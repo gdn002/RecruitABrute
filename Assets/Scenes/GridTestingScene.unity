@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 8, y: 5}
-  gridCellPrefab: {fileID: 9069475661514309857, guid: 2349e21ce738c384683c020f7c0ce94a,
+  gridTilePrefab: {fileID: 9069475661514309857, guid: 2349e21ce738c384683c020f7c0ce94a,
     type: 3}
   showGrid: 0
   showCollisions: 0

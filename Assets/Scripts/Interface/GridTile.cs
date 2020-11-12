@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GridCell : MonoBehaviour
+public class GridTile : MonoBehaviour
 {
     public enum TileHighlights
     {

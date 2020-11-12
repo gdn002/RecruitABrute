@@ -9,7 +9,7 @@ public class Grid : MonoBehaviour
 
     public Vector2Int gridSize = new Vector2Int(5, 5);
 
-    public GridCell gridCellPrefab;
+    public GridTile gridTilePrefab;
 
 
     // *** UTILITY VARIABLES ***
@@ -17,10 +17,10 @@ public class Grid : MonoBehaviour
     // Stores all objects attached to this grid
     private List<Entity> entityList;
 
-    // Stores all GridCells
-    private GridCell[,] cellArray;
+    // Stores all GridTiles
+    private GridTile[,] gridTileArray;
 
-    // Stores grid cell collision data
+    // Stores grid collision data
     public bool[,] collisionArray;
 
 
@@ -82,9 +82,9 @@ public class Grid : MonoBehaviour
 
     // ** Grid Tile Functions **
 
-    public void HighlightTile(Vector2Int index, GridCell.TileHighlights type)
+    public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
     {
-        cellArray[index.x, index.y].SetHighlight(type);
+        gridTileArray[index.x, index.y].SetHighlight(type);
     }
 
 
@@ -108,18 +108,18 @@ public class Grid : MonoBehaviour
         }
     }
 
-    private void InitializeCells()
+    private void InitializeTiles()
     {
-        if (gridCellPrefab != null)
+        if (gridTilePrefab != null)
         {
-            cellArray = new GridCell[gridSize.x, gridSize.y];
+            gridTileArray = new GridTile[gridSize.x, gridSize.y];
             for (int x = 0; x < gridSize.x; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
-                    GameObject cell = Instantiate(gridCellPrefab.gameObject);
-                    cellArray[x, y] = cell.GetComponent<GridCell>();
-                    cellArray[x, y].Initialize(transform, new Vector2Int(x, y));
+                    GameObject tile = Instantiate(gridTilePrefab.gameObject);
+                    gridTileArray[x, y] = tile.GetComponent<GridTile>();
+                    gridTileArray[x, y].Initialize(transform, new Vector2Int(x, y));
                 }
             }
         }
@@ -132,7 +132,7 @@ public class Grid : MonoBehaviour
     void Start()
     {
         InitializeEntities();
-        InitializeCells();
+        InitializeTiles();
     }
 
     // Update is called once per frame

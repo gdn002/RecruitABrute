@@ -24,10 +24,10 @@ public class DEBUG_MovementCalculatorTester : MonoBehaviour
             calculator.CalculateMovement(position, range);
             var tiles = calculator.GetReachableTiles(position);
 
-            grid.HighlightTile(position, GridCell.TileHighlights.Friend);
+            grid.HighlightTile(position, GridTile.TileHighlights.Friend);
             foreach (var tile in tiles)
             {
-                grid.HighlightTile(tile, GridCell.TileHighlights.Movement);
+                grid.HighlightTile(tile, GridTile.TileHighlights.Movement);
             }
 
             testRun = true;
