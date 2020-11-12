@@ -7,8 +7,10 @@ public class GridCell : MonoBehaviour
     public float height = 0.1f;
 
 
-    public void Initialize(Vector2Int coordinates)
+    public void Initialize(Transform parent, Vector2Int coordinates)
     {
+        transform.SetParent(parent);
+
         Vector3 position = Grid.GridToLocal(coordinates);
         position.y = -(height / 2);
         transform.localPosition = position;

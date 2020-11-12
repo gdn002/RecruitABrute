@@ -111,7 +111,7 @@ public class Grid : MonoBehaviour
                 {
                     GameObject cell = Instantiate(gridCellPrefab.gameObject);
                     cellArray[x, y] = cell.GetComponent<GridCell>();
-                    cellArray[x, y].Initialize(new Vector2Int(x, y));
+                    cellArray[x, y].Initialize(transform, new Vector2Int(x, y));
                 }
             }
         }
