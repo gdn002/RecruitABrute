@@ -9,11 +9,16 @@ public class Grid : MonoBehaviour
 
     public Vector2Int gridSize = new Vector2Int(5, 5);
 
+    public GridCell gridCellPrefab;
+
 
     // *** UTILITY VARIABLES ***
 
     // Stores all objects attached to this grid
     private List<Entity> entityList;
+
+    // Stores all GridCells
+    private GridCell[,] cellArray;
 
     // Stores grid cell collision data
     public bool[,] collisionArray;
@@ -95,6 +100,23 @@ public class Grid : MonoBehaviour
         }
     }
 
+    private void InitializeCells()
+    {
+        if (gridCellPrefab != null)
+        {
+            cellArray = new GridCell[gridSize.x, gridSize.y];
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GameObject cell = Instantiate(gridCellPrefab.gameObject);
+                    cellArray[x, y] = cell.GetComponent<GridCell>();
+                    cellArray[x, y].Initialize(new Vector2Int(x, y));
+                }
+            }
+        }
+    }
+
 
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
@@ -102,6 +124,7 @@ public class Grid : MonoBehaviour
     void Start()
     {
         InitializeEntities();
+        InitializeCells();
     }
 
     // Update is called once per frame
