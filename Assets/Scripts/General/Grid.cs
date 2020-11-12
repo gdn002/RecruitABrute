@@ -58,7 +58,7 @@ public class Grid : MonoBehaviour
     // Set collision flags in a grid cell. No effect if the coordinates are out of bounds of the collider array.
     public void SetCollision(Vector2Int index, bool collision)
     {
-        if (IsInCollisionArray(index))
+        if (IsInBounds(index))
         {
             collisionArray[index.x, index.y] = collision;
         }
@@ -67,7 +67,7 @@ public class Grid : MonoBehaviour
     // Get all collision flags from a grid cell. Out of bounds positions will always return central collision.
     public bool GetCollision(Vector2Int index)
     {
-        if (IsInCollisionArray(index))
+        if (IsInBounds(index))
         {
             return collisionArray[index.x, index.y];
         }
@@ -75,9 +75,9 @@ public class Grid : MonoBehaviour
         return true;
     }
 
-    private bool IsInCollisionArray(Vector2Int index)
+    public bool IsInBounds(Vector2Int index)
     {
-        return (index.x >= 0 && index.y >= 0 && index.x < collisionArray.GetLength(0) && index.y < collisionArray.GetLength(1));
+        return (index.x >= 0 && index.y >= 0 && index.x < gridSize.x && index.y < gridSize.y);
     }
 
     // ** Grid Tile Functions **

@@ -98,7 +98,7 @@ public class MovementCalculator
         Vector2Int next = current + step;
 
         // Boundary check
-        if (IsOutOfBounds(next)) return;
+        if (!grid.IsInBounds(next)) return;
 
         // Collision check
         if (CollisionArray[next.x, next.y]) return;
@@ -113,11 +113,6 @@ public class MovementCalculator
         distanceArray[next.x, next.y] = distance;
 
         pathQueue.Enqueue(next);
-    }
-
-    private bool IsOutOfBounds(Vector2Int node)
-    {
-        return (node.x < 0 || node.x >= GridSize.x || node.y < 0 || node.y >= GridSize.y);
     }
 
     private void Reset()
