@@ -80,6 +80,14 @@ public class Grid : MonoBehaviour
         return (index.x >= 0 && index.y >= 0 && index.x < collisionArray.GetLength(0) && index.y < collisionArray.GetLength(1));
     }
 
+    // ** Grid Tile Functions **
+
+    public void HighlightTile(Vector2Int index, GridCell.TileHighlights type)
+    {
+        cellArray[index.x, index.y].SetHighlight(type);
+    }
+
+
     // *** INITIALIZATION FUNCTIONS ***
     private void InitializeEntities()
     {
