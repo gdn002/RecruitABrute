@@ -28,10 +28,10 @@ public class Grid : MonoBehaviour
 
     // ** Coordinate Functions **
 
-    // Convert grid coordinates to local position. (Y axis is set to verticalPosition)
-    public static Vector3 GridToLocal(Vector2Int gridPosition)
+    // Convert grid coordinates to local position.
+    public static Vector3 GridToLocal(Vector2Int gridPosition, float heightOffset = 0)
     {
-        return new Vector3(gridPosition.x * CELL_SIZE, 0, gridPosition.y * CELL_SIZE);
+        return new Vector3(gridPosition.x * CELL_SIZE, heightOffset, gridPosition.y * CELL_SIZE);
     }
 
     // Convert local position to the nearest grid coordinates. (Y axis is ignored)
@@ -40,10 +40,10 @@ public class Grid : MonoBehaviour
         return new Vector2Int(Mathf.FloorToInt((position.x + (CELL_SIZE / 2)) / CELL_SIZE), Mathf.FloorToInt((position.z + (CELL_SIZE / 2)) / CELL_SIZE));
     }
 
-    // Convert grid coordinates to world position. (Y axis is set to verticalPosition)
-    public Vector3 GridToWorld(Vector2Int gridPosition)
+    // Convert grid coordinates to world position.
+    public Vector3 GridToWorld(Vector2Int gridPosition, float heightOffset = 0)
     {
-        return transform.TransformPoint(GridToLocal(gridPosition));
+        return transform.TransformPoint(GridToLocal(gridPosition) + new Vector3(0, heightOffset, 0));
     }
 
     // Convert world position to the nearest grid coordinates. (Y axis is ignored)

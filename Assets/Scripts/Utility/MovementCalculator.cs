@@ -9,6 +9,7 @@ public class MovementCalculator
     private Vector2Int GridSize { get { return grid.gridSize; } }
     private bool[,] CollisionArray { get { return grid.collisionArray; } }
 
+    private Vector2Int startingPoint;
     private int[,] distanceArray;
     private Vector2Int[,] pathArray;
     private Queue<Vector2Int> pathQueue;
@@ -24,6 +25,7 @@ public class MovementCalculator
     public void CalculateMovement(Vector2Int from, int range)
     {
         Reset();
+        startingPoint = from;
 
         // Get started with source node
         pathQueue.Enqueue(from);
@@ -33,7 +35,7 @@ public class MovementCalculator
         BreadthFirstSearch(range);
     }
 
-    public List<Vector2Int> GetReachableTiles(Vector2Int from)
+    public List<Vector2Int> GetReachableTiles()
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
 
@@ -49,7 +51,7 @@ public class MovementCalculator
         return tiles;
     }
 
-    public List<Vector2Int> GetPath(Vector2Int from, Vector2Int to)
+    public List<Vector2Int> GetPath(Vector2Int to)
     {
         // Check if destination was reached
         if (distanceArray[to.x, to.y] < 0) return null;
@@ -57,14 +59,14 @@ public class MovementCalculator
         // Retrace steps
         List<Vector2Int> path = new List<Vector2Int>();
         Vector2Int current = to;
-        while (current != from)
+        while (current != startingPoint)
         {
             path.Add(current);
             current = pathArray[current.x, current.y];
         }
 
         // Add the start to close the path off
-        path.Add(from);
+        path.Add(startingPoint);
         // Reverse so the path goes start to finish 
         // NOTE: We might be able to optimize this out in the future
         path.Reverse();
