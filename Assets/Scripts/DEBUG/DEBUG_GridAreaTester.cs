@@ -20,16 +20,14 @@ public class DEBUG_GridAreaTester : MonoBehaviour
     {
         if (!testRun)
         {
-            GridArea area = new GridArea();
-            area.pivot = areaPivot;
-
             // IMPORTANT: As currently is, this kernel will be flipped vertically
             // (due to how this initialization is being done)
-            area.kernel = new byte[5, 5] { { 1, 0, 0, 0, 1},
-                                           { 0, 1, 0, 1, 0},
-                                           { 0, 0, 1, 0, 0},
-                                           { 0, 1, 0, 1, 0},
-                                           { 1, 0, 0, 0, 1} };
+            GridArea area = new GridArea(new byte[5, 5] { { 1, 0, 0, 0, 1},
+                                                          { 0, 1, 0, 1, 0},
+                                                          { 0, 0, 1, 0, 0},
+                                                          { 0, 1, 0, 1, 0},
+                                                          { 1, 0, 0, 0, 1} });
+            area.pivot = areaPivot;
 
             var tiles = area.GetPlacement(grid, position);
             foreach (var tile in tiles)

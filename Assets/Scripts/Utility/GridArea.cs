@@ -7,6 +7,29 @@ public class GridArea
     public Vector2Int pivot;
     public byte[,] kernel;
 
+    public GridArea()
+    {
+        kernel = null;
+        pivot = Vector2Int.zero;
+    }
+
+    public GridArea(byte[,] kernel)
+    {
+        this.kernel = kernel;
+        SetPivotAtCenter();
+    }
+
+    public GridArea(byte[,] kernel, Vector2Int pivot)
+    {
+        this.kernel = kernel;
+        this.pivot = pivot;
+    }
+
+    public void SetPivotAtCenter()
+    {
+        pivot = new Vector2Int(kernel.GetLength(0) / 2, kernel.GetLength(1) / 2);
+    }
+
     public List<Vector2Int> GetPlacement(Grid grid, Vector2Int center)
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
