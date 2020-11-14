@@ -3,6 +3,9 @@ using System.Collections;
 
 public class GridTile : MonoBehaviour
 {
+    // Returns the currently selected tile, if there is any
+    public static GridTile CurrentlySelected { get; private set; }
+
     public enum TileHighlights
     {
         None = 0,
@@ -15,8 +18,11 @@ public class GridTile : MonoBehaviour
     public float gapBetweenCells = 0.01f;
     public float height = 0.1f;
 
+    public Vector2Int Coordinates { get; private set; }
+
     private new Renderer renderer;
     private TileHighlights currentHighlight = TileHighlights.None;
+    private bool isSelected = false;
 
     public void Initialize(Transform parent, Vector2Int coordinates)
     {
@@ -25,6 +31,8 @@ public class GridTile : MonoBehaviour
         Vector3 position = Grid.GridToLocal(coordinates);
         position.y = -(height / 2);
         transform.localPosition = position;
+
+        Coordinates = coordinates;
     }
 
     public void SetHighlight(TileHighlights type)
@@ -32,12 +40,19 @@ public class GridTile : MonoBehaviour
         if (currentHighlight != type)
         {
             currentHighlight = type;
-            renderer.material.color = GetHighlightColor();
+            UpdateHighlight();
         }
+    }
+
+    public void UpdateHighlight()
+    {
+        renderer.material.color = GetHighlightColor();
     }
 
     private Color GetHighlightColor()
     {
+        if (isSelected) return Color.cyan;
+
         switch (currentHighlight)
         {
             case TileHighlights.Movement:
@@ -52,6 +67,33 @@ public class GridTile : MonoBehaviour
 
         return Color.white;
     }
+
+
+    // *** MOUSE EVENTS ***
+    void OnMouseOver()
+    {
+        isSelected = true;
+        CurrentlySelected = this;
+        UpdateHighlight();
+    }
+
+    void OnMouseExit()
+    {
+        isSelected = false;
+        CurrentlySelected = null;
+        UpdateHighlight();
+    }
+
+    void OnMouseDown()
+    {
+
+    }
+
+    void OnMouseUp()
+    {
+
+    }
+
 
     // Use this for initialization
     void Start()
