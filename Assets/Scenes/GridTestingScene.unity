@@ -513,7 +513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &765119315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,7 +698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1523745157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,6 +714,8 @@ MonoBehaviour:
   grid: {fileID: 218164206}
   position: {x: 2, y: 2}
   range: 3
+  linePrefab: {fileID: 5566243548805156614, guid: 3e98129641682fc4080bbed6f676a735,
+    type: 3}
 --- !u!4 &1523745158
 Transform:
   m_ObjectHideFlags: 0
