@@ -11,6 +11,8 @@ public class Entity : MonoBehaviour
 
     public Grid ParentGrid { get; private set; }
 
+    public UnitStats unitStats;
+    public UnitStatsText unitStatsText;
 
     // *** UTILITY FUNCTIONS ***
 
@@ -60,12 +62,31 @@ public class Entity : MonoBehaviour
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
     // Start is called before the first frame update
+    void Awake()
+    {
+        Debug.Log("awake");
+        unitStatsText = GameObject.FindWithTag("UnitStatsText").GetComponent<UnitStatsText>();
+        unitStats = gameObject.GetComponentInParent(typeof(UnitStats)) as UnitStats;
+    }
+
     void Start()
     {
+
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    // *** MOUSE EVENTS ***
+    void OnMouseOver()
+    {
+        unitStatsText.unitStats = unitStats;
+    }
+
+    void OnMouseExit()
+    {
+        unitStatsText.unitStats = null;
     }
 }

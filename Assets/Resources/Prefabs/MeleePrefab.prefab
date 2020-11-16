@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2839243640456292318}
   - component: {fileID: 3663936693068788893}
   m_Layer: 0
-  m_Name: UnitPrefab
+  m_Name: MeleePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 20
+  MaxHealth: 20
   MovementRange: 2
   Damage: 5
   Initiative: 3

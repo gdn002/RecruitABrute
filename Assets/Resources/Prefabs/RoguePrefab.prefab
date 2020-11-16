@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7921719444714659163}
   - component: {fileID: 8669561034723872280}
   m_Layer: 0
-  m_Name: UnitPrefab
+  m_Name: RoguePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 10
+  MaxHealth: 10
   MovementRange: 4
   Damage: 10
   Initiative: 1
