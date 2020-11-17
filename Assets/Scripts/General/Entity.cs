@@ -10,8 +10,7 @@ public class Entity : MonoBehaviour
     public Vector2Int coordinates;
 
     public Grid ParentGrid { get; private set; }
-
-
+    
     // *** UTILITY FUNCTIONS ***
 
     // Moves the entity to a new set of grid coordinates.
@@ -62,10 +61,20 @@ public class Entity : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
     void Update()
+    {
+    }
+
+    // *** MOUSE EVENTS ***
+    void OnMouseOver()
+    {
+    }
+
+    void OnMouseExit()
     {
     }
 }
