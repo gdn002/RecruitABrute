@@ -105,6 +105,14 @@ public class Grid : MonoBehaviour
             item.UpdateEntity();
 
             SetCollision(item.coordinates, item.hasCollision);
+
+            // Add Units to TurnTracker (this might be revised once we have a proper setup phase implemented)
+            Unit unit = item.GetComponent<Unit>();
+            if (unit != null)
+            {
+                // If you get an error at this line, check if your scene has a TurnTracker
+                TurnTracker.ActiveTracker.AddToInitiative(unit);
+            }
         }
     }
 

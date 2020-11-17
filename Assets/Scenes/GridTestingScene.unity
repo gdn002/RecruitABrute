@@ -357,7 +357,7 @@ Transform:
   - {fileID: 625304751}
   - {fileID: 1283189567}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &253260118
 GameObject:
@@ -449,7 +449,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &625304750
 GameObject:
@@ -461,6 +461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 625304751}
   - component: {fileID: 625304752}
+  - component: {fileID: 625304753}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -497,6 +498,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasCollision: 1
   coordinates: {x: 3, y: 2}
+--- !u!114 &625304753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625304750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6a686c988c34844b6537bbba976e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 60
+  maxHealth: 60
+  movementRange: 5
+  attackRange: 6
+  damage: 10
+  initiative: 9
+  unitName: Ranger
+  unitStatsText: {fileID: 0}
 --- !u!1 &765119314
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +562,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1184719515
 GameObject:
@@ -636,6 +657,49 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1184719515}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1260255138
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1260255140}
+  - component: {fileID: 1260255139}
+  m_Layer: 0
+  m_Name: TurnTracker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1260255139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260255138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8228e6c793edda94197e06dabfe06e09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1260255140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260255138}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1283189566
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,6 +710,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1283189567}
   - component: {fileID: 1283189568}
+  - component: {fileID: 1283189569}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -682,6 +747,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasCollision: 1
   coordinates: {x: 2, y: 3}
+--- !u!114 &1283189569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283189566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6a686c988c34844b6537bbba976e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 40
+  maxHealth: 40
+  movementRange: 4
+  attackRange: 4
+  damage: 5
+  initiative: 6
+  unitName: Mage
+  unitStatsText: {fileID: 0}
 --- !u!1 &1523745156
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,7 +813,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1556732176
 GameObject:
@@ -740,6 +825,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1556732177}
   - component: {fileID: 1556732178}
+  - component: {fileID: 1556732179}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -776,6 +862,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasCollision: 1
   coordinates: {x: 0, y: 0}
+--- !u!114 &1556732179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556732176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6a686c988c34844b6537bbba976e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  maxHealth: 100
+  movementRange: 3
+  attackRange: 1
+  damage: 10
+  initiative: 7
+  unitName: Fighter
+  unitStatsText: {fileID: 0}
 --- !u!1 &1920756696
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,5 +963,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
