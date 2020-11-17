@@ -10,10 +10,7 @@ public class Entity : MonoBehaviour
     public Vector2Int coordinates;
 
     public Grid ParentGrid { get; private set; }
-
-    public UnitStats unitStats;
-    public UnitStatsText unitStatsText;
-
+    
     // *** UTILITY FUNCTIONS ***
 
     // Moves the entity to a new set of grid coordinates.
@@ -62,13 +59,6 @@ public class Entity : MonoBehaviour
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
     // Start is called before the first frame update
-    void Awake()
-    {
-        Debug.Log("awake");
-        unitStatsText = GameObject.FindWithTag("UnitStatsText").GetComponent<UnitStatsText>();
-        unitStats = gameObject.GetComponentInParent(typeof(UnitStats)) as UnitStats;
-    }
-
     void Start()
     {
 
@@ -82,11 +72,9 @@ public class Entity : MonoBehaviour
     // *** MOUSE EVENTS ***
     void OnMouseOver()
     {
-        unitStatsText.unitStats = unitStats;
     }
 
     void OnMouseExit()
     {
-        unitStatsText.unitStats = null;
     }
 }

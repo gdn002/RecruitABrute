@@ -5,26 +5,28 @@ using UnityEngine.UI;
 
 public class UnitStatsText : MonoBehaviour
 {
-    public UnitStats unitStats;
-    public Text unitStatsText;
+    public Unit unit;
+    public Text unitText;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (unitStats != null) {
-            unitStatsText.text = unitStats.Name + "\n" +
-        "Movement range: " + unitStats.MovementRange + "\n" +
-        "Health: " + unitStats.Health + " / " + unitStats.MaxHealth + "\n" +
-        "Damage: " + unitStats.Damage + "\n" +
-        "Initiative: " + unitStats.Initiative + "\n";
-        } else {
-            unitStatsText.text = "";
+        if (unit != null)
+        {
+            unitText.text = unit.unitName + "\n" +
+                            "Movement range: " + unit.movementRange + "\n" +
+                            "Health: " + unit.health + " / " + unit.maxHealth + "\n" +
+                            "Damage: " + unit.damage + "\n" +
+                            "Initiative: " + unit.initiative + "\n";
+        }
+        else
+        {
+            unitText.text = "";
         }
     }
 }
