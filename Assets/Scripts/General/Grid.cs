@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
+    public static Grid ActiveGrid { get; private set; }
+
     // *** PROPERTY FIELDS ***
 
     public const float CELL_SIZE = 1;
@@ -101,7 +103,6 @@ public class Grid : MonoBehaviour
         // Initialize and update all entities on the grid
         foreach (var item in entityList)
         {
-            item.Initialize(this);
             item.UpdateEntity();
 
             SetCollision(item.coordinates, item.hasCollision);
@@ -136,6 +137,18 @@ public class Grid : MonoBehaviour
 
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
+    void Awake()
+    {
+        if (ActiveGrid == null)
+        {
+            ActiveGrid = this;
+        }
+        else
+        {
+            Debug.LogError("A Grid component was initialized while another one is already running: " + gameObject.name);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -148,6 +161,13 @@ public class Grid : MonoBehaviour
     {
     }
 
+    void OnDestroy()
+    {
+        if (ActiveGrid == this)
+        {
+            ActiveGrid = null;
+        }
+    }
 
 #if UNITY_EDITOR
     // *** DEBUG FUNCTIONS ***
