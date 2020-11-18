@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TurnTracker : MonoBehaviour
@@ -13,7 +12,11 @@ public class TurnTracker : MonoBehaviour
 
     // Keep track of initiative
     public List<Unit> InitiativeOrder { get; private set; }
-    public Unit ActiveUnit { get { return InitiativeOrder[TurnCounter]; } }
+
+    public Unit ActiveUnit
+    {
+        get { return InitiativeOrder[TurnCounter]; }
+    }
 
 
     public void AddToInitiative(Unit unit)
@@ -27,6 +30,7 @@ public class TurnTracker : MonoBehaviour
                 return;
             }
         }
+
         InitiativeOrder.Add(unit);
     }
 
@@ -41,8 +45,11 @@ public class TurnTracker : MonoBehaviour
             RoundCounter++;
         }
 
-        // TODO: "activate" the next unit
         // TODO: turn change callbacks (if needed)
+        Grid.ActiveGrid.ClearHighlight();
+        
+        // TODO: "activate" the next unit
+        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
@@ -56,14 +63,17 @@ public class TurnTracker : MonoBehaviour
         }
         else
         {
-            Debug.LogError("A TurnTracker component was initialized while another one is already running: " + gameObject.name);
+            Debug.LogError("A TurnTracker component was initialized while another one is already running: " +
+                           gameObject.name);
         }
+
+        TurnCounter = 0;
+        RoundCounter = 0;
     }
 
     void Start()
     {
-        TurnCounter = 0;
-        RoundCounter = 0;
+        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
     }
 
     void Update()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class GridTile : MonoBehaviour
@@ -86,26 +87,33 @@ public class GridTile : MonoBehaviour
 
     void OnMouseDown()
     {
-
+        // Move unit to this tile if it is reachable
+        Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
+        if (Grid.ActiveGrid.GetReachableTiles(unit).Contains(Coordinates))
+        {
+            unit.GetEntity().Move(Coordinates);
+            TurnTracker.ActiveTracker.NextTurn();
+        }
     }
 
     void OnMouseUp()
     {
-
     }
 
-
-    // Use this for initialization
-    void Start()
+    // *** MONOBEHAVIOUR FUNCTIONS ***
+    private void Awake()
     {
         transform.localScale = new Vector3(Grid.CELL_SIZE - gapBetweenCells, height, Grid.CELL_SIZE - gapBetweenCells);
 
         renderer = GetComponent<Renderer>();
     }
 
+    void Start()
+    {
+    }
+
     // Update is called once per frame
     void Update()
     {
-
     }
 }

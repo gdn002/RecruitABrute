@@ -13,11 +13,22 @@ public class Unit : MonoBehaviour
     public string unitName;
 
     public UnitStatsText unitStatsText;
-//Add way to handle spells
+    //Add way to handle spells
 
+    // *** UTILITY FUNCTIONS ***
+    public Entity GetEntity()
+    {
+        return gameObject.GetComponent<Entity>();
+    }
+
+    public Vector2Int GetCoordinates()
+    {
+        return GetEntity().coordinates;
+    }
+
+    // *** MONOBEHAVIOUR FUNCTIONS ***
     void Awake()
     {
-        Debug.Log("awake");
         unitStatsText = GameObject.FindWithTag("UnitStatsText").GetComponent<UnitStatsText>();
     }
 
