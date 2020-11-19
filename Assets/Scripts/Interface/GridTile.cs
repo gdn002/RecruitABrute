@@ -103,9 +103,10 @@ public class GridTile : MonoBehaviour
             case TurnTracker.GamePhase.Combat:
                 // Move unit to this tile if it is reachable
                 Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-                if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange).Contains(Coordinates))
+                if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange).Contains(Coordinates) &&
+                    !unit.UnitEntity.IsMoving())
                 {
-                    unit.UnitEntity.Move(Coordinates);
+                    unit.UnitEntity.AnimateMove(Coordinates);
                 }
                 break;
 

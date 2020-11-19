@@ -32,7 +32,7 @@ public class Grid : MonoBehaviour
     // ** Coordinate Functions **
 
     // Convert grid coordinates to local position.
-    public static Vector3 GridToLocal(Vector2Int gridPosition, float heightOffset = 0)
+    public static Vector3 GridToLocal(Vector2 gridPosition, float heightOffset = 0)
     {
         return new Vector3(gridPosition.x * CELL_SIZE, heightOffset, gridPosition.y * CELL_SIZE);
     }
