@@ -6,10 +6,17 @@ public class TurnTracker : MonoBehaviour
     // Global access to the currently active tracker; only one TurnTracker should be active at once.
     public static TurnTracker ActiveTracker { get; private set; }
 
+    public enum GamePhase
+    {
+        Setup = 0,
+        Combat = 1,
+        Reward = 2,
+    }
+
     // Keep track of turns and rounds
     public int TurnCounter { get; private set; }
     public int RoundCounter { get; private set; }
-    public bool SetupPhase {get; set;}
+    public GamePhase CurrentPhase {get; private set;}
 
     // Keep track of initiative
     public List<Unit> InitiativeOrder { get; private set; }
@@ -36,6 +43,25 @@ public class TurnTracker : MonoBehaviour
         InitiativeOrder.Add(unit);
     }
 
+    public void NextPhase()
+    {
+        if (CurrentPhase != GamePhase.Reward)
+        {
+            CurrentPhase++;
+
+            // Phase change callbacks
+            switch(CurrentPhase)
+            {
+                case GamePhase.Combat:
+                    OnEnterCombatPhase();
+                    break;
+                case GamePhase.Reward:
+                    //OnEnterRewardPhase();
+                    break;
+            }
+        }
+    }
+
     public void NextTurn()
     {
         // TODO: "deactivate" the previous unit
@@ -56,6 +82,12 @@ public class TurnTracker : MonoBehaviour
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
+    private void OnEnterCombatPhase()
+    {
+        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
+        ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+    }
+
     void Awake()
     {
         InitiativeOrder = new List<Unit>();
@@ -72,13 +104,12 @@ public class TurnTracker : MonoBehaviour
 
         TurnCounter = 0;
         RoundCounter = 0;
-        SetupPhase = true;
+        CurrentPhase = GamePhase.Setup;
     }
 
     void Start()
     {
-        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
-        ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+    
     }
 
     void Update()

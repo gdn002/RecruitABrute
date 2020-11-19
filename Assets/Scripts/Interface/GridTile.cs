@@ -87,28 +87,31 @@ public class GridTile : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(TurnTracker.ActiveTracker.SetupPhase)
+        switch(TurnTracker.ActiveTracker.CurrentPhase)
         {
-            if (DeckHandler.MainDeckHandler.selectedUnit != null)
-            {
-                Unit u = DeckHandler.MainDeckHandler.selectedUnit;
-                u.transform.SetParent(Grid.ActiveGrid.transform);
-                u.UnitEntity.Move(Coordinates);
-                TurnTracker.ActiveTracker.AddToInitiative(u);
-                TurnTracker.ActiveTracker.SetupPhase = false; // Only allows one unit for now, this should be changed later
-            }
-        }
-        else {
-            // Move unit to this tile if it is reachable
-            Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-            if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange).Contains(Coordinates))
-            {
-                unit.UnitEntity.Move(Coordinates);
-            }
-        }
+            case TurnTracker.GamePhase.Setup:
+                if (DeckHandler.MainDeckHandler.selectedUnit != null)
+                {
+                    Unit u = DeckHandler.MainDeckHandler.selectedUnit;
+                    u.transform.SetParent(Grid.ActiveGrid.transform);
+                    u.UnitEntity.Move(Coordinates);
+                    TurnTracker.ActiveTracker.AddToInitiative(u);
+                    TurnTracker.ActiveTracker.NextPhase(); // Only allows one unit for now, this should be changed later
+                }
+                break;
 
-        
+            case TurnTracker.GamePhase.Combat:
+                // Move unit to this tile if it is reachable
+                Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
+                if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange).Contains(Coordinates))
+                {
+                    unit.UnitEntity.Move(Coordinates);
+                }
+                break;
 
+            case TurnTracker.GamePhase.Reward:
+                break;
+        }
     }
 
     void OnMouseUp()
