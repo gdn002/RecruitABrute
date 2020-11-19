@@ -13,7 +13,6 @@ public class DeckHandler : MonoBehaviour
     public GameObject unitbutton;
     public RectTransform placementpanel;
     public Unit selectedUnit = null;
-    public GameObject Grid;
     
     void Awake(){
 
@@ -32,9 +31,11 @@ public class DeckHandler : MonoBehaviour
         }
     }
 
-    public void AddCard(Unit u){
+    public void AddCard(Unit u)
+    {
         if (PlayerDeck.Count < maxdecksize)
         {
+            u.enemy = false;
             GameObject unit = Instantiate(u.gameObject);
             Debug.Log(u.unitName + " added");
             PlayerDeck.Add(unit.GetComponent<Unit>());
@@ -69,7 +70,6 @@ public class DeckHandler : MonoBehaviour
         selectedUnit = u;
         Debug.Log("Selected unit: " + selectedUnit);
         Destroy(b.gameObject);
-
     }
 
     void Update(){

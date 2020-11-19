@@ -31,6 +31,16 @@ public class Grid : MonoBehaviour
 
     // *** UTILITY FUNCTIONS ***
 
+    public void AddEntity(Entity entity)
+    {
+        entityList.Add(entity);
+    }
+    
+    public void RemoveEntity(Entity entity)
+    {
+        entityList.Remove(entity);
+    }
+    
     // ** Coordinate Functions **
 
     // Convert grid coordinates to local position.
@@ -142,8 +152,8 @@ public class Grid : MonoBehaviour
     {
         ClearHighlight();
         HighlightMovementTiles();
+        HighlightEnemyStatusTiles();
         HighlightActiveUnitTile();
-
     }
     
     private void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
@@ -161,8 +171,25 @@ public class Grid : MonoBehaviour
 
     private void HighlightActiveUnitTile()
     {
-        Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-        HighlightTile(unit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
+        if (TurnTracker.ActiveTracker.CurrentPhase == TurnTracker.GamePhase.Combat)
+        {
+            Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
+            HighlightTile(unit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
+        }
+    }
+
+    private void HighlightEnemyStatusTiles()
+    {
+        foreach (Entity unitGameObject in entityList)
+        {
+            Unit unit = unitGameObject.GetComponent<Unit>();
+            if (unit != null)
+            {
+                GridTile.TileHighlights tileHighlight =
+                    unit.enemy ? GridTile.TileHighlights.Foe : GridTile.TileHighlights.Friend;
+                HighlightTile(unit.GetCoordinates(), tileHighlight);
+            }
+        }
     }
     
     public void ClearHighlight()

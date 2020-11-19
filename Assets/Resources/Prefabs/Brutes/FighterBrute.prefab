@@ -148,6 +148,7 @@ MonoBehaviour:
   initiative: 8
   unitName: Fighter Brute
   UnitEntity: {fileID: 0}
+  enemy: 1
   unitStatsText: {fileID: 0}
 --- !u!65 &3390443023559326447
 BoxCollider:

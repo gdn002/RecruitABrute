@@ -61,13 +61,13 @@ public class GridTile : MonoBehaviour
             case TileHighlights.Movement:
                 return Color.blue;
             case TileHighlights.AoE:
-                return Color.yellow;
+                return Color.Lerp(Color.red, Color.yellow, 0.5f);//Orange
             case TileHighlights.Friend:
                 return Color.green;
             case TileHighlights.Foe:
                 return Color.red;
             case TileHighlights.ActiveUnit:
-                return Color.magenta;
+                return Color.yellow;
         }
 
         return Color.white;
@@ -105,8 +105,10 @@ public class GridTile : MonoBehaviour
                     u.gameObject.SetActive(true);
                     u.transform.SetParent(Grid.ActiveGrid.transform);
                     u.UnitEntity.Move(Coordinates);
+                    Grid.ActiveGrid.AddEntity(u.UnitEntity);
                     TurnTracker.ActiveTracker.AddToInitiative(u);
                     TurnTracker.ActiveTracker.PlaceUnit();
+                    Grid.ActiveGrid.UpdateHighlighting();
                 }
                 break;
 

@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour
     public int initiative;
     public string unitName;
     public Entity UnitEntity;
+    public bool enemy;
 
     public UnitStatsText unitStatsText;
     //Add way to handle spells
@@ -39,6 +40,7 @@ public class Unit : MonoBehaviour
     {
         TurnTracker.ActiveTracker.RemoveFromInitiative(this);
         UnitEntity.SetCollision(false);
+        Grid.ActiveGrid.RemoveEntity(UnitEntity);
         Destroy(gameObject);
     }
 
@@ -100,7 +102,8 @@ public class Unit : MonoBehaviour
     private void OnMouseDown()
     {
         Unit attacker = TurnTracker.ActiveTracker.ActiveUnit;
-        if (Grid.ActiveGrid.AttackDistance(attacker, this) <= attacker.attackRange && attacker != this)
+        if (Grid.ActiveGrid.AttackDistance(attacker, this) <= attacker.attackRange && attacker != this
+        && attacker.enemy != enemy)
         {
             ModifyHealth(-attacker.damage);
             TurnTracker.ActiveTracker.NextTurn();

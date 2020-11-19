@@ -128,4 +128,6 @@ MonoBehaviour:
   damage: 0
   initiative: 0
   unitName: 
+  UnitEntity: {fileID: 0}
+  enemy: 1
   unitStatsText: {fileID: 0}
