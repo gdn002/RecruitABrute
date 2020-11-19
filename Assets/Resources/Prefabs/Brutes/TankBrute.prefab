@@ -148,6 +148,7 @@ MonoBehaviour:
   initiative: 6
   unitName: Tank Brute
   UnitEntity: {fileID: 0}
+  enemy: 0
   unitStatsText: {fileID: 0}
 --- !u!65 &-1848076686925249854
 BoxCollider:

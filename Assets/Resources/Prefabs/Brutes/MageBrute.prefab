@@ -148,6 +148,7 @@ MonoBehaviour:
   initiative: 4
   unitName: Mage Brute
   UnitEntity: {fileID: 0}
+  enemy: 1
   unitStatsText: {fileID: 0}
 --- !u!65 &-5451271156393447666
 BoxCollider:

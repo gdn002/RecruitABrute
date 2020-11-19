@@ -148,6 +148,7 @@ MonoBehaviour:
   initiative: 8
   unitName: Ranger Brute
   UnitEntity: {fileID: 0}
+  enemy: 1
   unitStatsText: {fileID: 0}
 --- !u!65 &-1803234485993308033
 BoxCollider:
