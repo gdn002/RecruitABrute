@@ -93,6 +93,7 @@ public class GridTile : MonoBehaviour
                 if (DeckHandler.MainDeckHandler.selectedUnit != null)
                 {
                     Unit u = DeckHandler.MainDeckHandler.selectedUnit;
+                    u.gameObject.SetActive(true);
                     u.transform.SetParent(Grid.ActiveGrid.transform);
                     u.UnitEntity.Move(Coordinates);
                     TurnTracker.ActiveTracker.AddToInitiative(u);
