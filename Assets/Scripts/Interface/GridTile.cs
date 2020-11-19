@@ -92,7 +92,7 @@ public class GridTile : MonoBehaviour
         if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange)
             .Contains(Coordinates))
         {
-            unit.GetEntity().Move(Coordinates);
+            unit.UnitEntity.Move(Coordinates);
         }
     }
 
