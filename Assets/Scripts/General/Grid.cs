@@ -105,6 +105,11 @@ public class Grid : MonoBehaviour
     {
         return movementCalculator.GetReachableTiles();
     }
+
+    public List<Vector2Int> GetPath(Vector2Int from, Vector2Int to)
+    {
+        return movementCalculator.GetPath(from, to);
+    }
     
     public void RenderPathLine(Vector2Int destination)
     {

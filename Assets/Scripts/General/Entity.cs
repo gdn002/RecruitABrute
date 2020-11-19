@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // A GameObject whose position is regulated by a Grid
 public class Entity : MonoBehaviour
@@ -13,6 +14,7 @@ public class Entity : MonoBehaviour
     public bool IsMoving { get; private set; }
 
     private Vector2Int newCoordinates;
+    private List<Vector2Int> movementPath;
     
     // *** UTILITY FUNCTIONS ***
 
@@ -29,16 +31,23 @@ public class Entity : MonoBehaviour
     public void StartMoveAnimation(Vector2Int newCoordinates)
     {
         this.newCoordinates = newCoordinates;
+        movementPath = Grid.ActiveGrid.GetPath(coordinates, newCoordinates);
         StartCoroutine(nameof(AnimateMove));
     }
 
     IEnumerator AnimateMove()
     {
         IsMoving = true;
-        for (int moveAnimationFrame = MOVE_ANIMATION_FRAMES; moveAnimationFrame > 0; moveAnimationFrame--)
+        for (int moveAnimationFrame = 0; moveAnimationFrame < MOVE_ANIMATION_FRAMES; moveAnimationFrame++)
         {
             float interpolationRatio = (float) moveAnimationFrame / MOVE_ANIMATION_FRAMES;
-            Vector2 interpolatedCoordinates = Vector2.Lerp(newCoordinates, coordinates, interpolationRatio);
+            int interpolationIndex = (int) (interpolationRatio * movementPath.Count);
+            if (interpolationIndex >= movementPath.Count - 1)
+            {
+                interpolationIndex = movementPath.Count - 2;
+            }
+            float interpolationSubRatio = (interpolationRatio - ((float) interpolationIndex / movementPath.Count)) * movementPath.Count;
+            Vector2 interpolatedCoordinates = Vector2.Lerp(movementPath[interpolationIndex], movementPath[interpolationIndex + 1], interpolationSubRatio);
             UpdatePosition(interpolatedCoordinates);
             yield return null;
         }
