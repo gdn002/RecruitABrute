@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,13 +44,23 @@ public class Unit : MonoBehaviour
     }
 
     // *** MOUSE EVENTS ***
-    void OnMouseOver()
+    private void OnMouseOver()
     {
         unitStatsText.unit = this;
     }
 
-    void OnMouseExit()
+    private void OnMouseExit()
     {
         unitStatsText.unit = null;
+    }
+
+    private void OnMouseDown()
+    {
+        Unit attacker = TurnTracker.ActiveTracker.ActiveUnit;
+        if (Grid.ActiveGrid.AttackDistance(attacker, this) <= attacker.attackRange && attacker != this)
+        {
+            health -= attacker.damage;
+            TurnTracker.ActiveTracker.NextTurn();
+        }
     }
 }

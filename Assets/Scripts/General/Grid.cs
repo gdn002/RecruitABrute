@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
@@ -54,6 +55,15 @@ public class Grid : MonoBehaviour
         return LocalToGrid(transform.InverseTransformPoint(position));
     }
 
+    public int AttackDistance(Vector2Int coords1, Vector2Int coords2)
+    {
+        return Math.Max(Math.Abs(coords1.x - coords2.x), Math.Abs(coords1.y - coords2.y));
+    }
+    
+    public int AttackDistance(Unit unit1, Unit unit2)
+    {
+        return AttackDistance(unit1.GetCoordinates(), unit2.GetCoordinates());
+    }
 
     // ** Collision Functions **
 
@@ -85,9 +95,16 @@ public class Grid : MonoBehaviour
     // ** Movement Functions
     public List<Vector2Int> GetReachableTiles(Unit unit)
     {
+        return GetReachableTiles(unit.GetCoordinates(), unit.movementRange);
+    }
+    
+    public List<Vector2Int> GetReachableTiles(Vector2Int coordinates, int movementRange)
+    {
         MovementCalculator movementCalculator = new MovementCalculator(this);
-        movementCalculator.CalculateMovement(unit.GetCoordinates(), unit.movementRange);
-        return movementCalculator.GetReachableTiles();
+        movementCalculator.CalculateMovement(coordinates, movementRange);
+        List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
+        reachableTiles.Add(coordinates);
+        return reachableTiles;
     }
     
     // ** Grid Tile Functions **

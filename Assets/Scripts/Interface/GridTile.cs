@@ -89,10 +89,10 @@ public class GridTile : MonoBehaviour
     {
         // Move unit to this tile if it is reachable
         Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-        if (Grid.ActiveGrid.GetReachableTiles(unit).Contains(Coordinates))
+        if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange)
+            .Contains(Coordinates))
         {
             unit.GetEntity().Move(Coordinates);
-            TurnTracker.ActiveTracker.NextTurn();
         }
     }
 

@@ -18,6 +18,7 @@ public class TurnTracker : MonoBehaviour
         get { return InitiativeOrder[TurnCounter]; }
     }
 
+    public Vector2Int ActiveUnitStartCoordinates;
 
     public void AddToInitiative(Unit unit)
     {
@@ -50,6 +51,7 @@ public class TurnTracker : MonoBehaviour
         
         // TODO: "activate" the next unit
         Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
+        ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
@@ -74,6 +76,7 @@ public class TurnTracker : MonoBehaviour
     void Start()
     {
         Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
+        ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
     }
 
     void Update()
