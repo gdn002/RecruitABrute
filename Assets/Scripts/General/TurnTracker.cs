@@ -64,9 +64,7 @@ public class TurnTracker : MonoBehaviour
 
     public void NextTurn()
     {
-        ActiveUnit.Deactivate();
-
-        Grid.ActiveGrid.ClearHighlight();
+        OnTurnEnd();
 
         TurnCounter++;
         if (TurnCounter == InitiativeOrder.Count)
@@ -75,10 +73,25 @@ public class TurnTracker : MonoBehaviour
             RoundCounter++;
         }
 
-        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
+        OnTurnStart();
+    }
+
+    private void OnTurnEnd()
+    {
+        ActiveUnit.Deactivate();
+
+        Grid.ActiveGrid.ClearHighlight();
+    }
+
+    private void OnTurnStart()
+    {
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+
+        Grid.ActiveGrid.CalculateMovement(ActiveUnitStartCoordinates, ActiveUnit.movementRange);
+        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
         Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
+
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
@@ -86,10 +99,7 @@ public class TurnTracker : MonoBehaviour
     {
         // First Turn
 
-        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
-        ActiveUnit.Activate();
-        ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
-        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
+        OnTurnStart();
     }
 
     void Awake()

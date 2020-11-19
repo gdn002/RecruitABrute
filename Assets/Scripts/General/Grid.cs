@@ -26,6 +26,8 @@ public class Grid : MonoBehaviour
     // Stores grid collision data
     public bool[,] collisionArray;
 
+    public MovementCalculator movementCalculator;
+
 
     // *** UTILITY FUNCTIONS ***
 
@@ -92,19 +94,19 @@ public class Grid : MonoBehaviour
         return (index.x >= 0 && index.y >= 0 && index.x < gridSize.x && index.y < gridSize.y);
     }
 
-    // ** Movement Functions
-    public List<Vector2Int> GetReachableTiles(Unit unit)
+    // ** Movement Functions **
+
+    public void CalculateMovement(Vector2Int coordinates, int movementRange)
     {
-        return GetReachableTiles(unit.GetCoordinates(), unit.movementRange);
+        movementCalculator.CalculateMovement(coordinates, movementRange);
     }
     
-    public List<Vector2Int> GetReachableTiles(Vector2Int coordinates, int movementRange)
+    public List<Vector2Int> GetReachableTiles()
     {
-        MovementCalculator movementCalculator = new MovementCalculator(this);
-        movementCalculator.CalculateMovement(coordinates, movementRange);
-        List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
-        reachableTiles.Add(coordinates);
-        return reachableTiles;
+        return movementCalculator.GetReachableTiles();
+        //List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
+        //reachableTiles.Add(coordinates);
+        //return reachableTiles;
     }
     
     // ** Grid Tile Functions **
@@ -116,7 +118,7 @@ public class Grid : MonoBehaviour
 
     public void HighlightMovementTiles(Unit unit)
     {
-        foreach (Vector2Int reachableTile in GetReachableTiles(unit))
+        foreach (Vector2Int reachableTile in GetReachableTiles())
         {
             HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
         }
@@ -209,6 +211,8 @@ public class Grid : MonoBehaviour
         
         InitializeEntities();
         InitializeTiles();
+
+        movementCalculator = new MovementCalculator(this);
     }
 
     // Start is called before the first frame update
