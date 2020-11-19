@@ -10,8 +10,8 @@ public class Entity : MonoBehaviour
 
     public bool hasCollision;
     public Vector2Int coordinates;
+    public bool IsMoving { get; private set; }
 
-    private int moveAnimationFrame;
     private Vector2Int newCoordinates;
     
     // *** UTILITY FUNCTIONS ***
@@ -25,32 +25,24 @@ public class Entity : MonoBehaviour
         UpdatePosition();
     }
     
-    public void AnimateMove(Vector2Int newCoordinates)
+    public void StartMoveAnimation(Vector2Int newCoordinates)
     {
-        moveAnimationFrame = MOVE_ANIMATION_FRAMES;
         this.newCoordinates = newCoordinates;
+        StartCoroutine(nameof(AnimateMove));
     }
 
-    private void StepMoveAnimation()
+    IEnumerator AnimateMove()
     {
-        if (moveAnimationFrame > 0)
+        IsMoving = true;
+        for (int moveAnimationFrame = MOVE_ANIMATION_FRAMES; moveAnimationFrame > 0; moveAnimationFrame--)
         {
             float interpolationRatio = (float) moveAnimationFrame / MOVE_ANIMATION_FRAMES;
             Vector2 interpolatedCoordinates = Vector2.Lerp(newCoordinates, coordinates, interpolationRatio);
             UpdatePosition(interpolatedCoordinates);
-            moveAnimationFrame--;
-            
-            // Last animation frame
-            if (moveAnimationFrame == 0)
-            {
-                Move(newCoordinates);
-            }
+            yield return null;
         }
-    }
-
-    public bool IsMoving()
-    {
-        return moveAnimationFrame > 0;
+        Move(newCoordinates);
+        IsMoving = false;
     }
 
     // Updates the entity's local position to match its current grid coordinates.
@@ -88,7 +80,6 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StepMoveAnimation();
     }
 
     // *** MOUSE EVENTS ***
