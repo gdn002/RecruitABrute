@@ -28,10 +28,6 @@ public class Unit : MonoBehaviour
     }
 
     // *** MONOBEHAVIOUR FUNCTIONS ***
-    void Awake()
-    {
-        unitStatsText = GameObject.FindWithTag("UnitStatsText").GetComponent<UnitStatsText>();
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -46,12 +42,12 @@ public class Unit : MonoBehaviour
     // *** MOUSE EVENTS ***
     private void OnMouseOver()
     {
-        unitStatsText.unit = this;
+        UnitStatsText.ActiveUnitStatsText.UpdateText(this);
     }
 
     private void OnMouseExit()
     {
-        unitStatsText.unit = null;
+        UnitStatsText.ActiveUnitStatsText.ClearText();
     }
 
     private void OnMouseDown()
