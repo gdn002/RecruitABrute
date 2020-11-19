@@ -64,6 +64,9 @@ public class TurnTracker : MonoBehaviour
 
     public void NextTurn()
     {
+        if (CurrentPhase != GamePhase.Combat)
+            return;
+
         OnTurnEnd();
 
         TurnCounter++;
