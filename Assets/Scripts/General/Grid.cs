@@ -108,7 +108,8 @@ public class Grid : MonoBehaviour
     
     public void RenderPathLine(Vector2Int destination)
     {
-        var path = movementCalculator.GetPath(destination);
+        Vector2Int from = TurnTracker.ActiveTracker.ActiveUnit.GetCoordinates();
+        var path = movementCalculator.GetPath(from, destination);
 
         if (path != null)
         {
