@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
@@ -54,6 +55,15 @@ public class Grid : MonoBehaviour
         return LocalToGrid(transform.InverseTransformPoint(position));
     }
 
+    public int AttackDistance(Vector2Int coords1, Vector2Int coords2)
+    {
+        return Math.Max(Math.Abs(coords1.x - coords2.x), Math.Abs(coords1.y - coords2.y));
+    }
+    
+    public int AttackDistance(Unit unit1, Unit unit2)
+    {
+        return AttackDistance(unit1.GetCoordinates(), unit2.GetCoordinates());
+    }
 
     // ** Collision Functions **
 
@@ -82,6 +92,21 @@ public class Grid : MonoBehaviour
         return (index.x >= 0 && index.y >= 0 && index.x < gridSize.x && index.y < gridSize.y);
     }
 
+    // ** Movement Functions
+    public List<Vector2Int> GetReachableTiles(Unit unit)
+    {
+        return GetReachableTiles(unit.GetCoordinates(), unit.movementRange);
+    }
+    
+    public List<Vector2Int> GetReachableTiles(Vector2Int coordinates, int movementRange)
+    {
+        MovementCalculator movementCalculator = new MovementCalculator(this);
+        movementCalculator.CalculateMovement(coordinates, movementRange);
+        List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
+        reachableTiles.Add(coordinates);
+        return reachableTiles;
+    }
+    
     // ** Grid Tile Functions **
 
     public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
@@ -89,6 +114,21 @@ public class Grid : MonoBehaviour
         gridTileArray[index.x, index.y].SetHighlight(type);
     }
 
+    public void HighlightMovementTiles(Unit unit)
+    {
+        foreach (Vector2Int reachableTile in GetReachableTiles(unit))
+        {
+            HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
+        }
+    }
+    
+    public void ClearHighlight()
+    {
+        foreach (GridTile gridTile in gridTileArray)
+        {
+            gridTile.SetHighlight(GridTile.TileHighlights.None);
+        }
+    }
 
     // ** Entity Functions **
 
@@ -166,13 +206,14 @@ public class Grid : MonoBehaviour
         {
             Debug.LogError("A Grid component was initialized while another one is already running: " + gameObject.name);
         }
+        
+        InitializeEntities();
+        InitializeTiles();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        InitializeEntities();
-        InitializeTiles();
     }
 
     // Update is called once per frame
