@@ -146,7 +146,7 @@ MonoBehaviour:
   attackRange: 1
   damage: 30
   initiative: 8
-  unitName: Tank Brute
+  unitName: Fighter Brute
   UnitEntity: {fileID: 0}
   unitStatsText: {fileID: 0}
 --- !u!65 &3390443023559326447
