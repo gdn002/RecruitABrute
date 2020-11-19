@@ -43,7 +43,7 @@ public class MovementCalculator
         {
             for (int y = 0; y < GridSize.y; y++)
             {
-                if (distanceArray[x, y] > 0)
+                if (distanceArray[x, y] > -1)
                     tiles.Add(new Vector2Int(x, y));
             }
         }
