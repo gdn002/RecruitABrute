@@ -8,16 +8,14 @@ public class Entity : MonoBehaviour
 
     public bool hasCollision;
     public Vector2Int coordinates;
-
-    public Grid ParentGrid { get; private set; }
     
     // *** UTILITY FUNCTIONS ***
 
     // Moves the entity to a new set of grid coordinates.
     public virtual void Move(Vector2Int newCoordinates)
     {
-        ParentGrid.SetCollision(coordinates, false);
-        ParentGrid.SetCollision(newCoordinates, hasCollision);
+        Grid.ActiveGrid.SetCollision(coordinates, false);
+        Grid.ActiveGrid.SetCollision(newCoordinates, hasCollision);
         coordinates = newCoordinates;
         UpdatePosition();
     }
@@ -40,21 +38,6 @@ public class Entity : MonoBehaviour
         UpdatePosition();
     }
 
-    // *** GENERAL FUNCTIONS ***
-
-    // Initializes this Entity to a Grid. Only call once.
-    public void Initialize(Grid parentGrid)
-    {
-        if (ParentGrid == null)
-        {
-            ParentGrid = parentGrid;
-            transform.SetParent(ParentGrid.transform, true);
-        }
-        else
-        {
-            Debug.LogWarning("Entity.Initialize() was called more than once on Entity: " + name);
-        }
-    }
 
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
