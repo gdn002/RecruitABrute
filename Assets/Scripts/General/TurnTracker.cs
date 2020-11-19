@@ -45,7 +45,16 @@ public class TurnTracker : MonoBehaviour
 
     public void RemoveFromInitiative(Unit unit)
     {
-        InitiativeOrder.Remove(unit);
+        for (int i = 0; i < InitiativeOrder.Count; i++)
+        {
+            if (InitiativeOrder[i] == unit)
+            {
+                InitiativeOrder.RemoveAt(i);
+                if (i < TurnCounter)
+                    TurnCounter--;
+                // This still doesn't handle the possibility that the currently active unit dies in its own turn
+            }
+        }
     }
 
     public void NextPhase()
