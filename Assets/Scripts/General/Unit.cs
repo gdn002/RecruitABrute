@@ -12,22 +12,23 @@ public class Unit : MonoBehaviour
     public int damage;
     public int initiative;
     public string unitName;
+    public Entity UnitEntity;
 
     public UnitStatsText unitStatsText;
     //Add way to handle spells
 
     // *** UTILITY FUNCTIONS ***
-    public Entity GetEntity()
-    {
-        return gameObject.GetComponent<Entity>();
-    }
-
     public Vector2Int GetCoordinates()
     {
-        return GetEntity().coordinates;
+        return UnitEntity.coordinates;
     }
 
     // *** MONOBEHAVIOUR FUNCTIONS ***
+
+    private void Awake()
+    {
+        UnitEntity = gameObject.GetComponent<Entity>();
+    }
 
     // Start is called before the first frame update
     void Start()
