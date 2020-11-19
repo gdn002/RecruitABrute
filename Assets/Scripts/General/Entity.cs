@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 // A GameObject whose position is regulated by a Grid
 public class Entity : MonoBehaviour
 {
-    public const int MOVE_ANIMATION_FRAMES = 60;
+    public const int BASE_MOVE_ANIMATION_FRAMES = 60;
     
     // *** PROPERTY FIELDS ***
 
@@ -38,9 +39,10 @@ public class Entity : MonoBehaviour
     IEnumerator AnimateMove()
     {
         IsMoving = true;
-        for (int moveAnimationFrame = 0; moveAnimationFrame < MOVE_ANIMATION_FRAMES; moveAnimationFrame++)
+        int moveAnimationFrames = (int) (BASE_MOVE_ANIMATION_FRAMES * Math.Log(movementPath.Count));
+        for (int moveAnimationFrame = 0; moveAnimationFrame < moveAnimationFrames; moveAnimationFrame++)
         {
-            float interpolationRatio = (float) moveAnimationFrame / MOVE_ANIMATION_FRAMES;
+            float interpolationRatio = (float) moveAnimationFrame / moveAnimationFrames;
             int interpolationIndex = (int) (interpolationRatio * movementPath.Count);
             if (interpolationIndex >= movementPath.Count - 1)
             {
