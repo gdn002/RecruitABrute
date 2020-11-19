@@ -43,6 +43,11 @@ public class TurnTracker : MonoBehaviour
         InitiativeOrder.Add(unit);
     }
 
+    public void RemoveFromInitiative(Unit unit)
+    {
+        InitiativeOrder.Remove(unit);
+    }
+
     public void NextPhase()
     {
         if (CurrentPhase != GamePhase.Reward)
@@ -70,7 +75,7 @@ public class TurnTracker : MonoBehaviour
         OnTurnEnd();
 
         TurnCounter++;
-        if (TurnCounter == InitiativeOrder.Count)
+        if (TurnCounter >= InitiativeOrder.Count)
         {
             TurnCounter = 0;
             RoundCounter++;

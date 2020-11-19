@@ -26,6 +26,22 @@ public class Unit : MonoBehaviour
     }
 
 
+    public void ModifyHealth(int delta)
+    {
+        health += delta;
+        if (health <= 0)
+        {
+            Remove();
+        }
+    }
+
+    public void Remove()
+    {
+        TurnTracker.ActiveTracker.RemoveFromInitiative(this);
+        UnitEntity.SetCollision(false);
+        Destroy(gameObject);
+    }
+
     // *** UNIT STATE ***
 
     public void Activate()
@@ -65,6 +81,7 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
     }
 
     // *** MOUSE EVENTS ***
@@ -85,7 +102,7 @@ public class Unit : MonoBehaviour
         Unit attacker = TurnTracker.ActiveTracker.ActiveUnit;
         if (Grid.ActiveGrid.AttackDistance(attacker, this) <= attacker.attackRange && attacker != this)
         {
-            health -= attacker.damage;
+            ModifyHealth(-attacker.damage);
             TurnTracker.ActiveTracker.NextTurn();
         }
     }
