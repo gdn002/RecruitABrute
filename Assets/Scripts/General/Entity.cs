@@ -6,7 +6,7 @@ using System.Collections.Generic;
 // A GameObject whose position is regulated by a Grid
 public class Entity : MonoBehaviour
 {
-    public const int BASE_MOVE_ANIMATION_FRAMES = 60;
+    public const double BASE_MOVE_ANIMATION_SECONDS = 0.3f;
     
     // *** PROPERTY FIELDS ***
 
@@ -39,19 +39,22 @@ public class Entity : MonoBehaviour
     IEnumerator AnimateMove()
     {
         IsMoving = true;
-        int moveAnimationFrames = (int) (BASE_MOVE_ANIMATION_FRAMES * Math.Log(movementPath.Count));
-        for (int moveAnimationFrame = 0; moveAnimationFrame < moveAnimationFrames; moveAnimationFrame++)
+        double moveAnimationSeconds = BASE_MOVE_ANIMATION_SECONDS * Math.Log(movementPath.Count);
+        double elapsedTime = 0.0f;
+        while (elapsedTime < moveAnimationSeconds)
         {
-            float interpolationRatio = (float) moveAnimationFrame / moveAnimationFrames;
+            double interpolationRatio = elapsedTime / moveAnimationSeconds;
             int interpolationIndex = (int) (interpolationRatio * movementPath.Count);
             if (interpolationIndex >= movementPath.Count - 1)
             {
                 interpolationIndex = movementPath.Count - 2;
             }
-            float interpolationSubRatio = (interpolationRatio - ((float) interpolationIndex / movementPath.Count)) * movementPath.Count;
-            Vector2 interpolatedCoordinates = Vector2.Lerp(movementPath[interpolationIndex], movementPath[interpolationIndex + 1], interpolationSubRatio);
+            double interpolationSubRatio = (interpolationRatio - ((double) interpolationIndex / movementPath.Count)) * movementPath.Count;
+            Vector2 interpolatedCoordinates = Vector2.Lerp(movementPath[interpolationIndex], movementPath[interpolationIndex + 1], (float) interpolationSubRatio);
             UpdatePosition(interpolatedCoordinates);
             yield return null;
+            elapsedTime += Time.deltaTime;
+            Debug.Log(elapsedTime);
         }
         Move(newCoordinates);
         IsMoving = false;
