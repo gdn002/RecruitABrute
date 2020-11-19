@@ -87,7 +87,7 @@ public class GridTile : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(TurnTracker.ActiveTracker.SetupPhase)
+        if(TurnTracker.ActiveTracker.SetupPhase && DeckHandler.MainDeckHandler.selectedUnit != null)
         {
             Unit u  = DeckHandler.MainDeckHandler.selectedUnit;
             u.transform.SetParent(Grid.ActiveGrid.transform);
