@@ -21,6 +21,7 @@ public class MovementCalculator
         distanceArray = new int[GridSize.x, GridSize.y];
         pathArray = new Vector2Int[GridSize.x, GridSize.y];
         pathQueue = new Queue<Vector2Int>();
+        Reset();
     }
 
     public void CalculateMovement(Vector2Int from, int range)

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class TurnTracker : MonoBehaviour
 {
+    private const int UNIT_CAP = 5;
+    
     // Global access to the currently active tracker; only one TurnTracker should be active at once.
     public static TurnTracker ActiveTracker { get; private set; }
 
@@ -17,6 +19,7 @@ public class TurnTracker : MonoBehaviour
     public int TurnCounter { get; private set; }
     public int RoundCounter { get; private set; }
     public GamePhase CurrentPhase {get; private set;}
+    public int UnitsPlaced { get; private set; }
 
     // Keep track of initiative
     public List<Unit> InitiativeOrder { get; private set; }
@@ -93,6 +96,19 @@ public class TurnTracker : MonoBehaviour
         OnTurnStart();
     }
 
+    public void PlaceUnit()
+    {
+        if (CurrentPhase != GamePhase.Setup)
+            return;
+
+        UnitsPlaced++;
+
+        if (UnitsPlaced >= UNIT_CAP)
+        {
+            NextPhase();
+        }
+    }
+
     private void OnTurnEnd()
     {
         ActiveUnit.Deactivate();
@@ -133,11 +149,12 @@ public class TurnTracker : MonoBehaviour
         TurnCounter = 0;
         RoundCounter = 0;
         CurrentPhase = GamePhase.Setup;
+        UnitsPlaced = 0;
     }
 
     void Start()
     {
-    
+        Grid.ActiveGrid.UpdateHighlighting();
     }
 
     void Update()

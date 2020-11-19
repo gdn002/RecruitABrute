@@ -101,11 +101,12 @@ public class GridTile : MonoBehaviour
                 if (DeckHandler.MainDeckHandler.selectedUnit != null)
                 {
                     Unit u = DeckHandler.MainDeckHandler.selectedUnit;
+                    DeckHandler.MainDeckHandler.selectedUnit = null;
                     u.gameObject.SetActive(true);
                     u.transform.SetParent(Grid.ActiveGrid.transform);
                     u.UnitEntity.Move(Coordinates);
                     TurnTracker.ActiveTracker.AddToInitiative(u);
-                    TurnTracker.ActiveTracker.NextPhase(); // Only allows one unit for now, this should be changed later
+                    TurnTracker.ActiveTracker.PlaceUnit();
                 }
                 break;
 
