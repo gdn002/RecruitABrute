@@ -7,6 +7,7 @@ public class GridTile : MonoBehaviour
     // Returns the currently selected tile, if there is any
     public static GridTile CurrentlySelected { get; private set; }
 
+
     public enum TileHighlights
     {
         None = 0,
@@ -76,6 +77,9 @@ public class GridTile : MonoBehaviour
         isSelected = true;
         CurrentlySelected = this;
         UpdateHighlight();
+
+        if (TurnTracker.ActiveTracker.CurrentPhase == TurnTracker.GamePhase.Combat)
+            Grid.ActiveGrid.RenderPathLine(Coordinates);
     }
 
     void OnMouseExit()
@@ -83,6 +87,7 @@ public class GridTile : MonoBehaviour
         isSelected = false;
         CurrentlySelected = null;
         UpdateHighlight();
+        Grid.ActiveGrid.HidePathLine();
     }
 
     void OnMouseDown()

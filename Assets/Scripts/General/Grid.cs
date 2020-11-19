@@ -26,8 +26,8 @@ public class Grid : MonoBehaviour
     // Stores grid collision data
     public bool[,] collisionArray;
 
-    public MovementCalculator movementCalculator;
-
+    private MovementCalculator movementCalculator;
+    private static LineRenderer movementLine;
 
     // *** UTILITY FUNCTIONS ***
 
@@ -106,6 +106,30 @@ public class Grid : MonoBehaviour
         return movementCalculator.GetReachableTiles();
     }
     
+    public void RenderPathLine(Vector2Int destination)
+    {
+        var path = movementCalculator.GetPath(destination);
+
+        if (path != null)
+        {
+            movementLine.gameObject.SetActive(true);
+            movementLine.positionCount = path.Count;
+            for (int i = 0; i < path.Count; i++)
+            {
+                movementLine.SetPosition(i, GridToLocal(path[i], 0.1f));
+            }
+        }
+        else
+        {
+            movementLine.gameObject.SetActive(false);
+        }
+    }
+
+    public void HidePathLine()
+    {
+        movementLine.gameObject.SetActive(false);
+    }
+
     // ** Grid Tile Functions **
 
     public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
@@ -210,6 +234,14 @@ public class Grid : MonoBehaviour
         InitializeTiles();
 
         movementCalculator = new MovementCalculator(this);
+
+        GameObject newObj = Instantiate(Resources.Load<GameObject>("Prefabs/Interface/PathLine"));
+        newObj.transform.SetParent(transform, true);
+        movementLine = newObj.GetComponent<LineRenderer>();
+        movementLine.startColor = Color.cyan;
+        movementLine.endColor = Color.cyan;
+        movementLine.useWorldSpace = false;
+        movementLine.gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update
