@@ -15,6 +15,7 @@ public class GridTile : MonoBehaviour
         AoE,
         Friend,
         Foe,
+        ActiveUnit,
     }
 
     public float gapBetweenCells = 0.01f;
@@ -65,6 +66,8 @@ public class GridTile : MonoBehaviour
                 return Color.green;
             case TileHighlights.Foe:
                 return Color.red;
+            case TileHighlights.ActiveUnit:
+                return Color.magenta;
         }
 
         return Color.white;
@@ -109,9 +112,9 @@ public class GridTile : MonoBehaviour
             case TurnTracker.GamePhase.Combat:
                 // Move unit to this tile if it is reachable
                 Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-                if (Grid.ActiveGrid.GetReachableTiles().Contains(Coordinates))
+                if (Grid.ActiveGrid.GetReachableTiles().Contains(Coordinates) && !unit.UnitEntity.IsMoving)
                 {
-                    unit.UnitEntity.Move(Coordinates);
+                    unit.UnitEntity.StartMoveAnimation(Coordinates);
                 }
                 break;
 

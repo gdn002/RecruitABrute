@@ -33,10 +33,10 @@ public class DEBUG_MovementCalculatorTester : MonoBehaviour
             calculator.CalculateMovement(position, range);
             var tiles = calculator.GetReachableTiles();
 
-            grid.HighlightTile(position, GridTile.TileHighlights.Friend);
+            grid.UpdateHighlighting();
             foreach (var tile in tiles)
             {
-                grid.HighlightTile(tile, GridTile.TileHighlights.Movement);
+                grid.UpdateHighlighting();
             }
         }
 

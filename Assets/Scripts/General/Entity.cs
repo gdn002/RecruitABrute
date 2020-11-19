@@ -1,13 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // A GameObject whose position is regulated by a Grid
 public class Entity : MonoBehaviour
 {
+    public const int MOVE_ANIMATION_FRAMES = 60;
+    
     // *** PROPERTY FIELDS ***
 
     public bool hasCollision;
     public Vector2Int coordinates;
+    public bool IsMoving { get; private set; }
+
+    private Vector2Int newCoordinates;
+    private List<Vector2Int> movementPath;
     
     // *** UTILITY FUNCTIONS ***
 
@@ -18,12 +25,45 @@ public class Entity : MonoBehaviour
         Grid.ActiveGrid.SetCollision(newCoordinates, hasCollision);
         coordinates = newCoordinates;
         UpdatePosition();
+        Grid.ActiveGrid.UpdateHighlighting();
+    }
+    
+    public void StartMoveAnimation(Vector2Int newCoordinates)
+    {
+        this.newCoordinates = newCoordinates;
+        movementPath = Grid.ActiveGrid.GetPath(coordinates, newCoordinates);
+        StartCoroutine(nameof(AnimateMove));
+    }
+
+    IEnumerator AnimateMove()
+    {
+        IsMoving = true;
+        for (int moveAnimationFrame = 0; moveAnimationFrame < MOVE_ANIMATION_FRAMES; moveAnimationFrame++)
+        {
+            float interpolationRatio = (float) moveAnimationFrame / MOVE_ANIMATION_FRAMES;
+            int interpolationIndex = (int) (interpolationRatio * movementPath.Count);
+            if (interpolationIndex >= movementPath.Count - 1)
+            {
+                interpolationIndex = movementPath.Count - 2;
+            }
+            float interpolationSubRatio = (interpolationRatio - ((float) interpolationIndex / movementPath.Count)) * movementPath.Count;
+            Vector2 interpolatedCoordinates = Vector2.Lerp(movementPath[interpolationIndex], movementPath[interpolationIndex + 1], interpolationSubRatio);
+            UpdatePosition(interpolatedCoordinates);
+            yield return null;
+        }
+        Move(newCoordinates);
+        IsMoving = false;
     }
 
     // Updates the entity's local position to match its current grid coordinates.
+    public virtual void UpdatePosition(Vector2 coords)
+    {
+        transform.localPosition = Grid.GridToLocal(coords);
+    }
+    
     public virtual void UpdatePosition()
     {
-        transform.localPosition = Grid.GridToLocal(coordinates);
+        UpdatePosition(coordinates);
     }
 
     // Moves the entity to the nearest grid coordinates based on its current local position.

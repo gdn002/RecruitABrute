@@ -34,7 +34,7 @@ public class Grid : MonoBehaviour
     // ** Coordinate Functions **
 
     // Convert grid coordinates to local position.
-    public static Vector3 GridToLocal(Vector2Int gridPosition, float heightOffset = 0)
+    public static Vector3 GridToLocal(Vector2 gridPosition, float heightOffset = 0)
     {
         return new Vector3(gridPosition.x * CELL_SIZE, heightOffset, gridPosition.y * CELL_SIZE);
     }
@@ -105,10 +105,16 @@ public class Grid : MonoBehaviour
     {
         return movementCalculator.GetReachableTiles();
     }
+
+    public List<Vector2Int> GetPath(Vector2Int from, Vector2Int to)
+    {
+        return movementCalculator.GetPath(from, to);
+    }
     
     public void RenderPathLine(Vector2Int destination)
     {
-        var path = movementCalculator.GetPath(destination);
+        Vector2Int from = TurnTracker.ActiveTracker.ActiveUnit.GetCoordinates();
+        var path = movementCalculator.GetPath(from, destination);
 
         if (path != null)
         {
@@ -132,17 +138,31 @@ public class Grid : MonoBehaviour
 
     // ** Grid Tile Functions **
 
-    public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
+    public void UpdateHighlighting()
+    {
+        ClearHighlight();
+        HighlightMovementTiles();
+        HighlightActiveUnitTile();
+
+    }
+    
+    private void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
     {
         gridTileArray[index.x, index.y].SetHighlight(type);
     }
 
-    public void HighlightMovementTiles(Unit unit)
+    private void HighlightMovementTiles()
     {
         foreach (Vector2Int reachableTile in GetReachableTiles())
         {
             HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
         }
+    }
+
+    private void HighlightActiveUnitTile()
+    {
+        Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
+        HighlightTile(unit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
     }
     
     public void ClearHighlight()

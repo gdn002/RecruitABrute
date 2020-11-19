@@ -96,8 +96,6 @@ public class TurnTracker : MonoBehaviour
     private void OnTurnEnd()
     {
         ActiveUnit.Deactivate();
-
-        Grid.ActiveGrid.ClearHighlight();
     }
 
     private void OnTurnStart()
@@ -106,8 +104,7 @@ public class TurnTracker : MonoBehaviour
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
         Grid.ActiveGrid.CalculateMovement(ActiveUnitStartCoordinates, ActiveUnit.movementRange);
-        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
-        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
+        Grid.ActiveGrid.UpdateHighlighting();
 
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -33,6 +34,19 @@ public class MovementCalculator
 
         // Run BFS
         BreadthFirstSearch(range);
+    }
+    
+    public void CalculateMovement(Vector2Int from, List<Vector2Int> reachableTiles)
+    {
+        Reset();
+        startingPoint = from;
+
+        // Get started with source node
+        pathQueue.Enqueue(from);
+        distanceArray[from.x, from.y] = 0;
+
+        // Run BFS
+        BreadthFirstSearch(reachableTiles);
     }
 
     public List<Vector2Int> GetReachableTiles()
@@ -72,6 +86,18 @@ public class MovementCalculator
         path.Reverse();
         return path;
     }
+    
+    public List<Vector2Int> GetPath(Vector2Int from, Vector2Int to)
+    {
+        // Check that from and to are reachable
+        if (distanceArray[from.x, from.y] < 0) return null;
+        if (distanceArray[to.x, to.y] < 0) return null;
+
+        // Create a new movement calculator with new from
+        MovementCalculator tempMoveCalc = new MovementCalculator(grid);
+        tempMoveCalc.CalculateMovement(from, GetReachableTiles());
+        return tempMoveCalc.GetPath(to);
+    }
 
     private bool BreadthFirstSearch(int range)
     {
@@ -82,6 +108,28 @@ public class MovementCalculator
 
             // Check range
             if (distanceArray[current.x, current.y] >= range)
+                continue;
+
+            // Advance on all four directions
+            Step(current, Vector2Int.up);
+            Step(current, Vector2Int.down);
+            Step(current, Vector2Int.left);
+            Step(current, Vector2Int.right);
+        }
+
+        // Path not found
+        return false;
+    }
+    
+    private bool BreadthFirstSearch(List<Vector2Int> reachableTiles)
+    {
+        Vector2Int current;
+        while (pathQueue.Count > 0)
+        {
+            current = pathQueue.Dequeue();
+
+            // Check range
+            if (!reachableTiles.Contains(current))
                 continue;
 
             // Advance on all four directions
