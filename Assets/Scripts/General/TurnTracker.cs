@@ -78,6 +78,7 @@ public class TurnTracker : MonoBehaviour
         Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
@@ -88,6 +89,7 @@ public class TurnTracker : MonoBehaviour
         Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
     }
 
     void Awake()
