@@ -23,6 +23,7 @@ public class Entity : MonoBehaviour
         Grid.ActiveGrid.SetCollision(newCoordinates, hasCollision);
         coordinates = newCoordinates;
         UpdatePosition();
+        Grid.ActiveGrid.UpdateHighlighting();
     }
     
     public void StartMoveAnimation(Vector2Int newCoordinates)

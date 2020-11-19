@@ -132,17 +132,31 @@ public class Grid : MonoBehaviour
 
     // ** Grid Tile Functions **
 
-    public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
+    public void UpdateHighlighting()
+    {
+        ClearHighlight();
+        HighlightMovementTiles();
+        HighlightActiveUnitTile();
+
+    }
+    
+    private void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
     {
         gridTileArray[index.x, index.y].SetHighlight(type);
     }
 
-    public void HighlightMovementTiles(Unit unit)
+    private void HighlightMovementTiles()
     {
         foreach (Vector2Int reachableTile in GetReachableTiles())
         {
             HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
         }
+    }
+
+    private void HighlightActiveUnitTile()
+    {
+        Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
+        HighlightTile(unit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
     }
     
     public void ClearHighlight()

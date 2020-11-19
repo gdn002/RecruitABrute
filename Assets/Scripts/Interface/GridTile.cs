@@ -15,6 +15,7 @@ public class GridTile : MonoBehaviour
         AoE,
         Friend,
         Foe,
+        ActiveUnit,
     }
 
     public float gapBetweenCells = 0.01f;
@@ -65,6 +66,8 @@ public class GridTile : MonoBehaviour
                 return Color.green;
             case TileHighlights.Foe:
                 return Color.red;
+            case TileHighlights.ActiveUnit:
+                return Color.magenta;
         }
 
         return Color.white;

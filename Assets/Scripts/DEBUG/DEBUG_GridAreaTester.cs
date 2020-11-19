@@ -32,9 +32,9 @@ public class DEBUG_GridAreaTester : MonoBehaviour
             var tiles = area.GetPlacement(grid, position);
             foreach (var tile in tiles)
             {
-                grid.HighlightTile(tile, GridTile.TileHighlights.AoE);
+                grid.UpdateHighlighting();
             }
-            grid.HighlightTile(position, GridTile.TileHighlights.Friend);
+            grid.UpdateHighlighting();
 
             testRun = true;
         }
