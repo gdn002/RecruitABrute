@@ -7,6 +7,7 @@ public class GridTile : MonoBehaviour
     // Returns the currently selected tile, if there is any
     public static GridTile CurrentlySelected { get; private set; }
 
+
     public enum TileHighlights
     {
         None = 0,
@@ -76,6 +77,9 @@ public class GridTile : MonoBehaviour
         isSelected = true;
         CurrentlySelected = this;
         UpdateHighlight();
+
+        if (TurnTracker.ActiveTracker.CurrentPhase == TurnTracker.GamePhase.Combat)
+            Grid.ActiveGrid.RenderPathLine(Coordinates);
     }
 
     void OnMouseExit()
@@ -83,6 +87,7 @@ public class GridTile : MonoBehaviour
         isSelected = false;
         CurrentlySelected = null;
         UpdateHighlight();
+        Grid.ActiveGrid.HidePathLine();
     }
 
     void OnMouseDown()
@@ -93,6 +98,7 @@ public class GridTile : MonoBehaviour
                 if (DeckHandler.MainDeckHandler.selectedUnit != null)
                 {
                     Unit u = DeckHandler.MainDeckHandler.selectedUnit;
+                    u.gameObject.SetActive(true);
                     u.transform.SetParent(Grid.ActiveGrid.transform);
                     u.UnitEntity.Move(Coordinates);
                     TurnTracker.ActiveTracker.AddToInitiative(u);
@@ -103,8 +109,7 @@ public class GridTile : MonoBehaviour
             case TurnTracker.GamePhase.Combat:
                 // Move unit to this tile if it is reachable
                 Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-                if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange).Contains(Coordinates) &&
-                    !unit.UnitEntity.IsMoving)
+                if (Grid.ActiveGrid.GetReachableTiles().Contains(Coordinates) && !unit.UnitEntity.IsMoving)
                 {
                     unit.UnitEntity.StartMoveAnimation(Coordinates);
                 }

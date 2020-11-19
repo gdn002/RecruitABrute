@@ -43,6 +43,11 @@ public class TurnTracker : MonoBehaviour
         InitiativeOrder.Add(unit);
     }
 
+    public void RemoveFromInitiative(Unit unit)
+    {
+        InitiativeOrder.Remove(unit);
+    }
+
     public void NextPhase()
     {
         if (CurrentPhase != GamePhase.Reward)
@@ -64,28 +69,45 @@ public class TurnTracker : MonoBehaviour
 
     public void NextTurn()
     {
-        // TODO: "deactivate" the previous unit
+        if (CurrentPhase != GamePhase.Combat)
+            return;
+
+        OnTurnEnd();
 
         TurnCounter++;
-        if (TurnCounter == InitiativeOrder.Count)
+        if (TurnCounter >= InitiativeOrder.Count)
         {
             TurnCounter = 0;
             RoundCounter++;
         }
 
-        // TODO: turn change callbacks (if needed)
+        OnTurnStart();
+    }
+
+    private void OnTurnEnd()
+    {
+        ActiveUnit.Deactivate();
+
         Grid.ActiveGrid.ClearHighlight();
-        
-        // TODO: "activate" the next unit
-        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
+    }
+
+    private void OnTurnStart()
+    {
+        ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+
+        Grid.ActiveGrid.CalculateMovement(ActiveUnitStartCoordinates, ActiveUnit.movementRange);
+        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
+        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
+
         Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
     private void OnEnterCombatPhase()
     {
-        Grid.ActiveGrid.HighlightMovementTiles(ActiveUnit);
-        ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
+        // First Turn
+
+        OnTurnStart();
     }
 
     void Awake()

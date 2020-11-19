@@ -38,6 +38,7 @@ public class DeckHandler : MonoBehaviour
             GameObject unit = Instantiate(u.gameObject);
             Debug.Log(u.unitName + " added");
             PlayerDeck.Add(unit.GetComponent<Unit>());
+            unit.SetActive(false);
         }
         else
         {

@@ -26,6 +26,8 @@ public class Grid : MonoBehaviour
     // Stores grid collision data
     public bool[,] collisionArray;
 
+    private MovementCalculator movementCalculator;
+    private static LineRenderer movementLine;
 
     // *** UTILITY FUNCTIONS ***
 
@@ -92,21 +94,42 @@ public class Grid : MonoBehaviour
         return (index.x >= 0 && index.y >= 0 && index.x < gridSize.x && index.y < gridSize.y);
     }
 
-    // ** Movement Functions
-    public List<Vector2Int> GetReachableTiles(Unit unit)
+    // ** Movement Functions **
+
+    public void CalculateMovement(Vector2Int coordinates, int movementRange)
     {
-        return GetReachableTiles(unit.GetCoordinates(), unit.movementRange);
-    }
-    
-    public List<Vector2Int> GetReachableTiles(Vector2Int coordinates, int movementRange)
-    {
-        MovementCalculator movementCalculator = new MovementCalculator(this);
         movementCalculator.CalculateMovement(coordinates, movementRange);
-        List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
-        reachableTiles.Add(coordinates);
-        return reachableTiles;
     }
     
+    public List<Vector2Int> GetReachableTiles()
+    {
+        return movementCalculator.GetReachableTiles();
+    }
+    
+    public void RenderPathLine(Vector2Int destination)
+    {
+        var path = movementCalculator.GetPath(destination);
+
+        if (path != null)
+        {
+            movementLine.gameObject.SetActive(true);
+            movementLine.positionCount = path.Count;
+            for (int i = 0; i < path.Count; i++)
+            {
+                movementLine.SetPosition(i, GridToLocal(path[i], 0.1f));
+            }
+        }
+        else
+        {
+            movementLine.gameObject.SetActive(false);
+        }
+    }
+
+    public void HidePathLine()
+    {
+        movementLine.gameObject.SetActive(false);
+    }
+
     // ** Grid Tile Functions **
 
     public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
@@ -116,7 +139,7 @@ public class Grid : MonoBehaviour
 
     public void HighlightMovementTiles(Unit unit)
     {
-        foreach (Vector2Int reachableTile in GetReachableTiles(unit))
+        foreach (Vector2Int reachableTile in GetReachableTiles())
         {
             HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
         }
@@ -209,6 +232,16 @@ public class Grid : MonoBehaviour
         
         InitializeEntities();
         InitializeTiles();
+
+        movementCalculator = new MovementCalculator(this);
+
+        GameObject newObj = Instantiate(Resources.Load<GameObject>("Prefabs/Interface/PathLine"));
+        newObj.transform.SetParent(transform, true);
+        movementLine = newObj.GetComponent<LineRenderer>();
+        movementLine.startColor = Color.cyan;
+        movementLine.endColor = Color.cyan;
+        movementLine.useWorldSpace = false;
+        movementLine.gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update

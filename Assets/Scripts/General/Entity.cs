@@ -68,6 +68,12 @@ public class Entity : MonoBehaviour
         UpdatePosition();
     }
 
+    public void SetCollision(bool collision)
+    {
+        hasCollision = collision;
+        Grid.ActiveGrid.SetCollision(coordinates, hasCollision);
+    }
+
 
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
