@@ -87,13 +87,25 @@ public class GridTile : MonoBehaviour
 
     void OnMouseDown()
     {
-        // Move unit to this tile if it is reachable
-        Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-        if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange)
-            .Contains(Coordinates))
+        if(TurnTracker.ActiveTracker.SetupPhase)
         {
-            unit.UnitEntity.Move(Coordinates);
+            Unit u  = DeckHandler.MainDeckHandler.selectedUnit;
+            u.transform.SetParent(Grid.ActiveGrid.transform);
+            u.UnitEntity.Move(Coordinates);
+            TurnTracker.ActiveTracker.SetupPhase = false;
         }
+        
+        else{
+            // Move unit to this tile if it is reachable
+            Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
+            if (Grid.ActiveGrid.GetReachableTiles(TurnTracker.ActiveTracker.ActiveUnitStartCoordinates, unit.movementRange).Contains(Coordinates))
+            {
+            unit.UnitEntity.Move(Coordinates);
+            }
+        }
+
+        
+
     }
 
     void OnMouseUp()

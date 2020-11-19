@@ -9,6 +9,7 @@ public class TurnTracker : MonoBehaviour
     // Keep track of turns and rounds
     public int TurnCounter { get; private set; }
     public int RoundCounter { get; private set; }
+    public bool SetupPhase {get; set;}
 
     // Keep track of initiative
     public List<Unit> InitiativeOrder { get; private set; }
@@ -71,6 +72,7 @@ public class TurnTracker : MonoBehaviour
 
         TurnCounter = 0;
         RoundCounter = 0;
+        SetupPhase = true;
     }
 
     void Start()

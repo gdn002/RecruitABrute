@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class DeckHandler : MonoBehaviour
 {
+    public static DeckHandler MainDeckHandler { get; private set; }
+
     public Unit unit;
     public int maxdecksize;
     public List<Unit> PlayerDeck = new List<Unit>();
@@ -13,6 +15,15 @@ public class DeckHandler : MonoBehaviour
     public Unit selectedUnit = null;
     public GameObject Grid;
     
+    void Awake(){
+
+        if (MainDeckHandler == null)
+        {
+            MainDeckHandler = this;
+        }
+    }
+
+
 
     public void PrintDeck(){
         Debug.Log(PlayerDeck.Count);
@@ -24,9 +35,9 @@ public class DeckHandler : MonoBehaviour
     public void AddCard(Unit u){
         if (PlayerDeck.Count < maxdecksize)
         {
-            Instantiate(u);
+            GameObject unit = Instantiate(u.gameObject);
             Debug.Log(u.unitName + " added");
-            PlayerDeck.Add(u);
+            PlayerDeck.Add(unit.GetComponent<Unit>());
         }
         else
         {
@@ -55,25 +66,12 @@ public class DeckHandler : MonoBehaviour
 
     public void PlacementButtonOnClick(Unit u, Button b){
         selectedUnit = u;
-        Debug.Log(selectedUnit);
+        Debug.Log("Selected unit: " + selectedUnit);
         Destroy(b.gameObject);
 
     }
 
     void Update(){
-        if (Input.GetMouseButtonDown(0)){
-            Debug.Log("LMB pressed");
-            if(selectedUnit != null){
-
-                //selectedUnit.transform.SetParent(Grid); //WHAT DO HERE
-                //selectedUnit.transform.position = GridTile.CurrentlySelected.coordinates;
-
-                //Instantiate(selectedUnit, GridTile.CurrentlySelected.coordinates); //Using instantiate here will most likely create a new unit every time. We don't want this
-                Debug.Log("Place " + selectedUnit.unitName);
-                selectedUnit = null;
-            }
-        }
-
     }
 
 }
