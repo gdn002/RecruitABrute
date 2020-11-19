@@ -23,6 +23,20 @@ public class Unit : MonoBehaviour
         return UnitEntity.coordinates;
     }
 
+
+    // *** UNIT STATE ***
+
+    public void Activate()
+    {
+        UnitEntity.SetCollision(false);
+    }
+
+    public void Deactivate()
+    {
+        UnitEntity.SetCollision(true);
+    }
+
+
     // *** MONOBEHAVIOUR FUNCTIONS ***
 
     private void Awake()
