@@ -104,9 +104,6 @@ public class Grid : MonoBehaviour
     public List<Vector2Int> GetReachableTiles()
     {
         return movementCalculator.GetReachableTiles();
-        //List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
-        //reachableTiles.Add(coordinates);
-        //return reachableTiles;
     }
     
     // ** Grid Tile Functions **
