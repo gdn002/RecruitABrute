@@ -171,6 +171,35 @@ public class Grid : MonoBehaviour
         return null;
     }
 
+    public Unit GetUnit(Vector2Int coordinates)
+    {
+        // Limit search to entities with collision only
+        // Non-collision entities will be used only as eye-candy, therefore shouldn't be relevant
+        if (GetCollision(coordinates))
+        {
+            foreach (var entity in entityList)
+            {
+                if (entity.hasCollision && entity.coordinates == coordinates)
+                    return entity.GetComponent<Unit>();
+            }
+        }
+
+        return null;
+    }
+
+    public List<Unit> GetAllUnits()
+    {
+        List<Unit> allUnits = new List<Unit>();
+        foreach (var entity in entityList)
+        {
+            Unit unit = entity.GetComponent<Unit>();
+            if (unit != null)
+                allUnits.Add(unit);
+        }
+
+        return allUnits;
+    }
+
 
     // *** INITIALIZATION FUNCTIONS ***
     private void InitializeEntities()
