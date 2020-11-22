@@ -137,15 +137,15 @@ public class Grid : MonoBehaviour
         gridTileArray[index.x, index.y].SetHighlight(type);
     }
 
-    public void HighlightMovementTiles(Unit unit)
+    public void HighlightTiles(List<Vector2Int> tiles, GridTile.TileHighlights type)
     {
-        foreach (Vector2Int reachableTile in GetReachableTiles())
+        foreach (Vector2Int tile in tiles)
         {
-            HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
+            HighlightTile(tile, type);
         }
     }
     
-    public void ClearHighlight()
+    public void ClearAllHighlights()
     {
         foreach (GridTile gridTile in gridTileArray)
         {
@@ -198,6 +198,16 @@ public class Grid : MonoBehaviour
         }
 
         return allUnits;
+    }
+
+    public void AddEntity(Entity entity)
+    {
+        entityList.Add(entity);
+    }
+
+    public bool RemoveEntity(Entity entity)
+    {
+        return entityList.Remove(entity);
     }
 
 

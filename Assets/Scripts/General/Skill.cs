@@ -6,6 +6,8 @@ using System;
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Custom/Skill")]
 public class Skill : ScriptableObject
 {
+    public static readonly Skill DEFAULT_SKILL = new Skill();
+
     public enum TargetType
     {
         Self = 0,
@@ -38,6 +40,8 @@ public class Skill : ScriptableObject
         Heal,
     }
 
+    public string skillName = "Default Skill";
+
     public TargetType targetType            = TargetType.Unit;
     public ZoneType effectZone              = ZoneType.Point;
     public AffectedUnitType affectedUnits   = AffectedUnitType.Enemy;
@@ -47,9 +51,12 @@ public class Skill : ScriptableObject
     public int range = 1;
     public int radius = 1;
 
+
     // Returns all tiles that can be targeted by this skill while the casting unit is located at the given coordinates
-    public List<Vector2Int> GetValidTargets(Vector2Int coordinates)
+    public List<Vector2Int> GetValidTargets(Unit caster)
     {
+        Vector2Int coordinates = caster.GetCoordinates();
+
         List<Vector2Int> validTargets = new List<Vector2Int>();
         switch (targetType)
         {
@@ -60,7 +67,7 @@ public class Skill : ScriptableObject
             case TargetType.Unit: // All valid units in range can be targeted
                 foreach (var unit in GetAllUnitsInRange(coordinates))
                 {
-                    if (IsAffected(unit))
+                    if (IsAffected(caster, unit))
                         validTargets.Add(unit.GetCoordinates());
                 }
                 break;
@@ -104,7 +111,7 @@ public class Skill : ScriptableObject
     }
 
     // Returns all units that will be affected by this skill when targeting the given coordinates
-    public List<Unit> GetAffectedUnits(Vector2Int target)
+    public List<Unit> GetAffectedUnits(Unit caster, Vector2Int target)
     {
         List<Vector2Int> affectedTiles = GetAffectedTiles(target);
         List<Unit> affectedUnits = new List<Unit>();
@@ -112,18 +119,31 @@ public class Skill : ScriptableObject
         foreach (var tile in affectedTiles)
         {
             Unit unit = Grid.ActiveGrid.GetUnit(tile);
-            if (IsAffected(unit))
+            if (IsAffected(caster, unit))
                 affectedUnits.Add(unit);
         }
 
         return affectedUnits;
     }
 
+    // Executes the effects of this skill, targeting the given coordinates
+    public void ActivateSkill(Unit caster, Vector2Int target)
+    {
+        List<Unit> affectedUnits = GetAffectedUnits(caster, target);
+        foreach (var unit in affectedUnits)
+        {
+            EffectOnUnit(unit);
+        }
+    }
+
     // Check if this type of unit is affected by this skill
-    public bool IsAffected(Unit unit)
+    public bool IsAffected(Unit caster, Unit unit)
     {
         if (unit == null)
             return false;
+
+        if (caster == unit)
+            return IsAffected(AffectedUnitType.Self);
 
         // TODO: Verify if target is valid
         return true;
@@ -132,7 +152,16 @@ public class Skill : ScriptableObject
     // Commits the effects of this skill on an unit. (Does not verify if the Unit is a valid target, use GetAffectedUnits for that)
     public void EffectOnUnit(Unit unit)
     {
+        switch (effectOnTargets)
+        {
+            case EffectType.Damage:
+                unit.ModifyHealth(-power);
+                break;
 
+            case EffectType.Heal:
+                unit.ModifyHealth(power);
+                break;
+        }
     }
 
 
@@ -194,5 +223,10 @@ public class Skill : ScriptableObject
         }
 
         return tilesInRadius;
+    }
+
+    private bool IsAffected(AffectedUnitType type)
+    {
+        return (affectedUnits & type) != 0;
     }
 }

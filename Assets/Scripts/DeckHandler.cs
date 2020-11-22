@@ -13,7 +13,6 @@ public class DeckHandler : MonoBehaviour
     public GameObject unitbutton;
     public RectTransform placementpanel;
     public Unit selectedUnit = null;
-    public GameObject Grid;
     
     void Awake(){
 
@@ -67,9 +66,9 @@ public class DeckHandler : MonoBehaviour
 
     public void PlacementButtonOnClick(Unit u, Button b){
         selectedUnit = u;
+        Grid.ActiveGrid.AddEntity(selectedUnit.UnitEntity);
         Debug.Log("Selected unit: " + selectedUnit);
         Destroy(b.gameObject);
-
     }
 
     void Update(){
