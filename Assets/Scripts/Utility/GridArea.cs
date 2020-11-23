@@ -30,7 +30,7 @@ public class GridArea
         pivot = new Vector2Int(kernel.GetLength(0) / 2, kernel.GetLength(1) / 2);
     }
 
-    public List<Vector2Int> GetPlacement(Grid grid, Vector2Int center)
+    public List<Vector2Int> GetPlacement(Vector2Int center)
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
 
@@ -42,7 +42,7 @@ public class GridArea
                 if (kernel[x, y] == 0) continue;
 
                 Vector2Int tile = origin + new Vector2Int(x, y);
-                if (grid.IsInBounds(tile))
+                if (Grid.ActiveGrid.IsInBounds(tile))
                     tiles.Add(tile);
             }
         }

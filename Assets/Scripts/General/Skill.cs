@@ -6,8 +6,6 @@ using System;
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Custom/Skill")]
 public class Skill : ScriptableObject
 {
-    public static readonly Skill DEFAULT_SKILL = new Skill();
-
     public enum TargetType
     {
         Self = 0,
@@ -145,8 +143,12 @@ public class Skill : ScriptableObject
         if (caster == unit)
             return IsAffected(AffectedUnitType.Self);
 
-        // TODO: Verify if target is valid
-        return true;
+        if (caster.enemy == unit.enemy)
+            return IsAffected(AffectedUnitType.Friendly);
+
+        return IsAffected(AffectedUnitType.Enemy);
+
+        // TODO: Check for targetable props in the future
     }
 
     // Commits the effects of this skill on an unit. (Does not verify if the Unit is a valid target, use GetAffectedUnits for that)

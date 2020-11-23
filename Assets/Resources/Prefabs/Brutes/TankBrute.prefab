@@ -143,13 +143,13 @@ MonoBehaviour:
   health: 100
   maxHealth: 100
   movementRange: 2
-  attackRange: 1
-  damage: 20
   initiative: 6
   unitName: Tank Brute
   UnitEntity: {fileID: 0}
   enemy: 0
   unitStatsText: {fileID: 0}
+  baseAttack: {fileID: 11400000, guid: 8ac8dd7f5f124b54bbdabcfd77d7a192, type: 2}
+  abilities: []
 --- !u!65 &-1848076686925249854
 BoxCollider:
   m_ObjectHideFlags: 0

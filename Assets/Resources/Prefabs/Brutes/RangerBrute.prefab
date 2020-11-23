@@ -143,13 +143,13 @@ MonoBehaviour:
   health: 60
   maxHealth: 60
   movementRange: 4
-  attackRange: 6
-  damage: 25
   initiative: 8
   unitName: Ranger Brute
   UnitEntity: {fileID: 0}
-  enemy: 1
+  enemy: 0
   unitStatsText: {fileID: 0}
+  baseAttack: {fileID: 11400000, guid: d3364b565d6d3b14bbe63de53cc35dd9, type: 2}
+  abilities: []
 --- !u!65 &-1803234485993308033
 BoxCollider:
   m_ObjectHideFlags: 0
