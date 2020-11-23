@@ -15,6 +15,12 @@ public class TurnTracker : MonoBehaviour
         Reward = 2,
     }
 
+    public enum InputMode
+    {
+        Movement = 0,
+        Target,
+    }
+
     // Keep track of turns and rounds
     public int TurnCounter { get; private set; }
     public int RoundCounter { get; private set; }
@@ -24,12 +30,16 @@ public class TurnTracker : MonoBehaviour
     // Keep track of initiative
     public List<Unit> InitiativeOrder { get; private set; }
 
+    // Keep track of input
+    private InputMode inputMode = InputMode.Movement;
+
     public Unit ActiveUnit
     {
         get { return InitiativeOrder[TurnCounter]; }
     }
 
     public Vector2Int ActiveUnitStartCoordinates;
+    private GridTile lastSelected;
 
     public void AddToInitiative(Unit unit)
     {
@@ -119,10 +129,7 @@ public class TurnTracker : MonoBehaviour
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
-        Grid.ActiveGrid.CalculateMovement(ActiveUnitStartCoordinates, ActiveUnit.movementRange);
-        Grid.ActiveGrid.UpdateHighlighting();
-
-        Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
+        SetInputMode(InputMode.Movement);
     }
 
     private void OnEnterCombatPhase()
@@ -131,6 +138,115 @@ public class TurnTracker : MonoBehaviour
 
         OnTurnStart();
     }
+
+
+    // *** HIGHLIGHT MODES ***
+
+    // Highlights all units according to their allegiance to the currently active unit
+    private void SetUnitHighlight()
+    {
+        List<Unit> units = Grid.ActiveGrid.GetAllUnits();
+
+        foreach (var unit in units)
+        {
+            if (unit == ActiveUnit) continue;
+            Grid.ActiveGrid.HighlightTile(unit.GetCoordinates(), unit.enemy ? GridTile.TileHighlights.Foe : GridTile.TileHighlights.Friend);
+        }
+        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.ActiveUnit);
+    }
+
+    // Highlights the tiles the currently active unit can move to
+    private void SetMovementHighlight()
+    {
+        Grid.ActiveGrid.CalculateMovement(ActiveUnitStartCoordinates, ActiveUnit.movementRange);
+        Grid.ActiveGrid.HighlightTiles(Grid.ActiveGrid.GetReachableTiles(), GridTile.TileHighlights.Movement);
+    }
+
+    // Highlights the tiles the currently active unit can target (currently only works for the base attack)
+    private void SetTargetHighlight()
+    {
+        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.ActiveUnit);
+        Grid.ActiveGrid.HighlightTiles(ActiveUnit.baseAttack.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+    }
+
+
+    // *** INPUT MODES ***
+
+    public void SetInputMode(InputMode mode)
+    {
+        inputMode = mode;
+
+        Grid.ActiveGrid.ClearAllHighlights();
+        Grid.ActiveGrid.HidePathLine();
+        switch (inputMode)
+        {
+            case InputMode.Movement:
+                SetMovementHighlight();
+                SetUnitHighlight();
+                break;
+
+            case InputMode.Target:
+                SetUnitHighlight();
+                SetTargetHighlight();
+                break;
+        }
+    }
+
+    private void HandleMovementInput()
+    {
+        GridTile selection = GridTile.CurrentlySelected;
+        if (lastSelected != selection)
+        {
+            // Update pathline
+            if (selection == null)
+            {
+                Grid.ActiveGrid.HidePathLine();
+            }
+            else
+            {
+                Grid.ActiveGrid.RenderPathLine(selection.Coordinates);
+            }
+
+            lastSelected = selection;
+        }
+        else if (selection == null)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Move unit to selected tile if it is reachable
+            if (selection.GetHighlight() == GridTile.TileHighlights.Movement ||
+                selection.GetHighlight() == GridTile.TileHighlights.ActiveUnit)
+            {
+                // Check if mid-animation
+                if (!ActiveUnit.UnitEntity.IsMoving)
+                {
+                    ActiveUnit.UnitEntity.StartMoveAnimation(selection.Coordinates);
+                }
+            }
+        }
+      
+    }
+
+    private void HandleTargetInput()
+    {
+        GridTile selection = GridTile.CurrentlySelected;
+        if (selection == null) return;
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Use skill on selected target if it is valid
+            if (selection.GetHighlight() == GridTile.TileHighlights.AoE)
+            {
+                ActiveUnit.baseAttack.ActivateSkill(ActiveUnit, selection.Coordinates);
+                NextTurn();
+            }
+        }
+    }
+
 
     void Awake()
     {
@@ -154,7 +270,7 @@ public class TurnTracker : MonoBehaviour
 
     void Start()
     {
-        Grid.ActiveGrid.UpdateHighlighting();
+        SetUnitHighlight();
     }
 
     void Update()
@@ -163,6 +279,29 @@ public class TurnTracker : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             NextTurn();
+        }
+
+        // This is only for testing while we don't have the scripts/interface to select/deselect skills
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            if (inputMode == InputMode.Movement)
+                SetInputMode(InputMode.Target);
+            else
+                SetInputMode(InputMode.Movement);
+        }
+
+        if (CurrentPhase == GamePhase.Combat)
+        {
+            switch (inputMode)
+            {
+                case InputMode.Movement:
+                    HandleMovementInput();
+                    break;
+
+                case InputMode.Target:
+                    HandleTargetInput();
+                    break;
+            }
         }
     }
 

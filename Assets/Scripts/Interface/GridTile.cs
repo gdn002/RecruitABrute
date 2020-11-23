@@ -47,6 +47,11 @@ public class GridTile : MonoBehaviour
         }
     }
 
+    public TileHighlights GetHighlight()
+    {
+        return currentHighlight;
+    }
+
     public void UpdateHighlight()
     {
         renderer.material.color = GetHighlightColor();
@@ -79,10 +84,7 @@ public class GridTile : MonoBehaviour
     {
         isSelected = true;
         CurrentlySelected = this;
-        UpdateHighlight();
-
-        if (TurnTracker.ActiveTracker.CurrentPhase == TurnTracker.GamePhase.Combat)
-            Grid.ActiveGrid.RenderPathLine(Coordinates);
+        UpdateHighlight();    
     }
 
     void OnMouseExit()
@@ -90,7 +92,6 @@ public class GridTile : MonoBehaviour
         isSelected = false;
         CurrentlySelected = null;
         UpdateHighlight();
-        Grid.ActiveGrid.HidePathLine();
     }
 
     void OnMouseDown()
@@ -108,17 +109,11 @@ public class GridTile : MonoBehaviour
                     Grid.ActiveGrid.AddEntity(u.UnitEntity);
                     TurnTracker.ActiveTracker.AddToInitiative(u);
                     TurnTracker.ActiveTracker.PlaceUnit();
-                    Grid.ActiveGrid.UpdateHighlighting();
+                    Grid.ActiveGrid.HighlightTile(Coordinates, TileHighlights.Friend);
                 }
                 break;
 
             case TurnTracker.GamePhase.Combat:
-                // Move unit to this tile if it is reachable
-                Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-                if (Grid.ActiveGrid.GetReachableTiles().Contains(Coordinates) && !unit.UnitEntity.IsMoving)
-                {
-                    unit.UnitEntity.StartMoveAnimation(Coordinates);
-                }
                 break;
 
             case TurnTracker.GamePhase.Reward:

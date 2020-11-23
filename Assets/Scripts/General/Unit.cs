@@ -8,16 +8,25 @@ public class Unit : MonoBehaviour
     public int health;
     public int maxHealth;
     public int movementRange;
-    public int attackRange;
-    public int damage;
     public int initiative;
     public string unitName;
     public Entity UnitEntity;
     public bool enemy;
 
-    public UnitStatsText unitStatsText;
-    //Add way to handle spells
 
+    // These stats are derived from the unit's base attack Skill
+    public int AttackRange { get { return baseAttack.range; } }
+    public int AttackDamage { get { return baseAttack.power; } }
+
+    public UnitStatsText unitStatsText;
+
+    // Basic attack
+    public Skill baseAttack;
+
+    // Special abilities
+    public Skill[] abilities;
+
+    private bool isActiveUnit = false;
     private List<Renderer> localRenderers;
 
     // *** UTILITY FUNCTIONS ***
@@ -39,6 +48,7 @@ public class Unit : MonoBehaviour
     public void Remove()
     {
         TurnTracker.ActiveTracker.RemoveFromInitiative(this);
+        Grid.ActiveGrid.RemoveEntity(UnitEntity);
         UnitEntity.SetCollision(false);
         Grid.ActiveGrid.RemoveEntity(UnitEntity);
         Destroy(gameObject);
@@ -49,11 +59,13 @@ public class Unit : MonoBehaviour
     public void Activate()
     {
         UnitEntity.SetCollision(false);
+        isActiveUnit = true;
     }
 
     public void Deactivate()
     {
         UnitEntity.SetCollision(true);
+        isActiveUnit = false;
     }
 
     private void Highlight(bool highlight)
@@ -78,6 +90,12 @@ public class Unit : MonoBehaviour
     {
         localRenderers = new List<Renderer>();
         localRenderers.AddRange(GetComponentsInChildren<Renderer>());
+
+        if (baseAttack == null)
+        {
+            Debug.LogWarning("Unit " + unitName + " has no set base attack skill. Loading default skill...");
+            baseAttack = ScriptableObject.CreateInstance<Skill>();
+        }
     }
 
     // Update is called once per frame
@@ -101,12 +119,6 @@ public class Unit : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Unit attacker = TurnTracker.ActiveTracker.ActiveUnit;
-        if (Grid.ActiveGrid.AttackDistance(attacker, this) <= attacker.attackRange && attacker != this
-        && attacker.enemy != enemy)
-        {
-            ModifyHealth(-attacker.damage);
-            TurnTracker.ActiveTracker.NextTurn();
-        }
+
     }
 }

@@ -30,16 +30,6 @@ public class Grid : MonoBehaviour
     private static LineRenderer movementLine;
 
     // *** UTILITY FUNCTIONS ***
-
-    public void AddEntity(Entity entity)
-    {
-        entityList.Add(entity);
-    }
-    
-    public void RemoveEntity(Entity entity)
-    {
-        entityList.Remove(entity);
-    }
     
     // ** Coordinate Functions **
 
@@ -147,52 +137,21 @@ public class Grid : MonoBehaviour
     }
 
     // ** Grid Tile Functions **
-
-    public void UpdateHighlighting()
-    {
-        ClearHighlight();
-        HighlightMovementTiles();
-        HighlightEnemyStatusTiles();
-        HighlightActiveUnitTile();
-    }
     
-    private void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
+    public void HighlightTile(Vector2Int index, GridTile.TileHighlights type)
     {
         gridTileArray[index.x, index.y].SetHighlight(type);
     }
 
-    private void HighlightMovementTiles()
+    public void HighlightTiles(List<Vector2Int> tiles, GridTile.TileHighlights type)
     {
-        foreach (Vector2Int reachableTile in GetReachableTiles())
+        foreach (Vector2Int tile in tiles)
         {
-            HighlightTile(reachableTile, GridTile.TileHighlights.Movement);
-        }
-    }
-
-    private void HighlightActiveUnitTile()
-    {
-        if (TurnTracker.ActiveTracker.CurrentPhase == TurnTracker.GamePhase.Combat)
-        {
-            Unit unit = TurnTracker.ActiveTracker.ActiveUnit;
-            HighlightTile(unit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
-        }
-    }
-
-    private void HighlightEnemyStatusTiles()
-    {
-        foreach (Entity unitGameObject in entityList)
-        {
-            Unit unit = unitGameObject.GetComponent<Unit>();
-            if (unit != null)
-            {
-                GridTile.TileHighlights tileHighlight =
-                    unit.enemy ? GridTile.TileHighlights.Foe : GridTile.TileHighlights.Friend;
-                HighlightTile(unit.GetCoordinates(), tileHighlight);
-            }
+            HighlightTile(tile, type);
         }
     }
     
-    public void ClearHighlight()
+    public void ClearAllHighlights()
     {
         foreach (GridTile gridTile in gridTileArray)
         {
@@ -216,6 +175,45 @@ public class Grid : MonoBehaviour
         }
 
         return null;
+    }
+
+    public Unit GetUnit(Vector2Int coordinates)
+    {
+        // Limit search to entities with collision only
+        // Non-collision entities will be used only as eye-candy, therefore shouldn't be relevant
+        if (GetCollision(coordinates))
+        {
+            foreach (var entity in entityList)
+            {
+                if (entity.hasCollision && entity.coordinates == coordinates)
+                    return entity.GetComponent<Unit>();
+            }
+        }
+
+        return null;
+    }
+
+    public List<Unit> GetAllUnits()
+    {
+        List<Unit> allUnits = new List<Unit>();
+        foreach (var entity in entityList)
+        {
+            Unit unit = entity.GetComponent<Unit>();
+            if (unit != null)
+                allUnits.Add(unit);
+        }
+
+        return allUnits;
+    }
+
+    public void AddEntity(Entity entity)
+    {
+        entityList.Add(entity);
+    }
+
+    public bool RemoveEntity(Entity entity)
+    {
+        return entityList.Remove(entity);
     }
 
 
