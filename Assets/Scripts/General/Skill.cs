@@ -157,11 +157,11 @@ public class Skill : ScriptableObject
         switch (effectOnTargets)
         {
             case EffectType.Damage:
-                unit.ModifyHealth(-power);
+                unit.ReceiveDamage(-power);
                 break;
 
             case EffectType.Heal:
-                unit.ModifyHealth(power);
+                unit.ReceiveDamage(power);
                 break;
         }
     }

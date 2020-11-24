@@ -14,7 +14,7 @@ public class UnitStatsText : MonoBehaviour
         unitText.text = unit.unitName + "\n" +
                         "Movement range: " + unit.movementRange + "\n" +
                         "Attack range: " + unit.AttackRange + "\n" +
-                        "Health: " + unit.health + " / " + unit.maxHealth + "\n" +
+                        "Health: " + unit.currentHealth + " / " + unit.maxHealth + "\n" +
                         "Damage: " + unit.AttackDamage + "\n" +
                         "Initiative: " + unit.initiative + "\n";
     }

@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public int health;
     public int maxHealth;
+    public int currentHealth;
     public int movementRange;
     public int initiative;
     public string unitName;
     public Entity UnitEntity;
     public bool enemy;
 
+    public HealthBar healthBar;
 
     // These stats are derived from the unit's base attack Skill
     public int AttackRange { get { return baseAttack.range; } }
@@ -36,10 +37,11 @@ public class Unit : MonoBehaviour
     }
 
 
-    public void ModifyHealth(int delta)
+    public void ReceiveDamage(int damage)
     {
-        health += delta;
-        if (health <= 0)
+        currentHealth += damage;
+        
+        if (currentHealth <= 0)
         {
             Remove();
         }
@@ -90,6 +92,7 @@ public class Unit : MonoBehaviour
     {
         localRenderers = new List<Renderer>();
         localRenderers.AddRange(GetComponentsInChildren<Renderer>());
+        currentHealth = maxHealth;
 
         if (baseAttack == null)
         {
@@ -101,7 +104,11 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Just for test, for now.
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ReceiveDamage(20);
+        }
     }
 
     // *** MOUSE EVENTS ***
@@ -109,6 +116,7 @@ public class Unit : MonoBehaviour
     {
         UnitStatsText.ActiveUnitStatsText.UpdateText(this);
         Highlight(true);
+
     }
 
     private void OnMouseExit()
