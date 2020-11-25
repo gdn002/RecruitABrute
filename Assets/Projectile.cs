@@ -5,24 +5,19 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed = 4;
-    public Transform target;
-    // Start is called before the first frame update
-    void Start()
-    {
-        SetTarget(target); 
-    }
+    public Vector3 target;
 
-    public void SetTarget(Transform t){ //SET TARGET HERE
-        target = t;
+    public void SetTarget(Vector2Int t){ //SET TARGET HERE
+        target = Grid.ActiveGrid.GridToWorld(t);
     }
 
     // Update is called once per frame
     void Update()
     {
         float step = speed * Time.deltaTime;
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, target.position, step);
+        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, target, step);
 
-        if(gameObject.transform.position == target.position){
+        if(gameObject.transform.position == target){
             Destroy(gameObject);
             }
     

@@ -49,6 +49,8 @@ public class Skill : ScriptableObject
     public int range = 1;
     public int radius = 1;
 
+    public Projectile projectile;
+
 
     // Returns all tiles that can be targeted by this skill while the casting unit is located at the given coordinates
     public List<Vector2Int> GetValidTargets(Unit caster)
@@ -134,7 +136,11 @@ public class Skill : ScriptableObject
     public void ActivateSkill(Unit caster, Vector2Int target)
     {
         Animation(caster);
-        //Instantiate(projectile, caster.transform.position, Quaternion.identity); INSTANTIATE PROJECTILE HERE
+        if(projectile != null){
+            GameObject p = Instantiate(projectile.gameObject, caster.transform.position, Quaternion.identity);
+            p.GetComponent<Projectile>().SetTarget(target);
+        }
+        
 
         List<Unit> affectedUnits = GetAffectedUnits(caster, target);
         foreach (var unit in affectedUnits)
