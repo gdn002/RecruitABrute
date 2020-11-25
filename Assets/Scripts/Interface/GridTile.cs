@@ -80,21 +80,21 @@ public class GridTile : MonoBehaviour
 
 
     // *** MOUSE EVENTS ***
-    void OnMouseOver()
+    public void OnMouseOver()
     {
         isSelected = true;
         CurrentlySelected = this;
         UpdateHighlight();    
     }
 
-    void OnMouseExit()
+    public void OnMouseExit()
     {
         isSelected = false;
         CurrentlySelected = null;
         UpdateHighlight();
     }
 
-    void OnMouseDown()
+    public void OnMouseDown()
     {
         switch(TurnTracker.ActiveTracker.CurrentPhase)
         {

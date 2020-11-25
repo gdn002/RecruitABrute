@@ -307,6 +307,21 @@ public class Grid : MonoBehaviour
         }
     }
 
+    public void MouseDownGridTile(Vector2Int coordinates)
+    {
+        gridTileArray[coordinates.x, coordinates.y].OnMouseDown();
+    }
+    
+    public void MouseOverGridTile(Vector2Int coordinates)
+    {
+        gridTileArray[coordinates.x, coordinates.y].OnMouseOver();
+    }
+    
+    public void MouseExitGridTile(Vector2Int coordinates)
+    {
+        gridTileArray[coordinates.x, coordinates.y].OnMouseExit();
+    }
+    
 #if UNITY_EDITOR
     // *** DEBUG FUNCTIONS ***
 
