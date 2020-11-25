@@ -147,18 +147,26 @@ public class TurnTracker : MonoBehaviour
     {
         UpdatePathLine();
         Grid.ActiveGrid.ClearAllHighlights();
-        
-        switch (inputMode)
+
+        if (CurrentPhase == GamePhase.Combat)
         {
-            case InputMode.Movement:
-                SetMovementHighlight();
-                break;
-            
-            case InputMode.Target:
-                SetTargetHighlight();
-                break;
+            switch (inputMode)
+            {
+                case InputMode.Movement:
+                    SetMovementHighlight();
+                    SetUnitHighlight();
+                    break;
+
+                case InputMode.Target:
+                    SetUnitHighlight();
+                    SetTargetHighlight();
+                    break;
+            }
         }
-        SetUnitHighlight();
+        else
+        {
+            SetUnitHighlight();
+        }
     }
 
     public void UpdatePathLine()
@@ -180,10 +188,14 @@ public class TurnTracker : MonoBehaviour
 
         foreach (var unit in units)
         {
-            if (unit == ActiveUnit) continue;
+            if (unit == ActiveUnit && CurrentPhase == GamePhase.Combat) continue;
             Grid.ActiveGrid.HighlightTile(unit.GetCoordinates(), unit.enemy ? GridTile.TileHighlights.Foe : GridTile.TileHighlights.Friend);
         }
-        Grid.ActiveGrid.HighlightTile(ActiveUnit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
+
+        if (CurrentPhase == GamePhase.Combat)
+        {
+            Grid.ActiveGrid.HighlightTile(ActiveUnit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
+        }
     }
 
     // Highlights the tiles the currently active unit can move to
@@ -294,7 +306,7 @@ public class TurnTracker : MonoBehaviour
 
     void Start()
     {
-        SetUnitHighlight();
+        UpdateHighlight();
     }
 
     void Update()
