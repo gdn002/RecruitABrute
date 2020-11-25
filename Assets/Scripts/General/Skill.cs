@@ -124,9 +124,18 @@ public class Skill : ScriptableObject
         return affectedUnits;
     }
 
+    // Plays attack animation of casting unit
+    public void Animation(Unit caster){
+        Animator anim = caster.GetComponent<Animator>();
+        anim.Play("AttackAnimationTest",0,0.25f);
+    }
+
     // Executes the effects of this skill, targeting the given coordinates
     public void ActivateSkill(Unit caster, Vector2Int target)
     {
+        Animation(caster);
+        //Instantiate(projectile, caster.transform.position, Quaternion.identity); INSTANTIATE PROJECTILE HERE
+
         List<Unit> affectedUnits = GetAffectedUnits(caster, target);
         foreach (var unit in affectedUnits)
         {
