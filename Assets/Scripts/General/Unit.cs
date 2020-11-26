@@ -109,16 +109,18 @@ public class Unit : MonoBehaviour
     {
         UnitStatsText.ActiveUnitStatsText.UpdateText(this);
         Highlight(true);
+        Grid.ActiveGrid.MouseOverGridTile(GetCoordinates());
     }
 
     private void OnMouseExit()
     {
         UnitStatsText.ActiveUnitStatsText.ClearText();
         Highlight(false);
+        Grid.ActiveGrid.MouseExitGridTile(GetCoordinates());
     }
 
     private void OnMouseDown()
     {
-
+        Grid.ActiveGrid.MouseDownGridTile(GetCoordinates());
     }
 }

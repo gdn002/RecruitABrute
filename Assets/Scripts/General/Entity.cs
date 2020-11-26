@@ -38,6 +38,7 @@ public class Entity : MonoBehaviour
     IEnumerator AnimateMove()
     {
         IsMoving = true;
+        TurnTracker.ActiveTracker.UpdateHighlight();
         double moveAnimationSeconds = BASE_MOVE_ANIMATION_SECONDS * Math.Log(movementPath.Count);
         double elapsedTime = 0.0f;
         while (elapsedTime < moveAnimationSeconds)
@@ -53,9 +54,11 @@ public class Entity : MonoBehaviour
             UpdatePosition(interpolatedCoordinates);
             yield return null;
             elapsedTime += Time.deltaTime;
-            Debug.Log(elapsedTime);
         }
         Move(newCoordinates);
+        TurnTracker.ActiveTracker.UpdateHighlight();
+        TurnTracker.ActiveTracker.UpdatePathLine();
+        TurnTracker.ActiveTracker.ResetLastSelected();
         IsMoving = false;
     }
 

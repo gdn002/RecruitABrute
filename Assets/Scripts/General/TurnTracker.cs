@@ -142,6 +142,45 @@ public class TurnTracker : MonoBehaviour
 
     // *** HIGHLIGHT MODES ***
 
+    // Updates all highlights
+    public void UpdateHighlight()
+    {
+        UpdatePathLine();
+        Grid.ActiveGrid.ClearAllHighlights();
+
+        if (CurrentPhase == GamePhase.Combat)
+        {
+            switch (inputMode)
+            {
+                case InputMode.Movement:
+                    SetMovementHighlight();
+                    SetUnitHighlight();
+                    break;
+
+                case InputMode.Target:
+                    SetUnitHighlight();
+                    SetTargetHighlight();
+                    break;
+            }
+        }
+        else
+        {
+            SetUnitHighlight();
+        }
+    }
+
+    public void UpdatePathLine()
+    {
+        if (GridTile.CurrentlySelected == null || inputMode != InputMode.Movement)
+        {
+            Grid.ActiveGrid.HidePathLine();
+        }
+        else
+        {
+            Grid.ActiveGrid.RenderPathLine(GridTile.CurrentlySelected.Coordinates);
+        }
+    }
+    
     // Highlights all units according to their allegiance to the currently active unit
     private void SetUnitHighlight()
     {
@@ -149,10 +188,14 @@ public class TurnTracker : MonoBehaviour
 
         foreach (var unit in units)
         {
-            if (unit == ActiveUnit) continue;
+            if (unit == ActiveUnit && CurrentPhase == GamePhase.Combat) continue;
             Grid.ActiveGrid.HighlightTile(unit.GetCoordinates(), unit.enemy ? GridTile.TileHighlights.Foe : GridTile.TileHighlights.Friend);
         }
-        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.ActiveUnit);
+
+        if (CurrentPhase == GamePhase.Combat)
+        {
+            Grid.ActiveGrid.HighlightTile(ActiveUnit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
+        }
     }
 
     // Highlights the tiles the currently active unit can move to
@@ -165,31 +208,15 @@ public class TurnTracker : MonoBehaviour
     // Highlights the tiles the currently active unit can target (currently only works for the base attack)
     private void SetTargetHighlight()
     {
-        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.ActiveUnit);
         Grid.ActiveGrid.HighlightTiles(ActiveUnit.baseAttack.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
     }
-
 
     // *** INPUT MODES ***
 
     public void SetInputMode(InputMode mode)
     {
         inputMode = mode;
-
-        Grid.ActiveGrid.ClearAllHighlights();
-        Grid.ActiveGrid.HidePathLine();
-        switch (inputMode)
-        {
-            case InputMode.Movement:
-                SetMovementHighlight();
-                SetUnitHighlight();
-                break;
-
-            case InputMode.Target:
-                SetUnitHighlight();
-                SetTargetHighlight();
-                break;
-        }
+        UpdateHighlight();
     }
 
     private void HandleMovementInput()
@@ -198,13 +225,9 @@ public class TurnTracker : MonoBehaviour
         if (lastSelected != selection)
         {
             // Update pathline
-            if (selection == null)
+            if (!IsMoving())
             {
-                Grid.ActiveGrid.HidePathLine();
-            }
-            else
-            {
-                Grid.ActiveGrid.RenderPathLine(selection.Coordinates);
+                UpdatePathLine();
             }
 
             lastSelected = selection;
@@ -246,7 +269,20 @@ public class TurnTracker : MonoBehaviour
             }
         }
     }
+    
+    // *** UTILITY FUNCTIONS ***
+    
+    public void ResetLastSelected()
+    {
+        lastSelected = null;
+    }
 
+    public bool IsMoving()
+    {
+        return ActiveUnit.UnitEntity.IsMoving;
+    }
+    
+    // *** MONOBEHAVIOUR FUNCTIONS ***
 
     void Awake()
     {
@@ -270,7 +306,7 @@ public class TurnTracker : MonoBehaviour
 
     void Start()
     {
-        SetUnitHighlight();
+        UpdateHighlight();
     }
 
     void Update()
