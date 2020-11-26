@@ -6,26 +6,12 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public Slider slider;
+    public SpriteRenderer fill;
     public Gradient gradient;
-    public Image filling;
-
-    public void SetMaximumHealth(int health)
-    {
-        slider.maxValue = health;
-        slider.value = health;
-        filling.color = gradient.Evaluate(1f);
-    }
-
-    public void SetHealth(int health)
-    {
-        slider.value = health;
-        filling.color = gradient.Evaluate(slider.normalizedValue);
-
-    }
+    public Unit attachedUnit;
 
 
-void Start()
+    void Start()
     {
         
     }
@@ -33,7 +19,11 @@ void Start()
     // Update is called once per frame
     void Update()
     {
-        
+        float iLerp = Mathf.InverseLerp(0, attachedUnit.maxHealth, attachedUnit.currentHealth);
+        fill.transform.localScale = new Vector3(iLerp, 1, 1);
+        fill.color = gradient.Evaluate(iLerp);
+
+        transform.forward = Camera.main.transform.forward;
     }
 
 }

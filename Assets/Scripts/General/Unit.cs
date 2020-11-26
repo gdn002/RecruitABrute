@@ -90,9 +90,16 @@ public class Unit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Load renderers
         localRenderers = new List<Renderer>();
         localRenderers.AddRange(GetComponentsInChildren<Renderer>());
+
         currentHealth = maxHealth;
+
+        // Load Health Bar
+        GameObject newObj = Instantiate(Resources.Load<GameObject>("Prefabs/Interface/HealthBar"));
+        newObj.transform.SetParent(transform, false);
+        newObj.GetComponent<HealthBar>().attachedUnit = this;
 
         if (baseAttack == null)
         {
