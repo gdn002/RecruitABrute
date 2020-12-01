@@ -3,7 +3,6 @@ using System.Collections;
 
 public class DEBUG_MovementCalculatorTester : MonoBehaviour
 {
-    public Grid grid;
     public Vector2Int position = Vector2Int.zero;
     public int range = 2;
 
@@ -29,14 +28,14 @@ public class DEBUG_MovementCalculatorTester : MonoBehaviour
     {
         if (calculator == null)
         {
-            calculator = new MovementCalculator(grid);
+            calculator = new MovementCalculator();
             calculator.CalculateMovement(position, range);
             var tiles = calculator.GetReachableTiles();
 
-            grid.HighlightTile(position, GridTile.TileHighlights.Friend);
+            Grid.ActiveGrid.HighlightTile(position, GridTile.TileHighlights.Friend);
             foreach (var tile in tiles)
             {
-                grid.HighlightTile(tile, GridTile.TileHighlights.Movement);
+                Grid.ActiveGrid.HighlightTile(tile, GridTile.TileHighlights.Movement);
             }
         }
 
@@ -50,7 +49,7 @@ public class DEBUG_MovementCalculatorTester : MonoBehaviour
                 line.positionCount = path.Count;
                 for (int i = 0; i < path.Count; i++)
                 {
-                    line.SetPosition(i, grid.GridToWorld(path[i], 0.1f));
+                    line.SetPosition(i, Grid.ActiveGrid.GridToWorld(path[i], 0.1f));
                 }
             }
             else

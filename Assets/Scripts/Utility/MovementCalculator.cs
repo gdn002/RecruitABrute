@@ -4,19 +4,16 @@ using System.Collections.Generic;
 
 public class MovementCalculator
 {
-    private Grid grid;
-
-    private Vector2Int GridSize { get { return grid.gridSize; } }
-    private bool[,] CollisionArray { get { return grid.collisionArray; } }
+    private Vector2Int GridSize { get { return Grid.ActiveGrid.gridSize; } }
+    private bool[,] CollisionArray { get { return Grid.ActiveGrid.collisionArray; } }
 
     private Vector2Int startingPoint;
     private int[,] distanceArray;
     private Vector2Int[,] pathArray;
     private Queue<Vector2Int> pathQueue;
 
-    public MovementCalculator(Grid grid)
+    public MovementCalculator()
     {
-        this.grid = grid;
         distanceArray = new int[GridSize.x, GridSize.y];
         pathArray = new Vector2Int[GridSize.x, GridSize.y];
         pathQueue = new Queue<Vector2Int>();
@@ -73,7 +70,12 @@ public class MovementCalculator
         return path;
     }
 
-    private bool BreadthFirstSearch(int range)
+    public int GetDistance(Vector2Int to)
+    {
+        return distanceArray[to.x, to.y];
+    }
+
+    private void BreadthFirstSearch(int range)
     {
         Vector2Int current;
         while (pathQueue.Count > 0)
@@ -90,9 +92,6 @@ public class MovementCalculator
             Step(current, Vector2Int.left);
             Step(current, Vector2Int.right);
         }
-
-        // Path not found
-        return false;
     }
 
     private void Step(Vector2Int current, Vector2Int step)
@@ -100,7 +99,7 @@ public class MovementCalculator
         Vector2Int next = current + step;
 
         // Boundary check
-        if (!grid.IsInBounds(next)) return;
+        if (!Grid.ActiveGrid.IsInBounds(next)) return;
 
         // Collision check
         if (CollisionArray[next.x, next.y]) return;

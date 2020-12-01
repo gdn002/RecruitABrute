@@ -164,6 +164,21 @@ public class Skill : ScriptableObject
         }
     }
 
+    // Return the health loss/gain that will happen to an Unit if it is targeted
+    public int PreviewEffectOnUnit(Unit unit)
+    {
+        switch (effectOnTargets)
+        {
+            case EffectType.Damage:
+                return -Math.Min(unit.health, power);
+
+            case EffectType.Heal:
+                return Math.Min(unit.maxHealth - unit.health, power);
+        }
+
+        return 0;
+    }
+
 
     private List<Unit> GetAllUnitsInRange(Vector2Int coordinates)
     {
