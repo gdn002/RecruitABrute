@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class TurnTracker : MonoBehaviour
 {
+    private const int UNIT_CAP = 5;
+    
     // Global access to the currently active tracker; only one TurnTracker should be active at once.
     public static TurnTracker ActiveTracker { get; private set; }
 
@@ -23,6 +25,7 @@ public class TurnTracker : MonoBehaviour
     public int TurnCounter { get; private set; }
     public int RoundCounter { get; private set; }
     public GamePhase CurrentPhase {get; private set;}
+    public int UnitsPlaced { get; private set; }
 
     // Keep track of initiative
     public List<Unit> InitiativeOrder { get; private set; }
@@ -103,12 +106,22 @@ public class TurnTracker : MonoBehaviour
         OnTurnStart();
     }
 
-    
+    public void PlaceUnit()
+    {
+        if (CurrentPhase != GamePhase.Setup)
+            return;
+
+        UnitsPlaced++;
+
+        if (UnitsPlaced >= UNIT_CAP)
+        {
+            NextPhase();
+        }
+    }
 
     private void OnTurnEnd()
     {
         ActiveUnit.Deactivate();
-
     }
 
     private void OnTurnStart()
@@ -117,8 +130,6 @@ public class TurnTracker : MonoBehaviour
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
         SetInputMode(InputMode.Movement);
-
-        Debug.Log("Turn " + TurnCounter + ", Round " + RoundCounter + ", Active Unit: " + ActiveUnit.gameObject.name);
     }
 
     private void OnEnterCombatPhase()
@@ -131,39 +142,81 @@ public class TurnTracker : MonoBehaviour
 
     // *** HIGHLIGHT MODES ***
 
+    // Updates all highlights
+    public void UpdateHighlight()
+    {
+        UpdatePathLine();
+        Grid.ActiveGrid.ClearAllHighlights();
+
+        if (CurrentPhase == GamePhase.Combat)
+        {
+            switch (inputMode)
+            {
+                case InputMode.Movement:
+                    SetMovementHighlight();
+                    SetUnitHighlight();
+                    break;
+
+                case InputMode.Target:
+                    SetUnitHighlight();
+                    SetTargetHighlight();
+                    break;
+            }
+        }
+        else
+        {
+            SetUnitHighlight();
+        }
+    }
+
+    public void UpdatePathLine()
+    {
+        if (GridTile.CurrentlySelected == null || inputMode != InputMode.Movement)
+        {
+            Grid.ActiveGrid.HidePathLine();
+        }
+        else
+        {
+            Grid.ActiveGrid.RenderPathLine(GridTile.CurrentlySelected.Coordinates);
+        }
+    }
+    
+    // Highlights all units according to their allegiance to the currently active unit
+    private void SetUnitHighlight()
+    {
+        List<Unit> units = Grid.ActiveGrid.GetAllUnits();
+
+        foreach (var unit in units)
+        {
+            if (unit == ActiveUnit && CurrentPhase == GamePhase.Combat) continue;
+            Grid.ActiveGrid.HighlightTile(unit.GetCoordinates(), unit.enemy ? GridTile.TileHighlights.Foe : GridTile.TileHighlights.Friend);
+        }
+
+        if (CurrentPhase == GamePhase.Combat)
+        {
+            Grid.ActiveGrid.HighlightTile(ActiveUnit.GetCoordinates(), GridTile.TileHighlights.ActiveUnit);
+        }
+    }
+
     // Highlights the tiles the currently active unit can move to
     private void SetMovementHighlight()
     {
-        Grid.ActiveGrid.ClearAllHighlights();
         Grid.ActiveGrid.CalculateMovement(ActiveUnitStartCoordinates, ActiveUnit.movementRange);
         Grid.ActiveGrid.HighlightTiles(Grid.ActiveGrid.GetReachableTiles(), GridTile.TileHighlights.Movement);
-        Grid.ActiveGrid.HighlightTile(ActiveUnitStartCoordinates, GridTile.TileHighlights.Friend);
     }
 
     // Highlights the tiles the currently active unit can target (currently only works for the base attack)
     private void SetTargetHighlight()
     {
-        Grid.ActiveGrid.ClearAllHighlights();
         Grid.ActiveGrid.HighlightTiles(ActiveUnit.baseAttack.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
     }
-
 
     // *** INPUT MODES ***
 
     public void SetInputMode(InputMode mode)
     {
         inputMode = mode;
-
-        switch (inputMode)
-        {
-            case InputMode.Movement:
-                SetMovementHighlight();
-                break;
-
-            case InputMode.Target:
-                SetTargetHighlight();
-                break;
-        }
+        UpdateHighlight();
     }
 
     private void HandleMovementInput()
@@ -172,13 +225,9 @@ public class TurnTracker : MonoBehaviour
         if (lastSelected != selection)
         {
             // Update pathline
-            if (selection == null)
+            if (!IsMoving())
             {
-                Grid.ActiveGrid.HidePathLine();
-            }
-            else
-            {
-                Grid.ActiveGrid.RenderPathLine(selection.Coordinates);
+                UpdatePathLine();
             }
 
             lastSelected = selection;
@@ -192,9 +241,13 @@ public class TurnTracker : MonoBehaviour
         {
             // Move unit to selected tile if it is reachable
             if (selection.GetHighlight() == GridTile.TileHighlights.Movement ||
-                selection.GetHighlight() == GridTile.TileHighlights.Friend)
+                selection.GetHighlight() == GridTile.TileHighlights.ActiveUnit)
             {
-                ActiveUnit.UnitEntity.Move(selection.Coordinates);
+                // Check if mid-animation
+                if (!ActiveUnit.UnitEntity.IsMoving)
+                {
+                    ActiveUnit.UnitEntity.StartMoveAnimation(selection.Coordinates);
+                }
             }
         }
       
@@ -216,7 +269,20 @@ public class TurnTracker : MonoBehaviour
             }
         }
     }
+    
+    // *** UTILITY FUNCTIONS ***
+    
+    public void ResetLastSelected()
+    {
+        lastSelected = null;
+    }
 
+    public bool IsMoving()
+    {
+        return ActiveUnit.UnitEntity.IsMoving;
+    }
+    
+    // *** MONOBEHAVIOUR FUNCTIONS ***
 
     void Awake()
     {
@@ -235,11 +301,12 @@ public class TurnTracker : MonoBehaviour
         TurnCounter = 0;
         RoundCounter = 0;
         CurrentPhase = GamePhase.Setup;
+        UnitsPlaced = 0;
     }
 
     void Start()
     {
-    
+        UpdateHighlight();
     }
 
     void Update()

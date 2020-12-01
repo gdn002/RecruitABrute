@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour
     public int initiative;
     public string unitName;
     public Entity UnitEntity;
+    public bool enemy;
 
 
     // These stats are derived from the unit's base attack Skill
@@ -49,6 +50,7 @@ public class Unit : MonoBehaviour
         TurnTracker.ActiveTracker.RemoveFromInitiative(this);
         Grid.ActiveGrid.RemoveEntity(UnitEntity);
         UnitEntity.SetCollision(false);
+        Grid.ActiveGrid.RemoveEntity(UnitEntity);
         Destroy(gameObject);
     }
 
@@ -91,8 +93,8 @@ public class Unit : MonoBehaviour
 
         if (baseAttack == null)
         {
-            baseAttack = Skill.DEFAULT_SKILL;
             Debug.LogWarning("Unit " + unitName + " has no set base attack skill. Loading default skill...");
+            baseAttack = ScriptableObject.CreateInstance<Skill>();
         }
     }
 
@@ -107,16 +109,18 @@ public class Unit : MonoBehaviour
     {
         UnitStatsText.ActiveUnitStatsText.UpdateText(this);
         Highlight(true);
+        Grid.ActiveGrid.MouseOverGridTile(GetCoordinates());
     }
 
     private void OnMouseExit()
     {
         UnitStatsText.ActiveUnitStatsText.ClearText();
         Highlight(false);
+        Grid.ActiveGrid.MouseExitGridTile(GetCoordinates());
     }
 
     private void OnMouseDown()
     {
-
+        Grid.ActiveGrid.MouseDownGridTile(GetCoordinates());
     }
 }

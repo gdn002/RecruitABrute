@@ -3,7 +3,6 @@ using System.Collections;
 
 public class DEBUG_GridAreaTester : MonoBehaviour
 {
-    public Grid grid;
     public Vector2Int position = Vector2Int.zero;
     public Vector2Int areaPivot = Vector2Int.zero;
 
@@ -29,12 +28,7 @@ public class DEBUG_GridAreaTester : MonoBehaviour
                                                           { 1, 0, 0, 0, 1} });
             area.pivot = areaPivot;
 
-            var tiles = area.GetPlacement(grid, position);
-            foreach (var tile in tiles)
-            {
-                grid.HighlightTile(tile, GridTile.TileHighlights.AoE);
-            }
-            grid.HighlightTile(position, GridTile.TileHighlights.Friend);
+            Grid.ActiveGrid.HighlightTiles(area.GetPlacement(position), GridTile.TileHighlights.AoE);
 
             testRun = true;
         }

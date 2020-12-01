@@ -21,6 +21,9 @@ public class DEBUG_MovementCalculatorTester : MonoBehaviour
         line.endColor = Color.cyan;
         line.useWorldSpace = true;
         line.gameObject.SetActive(false);
+
+        Grid.ActiveGrid.CalculateMovement(position, range);
+        Grid.ActiveGrid.HighlightTiles(Grid.ActiveGrid.GetReachableTiles(), GridTile.TileHighlights.Movement);
     }
 
     // Update is called once per frame

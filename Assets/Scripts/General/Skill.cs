@@ -6,8 +6,6 @@ using System;
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Custom/Skill")]
 public class Skill : ScriptableObject
 {
-    public static readonly Skill DEFAULT_SKILL = new Skill();
-
     public enum TargetType
     {
         Self = 0,
@@ -50,6 +48,8 @@ public class Skill : ScriptableObject
     public int power = 10;
     public int range = 1;
     public int radius = 1;
+
+    public Projectile projectile;
 
 
     // Returns all tiles that can be targeted by this skill while the casting unit is located at the given coordinates
@@ -126,9 +126,22 @@ public class Skill : ScriptableObject
         return affectedUnits;
     }
 
+    // Plays attack animation of casting unit
+    public void Animation(Unit caster){
+        Animator anim = caster.GetComponent<Animator>();
+        anim.Play("AttackAnimationTest",0,0.25f);
+    }
+
     // Executes the effects of this skill, targeting the given coordinates
     public void ActivateSkill(Unit caster, Vector2Int target)
     {
+        Animation(caster);
+        if(projectile != null){
+            GameObject p = Instantiate(projectile.gameObject, caster.transform.position, Quaternion.identity);
+            p.GetComponent<Projectile>().SetTarget(target);
+        }
+        
+
         List<Unit> affectedUnits = GetAffectedUnits(caster, target);
         foreach (var unit in affectedUnits)
         {
@@ -145,8 +158,12 @@ public class Skill : ScriptableObject
         if (caster == unit)
             return IsAffected(AffectedUnitType.Self);
 
-        // TODO: Verify if target is valid
-        return true;
+        if (caster.enemy == unit.enemy)
+            return IsAffected(AffectedUnitType.Friendly);
+
+        return IsAffected(AffectedUnitType.Enemy);
+
+        // TODO: Check for targetable props in the future
     }
 
     // Commits the effects of this skill on an unit. (Does not verify if the Unit is a valid target, use GetAffectedUnits for that)

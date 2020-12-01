@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 2569565651780631889}
   - component: {fileID: -1848076686925249854}
   - component: {fileID: -1674980434048103608}
+  - component: {fileID: 1262437237902905898}
   m_Layer: 0
   m_Name: TankBrute
   m_TagString: Untagged
@@ -143,12 +144,13 @@ MonoBehaviour:
   health: 100
   maxHealth: 100
   movementRange: 2
-  attackRange: 1
-  damage: 20
   initiative: 6
   unitName: Tank Brute
   UnitEntity: {fileID: 0}
+  enemy: 0
   unitStatsText: {fileID: 0}
+  baseAttack: {fileID: 11400000, guid: 8ac8dd7f5f124b54bbdabcfd77d7a192, type: 2}
+  abilities: []
 --- !u!65 &-1848076686925249854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -175,6 +177,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9, y: 0.1, z: 0.9}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &1262437237902905898
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3161697582008038310}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 87fb9176a2f9c1d4cb129787460a17d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3219389214286412947
 GameObject:
   m_ObjectHideFlags: 0

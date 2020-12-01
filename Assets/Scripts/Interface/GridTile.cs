@@ -6,8 +6,7 @@ public class GridTile : MonoBehaviour
 {
     // Returns the currently selected tile, if there is any
     public static GridTile CurrentlySelected { get; private set; }
-
-
+    
     public enum TileHighlights
     {
         None = 0,
@@ -15,6 +14,7 @@ public class GridTile : MonoBehaviour
         AoE,
         Friend,
         Foe,
+        ActiveUnit,
     }
 
     public float gapBetweenCells = 0.01f;
@@ -24,7 +24,6 @@ public class GridTile : MonoBehaviour
 
     private new Renderer renderer;
     private TileHighlights currentHighlight = TileHighlights.None;
-    private bool isSelected = false;
 
     public void Initialize(Transform parent, Vector2Int coordinates)
     {
@@ -39,11 +38,8 @@ public class GridTile : MonoBehaviour
 
     public void SetHighlight(TileHighlights type)
     {
-        if (currentHighlight != type)
-        {
-            currentHighlight = type;
-            UpdateHighlight();
-        }
+        currentHighlight = type;
+        UpdateHighlight();
     }
 
     public TileHighlights GetHighlight()
@@ -58,18 +54,20 @@ public class GridTile : MonoBehaviour
 
     private Color GetHighlightColor()
     {
-        if (isSelected) return Color.cyan;
+        if (CurrentlySelected == this) return Color.cyan;
 
         switch (currentHighlight)
         {
             case TileHighlights.Movement:
-                return Color.blue;
+                return new Color(0.5f, 0.5f, 0.5f);//Gray
             case TileHighlights.AoE:
-                return Color.yellow;
+                return new Color(1f, 0.5f, 0f);//Orange
             case TileHighlights.Friend:
                 return Color.green;
             case TileHighlights.Foe:
                 return Color.red;
+            case TileHighlights.ActiveUnit:
+                return new Color(0.3f, 0.3f, 0.3f);
         }
 
         return Color.white;
@@ -77,21 +75,19 @@ public class GridTile : MonoBehaviour
 
 
     // *** MOUSE EVENTS ***
-    void OnMouseOver()
+    public void OnMouseOver()
     {
-        isSelected = true;
         CurrentlySelected = this;
-        UpdateHighlight();    
+        TurnTracker.ActiveTracker.UpdateHighlight();    
     }
 
-    void OnMouseExit()
+    public void OnMouseExit()
     {
-        isSelected = false;
         CurrentlySelected = null;
-        UpdateHighlight();
+        TurnTracker.ActiveTracker.UpdateHighlight();
     }
 
-    void OnMouseDown()
+    public void OnMouseDown()
     {
         switch(TurnTracker.ActiveTracker.CurrentPhase)
         {
@@ -99,12 +95,21 @@ public class GridTile : MonoBehaviour
                 if (DeckHandler.MainDeckHandler.selectedUnit != null)
                 {
                     Unit u = DeckHandler.MainDeckHandler.selectedUnit;
+                    DeckHandler.MainDeckHandler.selectedUnit = null;
                     u.gameObject.SetActive(true);
                     u.transform.SetParent(Grid.ActiveGrid.transform);
                     u.UnitEntity.Move(Coordinates);
+                    Grid.ActiveGrid.AddEntity(u.UnitEntity);
                     TurnTracker.ActiveTracker.AddToInitiative(u);
-                    TurnTracker.ActiveTracker.NextPhase(); // Only allows one unit for now, this should be changed later
+                    TurnTracker.ActiveTracker.PlaceUnit();
+                    TurnTracker.ActiveTracker.UpdateHighlight();
                 }
+                break;
+
+            case TurnTracker.GamePhase.Combat:
+                break;
+
+            case TurnTracker.GamePhase.Reward:
                 break;
         }
     }
@@ -117,8 +122,8 @@ public class GridTile : MonoBehaviour
     private void Awake()
     {
         transform.localScale = new Vector3(Grid.CELL_SIZE - gapBetweenCells, height, Grid.CELL_SIZE - gapBetweenCells);
-
         renderer = GetComponent<Renderer>();
+        UpdateHighlight();
     }
 
     void Start()
