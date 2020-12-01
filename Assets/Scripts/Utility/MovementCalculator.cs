@@ -92,7 +92,7 @@ public class MovementCalculator
         if (distanceArray[to.x, to.y] < 0) return null;
 
         // Create a new movement calculator with new from
-        MovementCalculator tempMoveCalc = new MovementCalculator(grid);
+        MovementCalculator tempMoveCalc = new MovementCalculator();
         tempMoveCalc.CalculateMovement(from, GetReachableTiles());
         return tempMoveCalc.GetPath(to);
     }

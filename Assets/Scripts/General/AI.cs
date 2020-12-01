@@ -29,11 +29,12 @@ public class AI : MonoBehaviour
             Vector2Int? movePos = null;
             if (IsTargetReachable(target, ref movePos))
             {
-                Debug.Log("DIRECTIVE FOUND");
+                string msg = "DIRECTIVE FOUND \r\n";
                 if (movePos != null)
-                    Debug.Log("Move to position: " + movePos.ToString());
-                Debug.Log("Target position: " + target.distance);
-                Debug.Log("Target value: " + target.value);
+                    msg += "Move to position: " + movePos + "\r\n";
+                msg += "Target position: " + target.coordinates +"\r\n";
+                msg += "Target value: " + target.value + "\r\n";
+                Debug.Log(msg);
                 return;
             }
         }
@@ -44,11 +45,16 @@ public class AI : MonoBehaviour
     // If no movement is required, movePos will not be altered.
     private bool IsTargetReachable(AITarget target, ref Vector2Int? movePos)
     {
+        float distToTarget = Vector2Int.Distance(target.coordinates, AttachedUnit.GetCoordinates());
+
         // Check if target is in range without moving
-        if (Vector2Int.Distance(target.coordinates, AttachedUnit.GetCoordinates()) <= AttachedSkill.range)
+        if (distToTarget <= AttachedUnit.AttackRange)
             return true;
 
         // Check if target can be in range after moving
+        if (distToTarget > AttachedUnit.AttackRange + AttachedUnit.movementRange)
+            return false;
+
         // Find tile within movement range that is also in attack range of the desired target
         // Prioritize the least amount of movement
         int distance = int.MaxValue;
@@ -57,7 +63,7 @@ public class AI : MonoBehaviour
         List<Vector2Int> reachableTiles = movementCalculator.GetReachableTiles();
         foreach (var tile in reachableTiles)
         {
-            if (Vector2Int.Distance(target.coordinates, tile) <= AttachedSkill.range)
+            if (Vector2Int.Distance(target.coordinates, tile) <= AttachedUnit.AttackRange)
             {
                 int thisDist = movementCalculator.GetDistance(tile);
                 if (thisDist < distance)
@@ -145,14 +151,11 @@ public class AI : MonoBehaviour
     }
 
 
-    void Awake()
-    {
-        movementCalculator = new MovementCalculator();
-    }
-
     // Use this for initialization
     void Start()
     {
+        movementCalculator = new MovementCalculator();
+
         AttachedUnit = GetComponent<Unit>();
     }
 

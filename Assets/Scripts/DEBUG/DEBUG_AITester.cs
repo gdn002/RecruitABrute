@@ -19,6 +19,7 @@ public class DEBUG_AITester : MonoBehaviour
         if (!testRun)
         {
             attacker.GetDefiniteTarget();
+            testRun = true;
         }
     }
 }
