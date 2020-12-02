@@ -26,6 +26,9 @@ public class Unit : MonoBehaviour
     // Special abilities
     public Skill[] abilities;
 
+    public AI AttachedAI { get; private set; }
+    public bool HasAI { get { return AttachedAI != null; } }
+
     private bool isActiveUnit = false;
     private List<Renderer> localRenderers;
 
@@ -96,6 +99,8 @@ public class Unit : MonoBehaviour
             Debug.LogWarning("Unit " + unitName + " has no set base attack skill. Loading default skill...");
             baseAttack = ScriptableObject.CreateInstance<Skill>();
         }
+
+        AttachedAI = GetComponent<AI>();
     }
 
     // Update is called once per frame

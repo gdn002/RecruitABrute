@@ -18,6 +18,9 @@ public class AI : MonoBehaviour
         public float distance;
     }
 
+    public bool IsBusy { get; private set; }
+
+    public Entity AttachedEntity { get; private set; }
     public Unit AttachedUnit { get; private set; }
     public Skill AttachedSkill { get { return AttachedUnit.baseAttack; } }
 
@@ -27,6 +30,26 @@ public class AI : MonoBehaviour
 
     private MovementCalculator movementCalculator;
 
+
+    public IEnumerator CommitActions()
+    {
+        IsBusy = true;
+
+        // First move the AI
+        if (FoundMovePos.HasValue)
+        {
+            AttachedEntity.StartMoveAnimation(FoundMovePos.Value);
+            yield return new WaitWhile(() => AttachedEntity.IsMoving);
+        }
+
+        // Then attack the target
+        if (FoundTarget.HasValue)
+        {
+            AttachedSkill.ActivateSkill(AttachedUnit, FoundTarget.Value);
+        }
+
+        IsBusy = false;
+    }
 
     // Parses all possible targets and tracks the most optimal target
     // Use FoundTarget to get the AI's target, and FoundMovePos to get the position the AI should move to
@@ -107,11 +130,15 @@ public class AI : MonoBehaviour
         return coordinates != null;
     }
 
-    private Vector2Int MovementTowards(AITarget target)
+    private Vector2Int? MovementTowards(AITarget target)
     {
-        movementCalculator.CalculateMovement(AttachedUnit.GetCoordinates(), (int)target.distance);
-        List<Vector2Int> path = movementCalculator.GetPath(target.coordinates);
-        return path[AttachedUnit.movementRange];
+        movementCalculator.CalculateMovementUnrestricted(AttachedUnit.GetCoordinates());
+        List<Vector2Int> path = movementCalculator.GetPath(movementCalculator.GetNearestAvailableNeighbor(target.coordinates));
+
+        if (path != null)
+            return path[AttachedUnit.movementRange];
+
+        return null;
     }
 
     // Returns a list of possible target points for the Unit, sorted by value (descending order) and distance (ascending order)
@@ -192,6 +219,9 @@ public class AI : MonoBehaviour
     {
         movementCalculator = new MovementCalculator();
 
+        IsBusy = false;
+
+        AttachedEntity = GetComponent<Entity>();
         AttachedUnit = GetComponent<Unit>();
     }
 

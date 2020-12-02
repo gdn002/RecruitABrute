@@ -34,6 +34,11 @@ public class MovementCalculator
         BreadthFirstSearch(range);
     }
     
+    public void CalculateMovementUnrestricted(Vector2Int from)
+    {
+        CalculateMovement(from, int.MaxValue);
+    }
+
     public void CalculateMovement(Vector2Int from, List<Vector2Int> reachableTiles)
     {
         Reset();
@@ -100,6 +105,32 @@ public class MovementCalculator
     public int GetDistance(Vector2Int to)
     {
         return distanceArray[to.x, to.y];
+    }
+
+    // Use this when calling GetPath() to an occupied position
+    public Vector2Int GetNearestAvailableNeighbor(Vector2Int position)
+    {
+        int lowestDist = int.MaxValue;
+        Vector2Int nearest = position;
+
+        for(int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                Vector2Int here = new Vector2Int(position.x + x, position.y + y);
+                if (Grid.ActiveGrid.IsInBounds(here))
+                {
+                    int dist = distanceArray[here.x, here.y];
+                    if (dist >= 0 && dist < lowestDist)
+                    {
+                        lowestDist = dist;
+                        nearest = here;
+                    }
+                }
+            }
+        }
+
+        return nearest;
     }
 
     private void BreadthFirstSearch(int range)
