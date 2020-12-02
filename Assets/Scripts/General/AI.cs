@@ -4,6 +4,13 @@ using System.Collections.Generic;
 
 public class AI : MonoBehaviour
 {
+    private static int ValueOf(Skill.Effects effect)
+    {
+        int value = (int)(Mathf.Abs(effect.percentHealthDelta) * 100);
+        value += effect.isFinalBlow ? 100 : 0;
+        return value;
+    }
+
     private struct AITarget
     {
         public Vector2Int coordinates;
@@ -144,7 +151,7 @@ public class AI : MonoBehaviour
         int value = 0;
         foreach (var unit in affectedUnits)
         {
-            value += Mathf.Abs(AttachedSkill.PreviewEffectOnUnit(unit));
+            value += ValueOf(AttachedSkill.PreviewEffectOnUnit(unit));
         }
 
         return value;

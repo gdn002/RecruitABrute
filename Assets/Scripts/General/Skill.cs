@@ -6,6 +6,13 @@ using System;
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Custom/Skill")]
 public class Skill : ScriptableObject
 {
+    public struct Effects
+    {
+        public int healthDelta;
+        public float percentHealthDelta;
+        public bool isFinalBlow;
+    }
+
     public enum TargetType
     {
         Self = 0,
@@ -182,18 +189,25 @@ public class Skill : ScriptableObject
     }
 
     // Return the health loss/gain that will happen to an Unit if it is targeted
-    public int PreviewEffectOnUnit(Unit unit)
+    public Effects PreviewEffectOnUnit(Unit unit)
     {
+        Effects effect;
+        effect.healthDelta = 0;
+
         switch (effectOnTargets)
         {
             case EffectType.Damage:
-                return -Math.Min(unit.health, power);
+                effect.healthDelta = -Math.Min(unit.health, power);
+                break;
 
             case EffectType.Heal:
-                return Math.Min(unit.maxHealth - unit.health, power);
+                effect.healthDelta = Math.Min(unit.maxHealth - unit.health, power);
+                break;
         }
 
-        return 0;
+        effect.percentHealthDelta = effect.healthDelta / (float)unit.maxHealth;
+        effect.isFinalBlow = (unit.health + effect.healthDelta) <= 0;
+        return effect;
     }
 
 
