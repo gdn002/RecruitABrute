@@ -21,30 +21,52 @@ public class AI : MonoBehaviour
     public Unit AttachedUnit { get; private set; }
     public Skill AttachedSkill { get { return AttachedUnit.baseAttack; } }
 
+    public Vector2Int? FoundTarget { get; private set; }
+    public Vector2Int? FoundMovePos { get; private set; }
+
 
     private MovementCalculator movementCalculator;
 
 
     // Parses all possible targets and tracks the most optimal target
-    public void GetDefiniteTarget()
+    // Use FoundTarget to get the AI's target, and FoundMovePos to get the position the AI should move to
+    // Both of these may be null
+    public void FindTarget()
     {
         movementCalculator.CalculateMovement(AttachedUnit.GetCoordinates(), AttachedUnit.movementRange);
         List<AITarget> targets = GetPossibleTargets();
 
+        FoundTarget = null;
+        FoundMovePos = null;
+
+        // No targets, no action
+        if (targets.Count == 0)
+            return;
+
+        // Check all possible targets from the most valuable to the least valuable
+        // Take the first target in range
         foreach (var target in targets)
         {
             Vector2Int? movePos = null;
             if (IsTargetReachable(target, ref movePos))
             {
-                string msg = "DIRECTIVE FOUND \r\n";
-                if (movePos != null)
-                    msg += "Move to position: " + movePos + "\r\n";
-                msg += "Target position: " + target.coordinates +"\r\n";
-                msg += "Target value: " + target.value + "\r\n";
-                Debug.Log(msg);
+                FoundTarget = target.coordinates;
+                FoundMovePos = movePos;
                 return;
             }
         }
+
+        // If no targets were in range, find nearest target and start moving towards it
+        AITarget closest = new AITarget();
+        closest.distance = float.MaxValue;
+        foreach (var target in targets)
+        {
+            if (target.distance < closest.distance)
+                closest = target;
+        }
+
+        // Find the tile to move to
+        FoundMovePos = MovementTowards(closest);
     }
 
     // Returns true if this target is within attack range
@@ -83,6 +105,13 @@ public class AI : MonoBehaviour
 
         movePos = coordinates;
         return coordinates != null;
+    }
+
+    private Vector2Int MovementTowards(AITarget target)
+    {
+        movementCalculator.CalculateMovement(AttachedUnit.GetCoordinates(), (int)target.distance);
+        List<Vector2Int> path = movementCalculator.GetPath(target.coordinates);
+        return path[AttachedUnit.movementRange];
     }
 
     // Returns a list of possible target points for the Unit, sorted by value (descending order) and distance (ascending order)
