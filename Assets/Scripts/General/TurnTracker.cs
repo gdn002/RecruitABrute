@@ -130,6 +130,12 @@ public class TurnTracker : MonoBehaviour
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
         SetInputMode(InputMode.Movement);
+
+        if (ActiveUnit.HasAI)
+        {
+            ActiveUnit.AttachedAI.FindTarget();
+            StartCoroutine(ActiveUnit.AttachedAI.CommitActions());
+        }
     }
 
     private void OnEnterCombatPhase()
@@ -311,6 +317,16 @@ public class TurnTracker : MonoBehaviour
 
     void Update()
     {
+        // If the active unit is an AI unit, disable all direct input
+        if (ActiveUnit != null && ActiveUnit.HasAI)
+        {
+            // If the AI is no longer busy, it means it is done and the next turn can start
+            if (!ActiveUnit.AttachedAI.IsBusy)
+                NextTurn();
+
+            return;
+        }
+
         // This is only for testing while we don't have the scripts/interface to call NextTurn externally
         if (Input.GetKeyDown(KeyCode.Return))
         {

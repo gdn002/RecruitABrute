@@ -29,6 +29,19 @@ public class DEBUG_MovementCalculatorTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (calculator == null)
+        {
+            calculator = new MovementCalculator();
+            calculator.CalculateMovement(position, range);
+            var tiles = calculator.GetReachableTiles();
+
+            Grid.ActiveGrid.HighlightTile(position, GridTile.TileHighlights.Friend);
+            foreach (var tile in tiles)
+            {
+                Grid.ActiveGrid.HighlightTile(tile, GridTile.TileHighlights.Movement);
+            }
+        }
+
         if (GridTile.CurrentlySelected != null)
         {
             var path = calculator.GetPath(GridTile.CurrentlySelected.Coordinates);

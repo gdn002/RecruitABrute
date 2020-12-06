@@ -5,19 +5,16 @@ using System.Collections.Generic;
 
 public class MovementCalculator
 {
-    private Grid grid;
-
-    private Vector2Int GridSize { get { return grid.gridSize; } }
-    private bool[,] CollisionArray { get { return grid.collisionArray; } }
+    private Vector2Int GridSize { get { return Grid.ActiveGrid.gridSize; } }
+    private bool[,] CollisionArray { get { return Grid.ActiveGrid.collisionArray; } }
 
     private Vector2Int startingPoint;
     private int[,] distanceArray;
     private Vector2Int[,] pathArray;
     private Queue<Vector2Int> pathQueue;
 
-    public MovementCalculator(Grid grid)
+    public MovementCalculator()
     {
-        this.grid = grid;
         distanceArray = new int[GridSize.x, GridSize.y];
         pathArray = new Vector2Int[GridSize.x, GridSize.y];
         pathQueue = new Queue<Vector2Int>();
@@ -37,6 +34,11 @@ public class MovementCalculator
         BreadthFirstSearch(range);
     }
     
+    public void CalculateMovementUnrestricted(Vector2Int from)
+    {
+        CalculateMovement(from, int.MaxValue);
+    }
+
     public void CalculateMovement(Vector2Int from, List<Vector2Int> reachableTiles)
     {
         Reset();
@@ -95,12 +97,43 @@ public class MovementCalculator
         if (distanceArray[to.x, to.y] < 0) return null;
 
         // Create a new movement calculator with new from
-        MovementCalculator tempMoveCalc = new MovementCalculator(grid);
+        MovementCalculator tempMoveCalc = new MovementCalculator();
         tempMoveCalc.CalculateMovement(from, GetReachableTiles());
         return tempMoveCalc.GetPath(to);
     }
 
-    private bool BreadthFirstSearch(int range)
+    public int GetDistance(Vector2Int to)
+    {
+        return distanceArray[to.x, to.y];
+    }
+
+    // Use this when calling GetPath() to an occupied position
+    public Vector2Int GetNearestAvailableNeighbor(Vector2Int position)
+    {
+        int lowestDist = int.MaxValue;
+        Vector2Int nearest = position;
+
+        for(int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                Vector2Int here = new Vector2Int(position.x + x, position.y + y);
+                if (Grid.ActiveGrid.IsInBounds(here))
+                {
+                    int dist = distanceArray[here.x, here.y];
+                    if (dist >= 0 && dist < lowestDist)
+                    {
+                        lowestDist = dist;
+                        nearest = here;
+                    }
+                }
+            }
+        }
+
+        return nearest;
+    }
+
+    private void BreadthFirstSearch(int range)
     {
         Vector2Int current;
         while (pathQueue.Count > 0)
@@ -117,9 +150,6 @@ public class MovementCalculator
             Step(current, Vector2Int.left);
             Step(current, Vector2Int.right);
         }
-
-        // Path not found
-        return false;
     }
     
     private bool BreadthFirstSearch(List<Vector2Int> reachableTiles)
@@ -149,7 +179,7 @@ public class MovementCalculator
         Vector2Int next = current + step;
 
         // Boundary check
-        if (!grid.IsInBounds(next)) return;
+        if (!Grid.ActiveGrid.IsInBounds(next)) return;
 
         // Collision check
         if (CollisionArray[next.x, next.y]) return;

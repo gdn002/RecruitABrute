@@ -278,7 +278,7 @@ public class Grid : MonoBehaviour
         InitializeEntities();
         InitializeTiles();
 
-        movementCalculator = new MovementCalculator(this);
+        movementCalculator = new MovementCalculator();
 
         GameObject newObj = Instantiate(Resources.Load<GameObject>("Prefabs/Interface/PathLine"));
         newObj.transform.SetParent(transform, true);
