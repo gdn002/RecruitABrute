@@ -6,12 +6,12 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
 
+    //Here add more sounds by placing them inside the Resources/Sounds folder
     public enum Sound
     {
         attack,
 
     }
-
 
     private AudioSource audioSource;
 
