@@ -86,6 +86,11 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         UnitEntity = gameObject.GetComponent<Entity>();
+
+        if (enemy)
+        {
+            gameObject.AddComponent<AI>();
+        }
     }
 
     // Start is called before the first frame update
