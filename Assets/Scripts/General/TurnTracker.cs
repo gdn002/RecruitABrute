@@ -317,10 +317,6 @@ public class TurnTracker : MonoBehaviour
 
     void Update()
     {
-        // DEBUG PURPOSES
-        if (CurrentPhase == GamePhase.Setup)
-            NextPhase();
-
         // If the active unit is an AI unit, disable all direct input
         if (ActiveUnit != null && ActiveUnit.HasAI)
         {
