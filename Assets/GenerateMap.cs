@@ -116,7 +116,7 @@ public class GenerateMap : MonoBehaviour
             sceneToLoad++;
             //Debug.Log("Load level with index: " + (loadMe));
             map.GetComponent<Canvas>().enabled = false;
-            SceneManager.LoadScene(1); //THIS IS WHERE WE SET WHAT SCENE TO LOAD it should be "loadMe"
+            SceneManager.LoadScene(loadMe); //THIS IS WHERE WE SET WHAT SCENE TO LOAD it should be "loadMe"
         }
     }
 }
