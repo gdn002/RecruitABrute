@@ -7,73 +7,82 @@ public class DeckHandler : MonoBehaviour
 {
     public static DeckHandler MainDeckHandler { get; private set; }
 
-    public Unit unit;
     public int maxdecksize;
-    public List<Unit> PlayerDeck = new List<Unit>();
     public GameObject unitbutton;
     public RectTransform placementpanel;
     public Unit selectedUnit = null;
-    
-    void Awake(){
+    public List<UnitState> Units { get; private set; } = new List<UnitState>();
 
+    public Unit BaseUnitPrefab;
+    
+    void Awake()
+    {
+        BaseUnitPrefab.enemy = false;
+        
         if (MainDeckHandler == null)
         {
             MainDeckHandler = this;
+            DontDestroyOnLoad(transform.root.gameObject);
+            UnitState initUnit = ScriptableObject.CreateInstance<UnitState>();
+            initUnit.health = 100;
+            initUnit.maxHealth = 100;
+            initUnit.movementRange = 3;
+            initUnit.initiative = 3;
+            initUnit.unitName = "Test Brute";
+            initUnit.enemy = false;
+            AddCard(initUnit);
+            AddCard(initUnit);
+            AddCard(initUnit);
         }
     }
 
 
-
-    public void PrintDeck(){
-        Debug.Log(PlayerDeck.Count);
-        foreach(Unit u in PlayerDeck){
+    public void PrintDeck()
+    {
+        Debug.Log(Units.Count);
+        foreach (UnitState u in Units)
+        {
             Debug.Log(u.unitName);
         }
     }
 
-    public void AddCard(Unit u)
+    public void AddCard(UnitState u)
     {
-        if (PlayerDeck.Count < maxdecksize)
+        if (Units.Count < maxdecksize)
         {
-            u.enemy = false;
-            GameObject unit = Instantiate(u.gameObject);
-            Debug.Log(u.unitName + " added");
-            PlayerDeck.Add(unit.GetComponent<Unit>());
-            unit.SetActive(false);
+            Units.Add(u);
         }
-        else
-        {
-            Debug.Log("Deck is full :(");
-        }
-
     }
 
-    public void DrawDeckToUI(){
+    public void DrawDeckToUI()
+    {
         int num = 0;
 
-        foreach(Unit u in PlayerDeck){
-            GameObject btn = (GameObject)Instantiate(unitbutton);
+        foreach (UnitState u in Units)
+        {
+            GameObject btn = Instantiate(unitbutton);
             btn.transform.SetParent(placementpanel, false);
             btn.transform.localScale = new Vector3(1, 1, 1);
- 
             btn.GetComponentInChildren<Text>().text = u.unitName;
- 
             Button tempButton = btn.GetComponent<Button>();
-            int tempInt = num;
- 
+
             tempButton.onClick.AddListener(() => PlacementButtonOnClick(u, tempButton));
             num++;
         }
     }
 
-    public void PlacementButtonOnClick(Unit u, Button b){
-        selectedUnit = u;
+    public void PlacementButtonOnClick(UnitState u, Button b)
+    {
+        GameObject unitGameObject = Instantiate(BaseUnitPrefab.gameObject);
+        Unit unit = unitGameObject.AddComponent<Unit>();
+        unit.Init(u);
+        unitGameObject.SetActive(false);
+        selectedUnit = unit;
         Grid.ActiveGrid.AddEntity(selectedUnit.UnitEntity);
-        Debug.Log("Selected unit: " + selectedUnit);
         Destroy(b.gameObject);
     }
 
-    void Update(){
+    void Update()
+    {
     }
-
 }

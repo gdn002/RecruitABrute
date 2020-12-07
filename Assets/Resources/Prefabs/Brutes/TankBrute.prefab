@@ -147,7 +147,7 @@ MonoBehaviour:
   initiative: 6
   unitName: Tank Brute
   UnitEntity: {fileID: 0}
-  enemy: 0
+  enemy: 1
   unitStatsText: {fileID: 0}
   baseAttack: {fileID: 11400000, guid: 8ac8dd7f5f124b54bbdabcfd77d7a192, type: 2}
   abilities: []

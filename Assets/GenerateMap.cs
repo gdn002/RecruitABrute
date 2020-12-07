@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GenerateMap : MonoBehaviour
 {
+    public static GenerateMap ActiveMap;
     public Canvas myCanvas;
     private GameObject map;
     public GameObject button;
@@ -17,6 +20,15 @@ public class GenerateMap : MonoBehaviour
     public int yRandomness;
     public int spacing;
     public int amountOfButtons;
+
+
+    private void Awake()
+    {
+        if (ActiveMap == null)
+        {
+            ActiveMap = this;
+        }
+    }
 
     void Start()
     {

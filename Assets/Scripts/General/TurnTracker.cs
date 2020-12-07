@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TurnTracker : MonoBehaviour
 {
@@ -83,7 +84,7 @@ public class TurnTracker : MonoBehaviour
                     OnEnterCombatPhase();
                     break;
                 case GamePhase.Reward:
-                    //OnEnterRewardPhase();
+                    OnEnterRewardPhase();
                     break;
             }
         }
@@ -143,6 +144,15 @@ public class TurnTracker : MonoBehaviour
         // First Turn
 
         OnTurnStart();
+    }
+
+    private void OnEnterRewardPhase()
+    {
+        foreach (Unit unit in Grid.ActiveGrid.GetAllFriendlyUnits())
+        {
+            DeckHandler.MainDeckHandler.AddCard(unit.UnitState);
+        }
+        SceneManager.LoadScene(1);
     }
 
 
@@ -344,6 +354,15 @@ public class TurnTracker : MonoBehaviour
 
         if (CurrentPhase == GamePhase.Combat)
         {
+            
+            if (Grid.ActiveGrid.GetAllFriendlyUnits().Count == 0)
+            {
+                Application.Quit();//Todo: Handle player lost scenario
+            } else if (Grid.ActiveGrid.GetAllEnemyUnits().Count == 0)
+            {
+                NextPhase();
+            }
+            
             switch (inputMode)
             {
                 case InputMode.Movement:
