@@ -10,19 +10,51 @@ public class SoundManager : MonoBehaviour
     public enum Sound
     {
         attack,
+        //Add more effects or whatever
 
     }
 
     private AudioSource audioSource;
 
+    private float volume = .5f;
+    private Dictionary<Sound, AudioClip> soundAudioClipDictionary;
+
     private void Awake()
     {
         Instance = this;
         audioSource = GetComponent<AudioSource>();
-    }
-    public void PlaySound()
-    {
-        audioSource.PlayOneShot(Resources.Load<AudioClip>(Sound.attack.ToString()));
+
+        soundAudioClipDictionary = new Dictionary<Sound, AudioClip>();
 
     }
+    //public void PlaySound()
+    //
+      //  audioSource.PlayOneShot(Resources.Load<AudioClip>(Sound.attack.ToString()));
+
+   // }
+
+    public void PlaySound(Sound sound)
+    {
+        audioSource.PlayOneShot(soundAudioClipDictionary[sound], volume);
+    }
+
+
+
+    public void IncreaseVolume()
+    {
+        volume += .1f;
+        volume = Mathf.Clamp01(volume);
+    }
+
+    public void DecreaseVolume()
+    {
+        volume -= .1f;
+        volume = Mathf.Clamp01(volume);
+    }
+
+    public float GetVolume()
+    {
+        return volume;
+    }
+
 }

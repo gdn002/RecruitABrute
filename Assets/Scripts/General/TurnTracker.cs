@@ -271,7 +271,7 @@ public class TurnTracker : MonoBehaviour
             if (selection.GetHighlight() == GridTile.TileHighlights.AoE)
             {
                 ActiveUnit.baseAttack.ActivateSkill(ActiveUnit, selection.Coordinates);
-                SoundManager.Instance.PlaySound();
+              
                 NextTurn();
             }
         }
