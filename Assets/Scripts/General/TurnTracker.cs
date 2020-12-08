@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TurnTracker : MonoBehaviour
 {
@@ -83,7 +84,7 @@ public class TurnTracker : MonoBehaviour
                     OnEnterCombatPhase();
                     break;
                 case GamePhase.Reward:
-                    //OnEnterRewardPhase();
+                    OnEnterRewardPhase();
                     break;
             }
         }
@@ -143,6 +144,21 @@ public class TurnTracker : MonoBehaviour
         // First Turn
 
         OnTurnStart();
+    }
+
+    private void OnEnterRewardPhase()
+    {
+        //temporary
+        UnitState reward = ScriptableObject.CreateInstance<UnitState>();
+        reward.health = 1000;
+        reward.maxHealth = 1000;
+        reward.movementRange = 3;
+        reward.initiative = 3;
+        reward.unitName = "Test Brute";
+        reward.enemy = false;
+        DeckHandler.MainDeckHandler.AddCard(reward);
+        
+        SceneManager.LoadScene(1);
     }
 
 
@@ -313,10 +329,19 @@ public class TurnTracker : MonoBehaviour
     void Start()
     {
         UpdateHighlight();
+        DeckHandler.MainDeckHandler.DrawDeckToUI();
     }
 
     void Update()
     {
+        if (CurrentPhase == GamePhase.Setup)
+        {
+            if (DeckHandler.MainDeckHandler.Units.Count == UnitsPlaced)
+            {
+                NextPhase();
+            }
+        }
+        
         // If the active unit is an AI unit, disable all direct input
         if (ActiveUnit != null && ActiveUnit.HasAI)
         {
@@ -344,6 +369,15 @@ public class TurnTracker : MonoBehaviour
 
         if (CurrentPhase == GamePhase.Combat)
         {
+            
+            if (Grid.ActiveGrid.GetAllFriendlyUnits().Count == 0)
+            {
+                Application.Quit();//Todo: Handle player lost scenario
+            } else if (Grid.ActiveGrid.GetAllEnemyUnits().Count == 0)
+            {
+                NextPhase();
+            }
+            
             switch (inputMode)
             {
                 case InputMode.Movement:
