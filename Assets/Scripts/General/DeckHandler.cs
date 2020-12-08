@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,17 +23,21 @@ public class DeckHandler : MonoBehaviour
         if (MainDeckHandler == null)
         {
             MainDeckHandler = this;
-            DontDestroyOnLoad(transform.root.gameObject);
+            DontDestroyOnLoad(this);
+            
+            //Temporary to test adding card
             UnitState initUnit = ScriptableObject.CreateInstance<UnitState>();
-            initUnit.health = 100;
-            initUnit.maxHealth = 100;
+            initUnit.health = 1000;
+            initUnit.maxHealth = 1000;
             initUnit.movementRange = 3;
             initUnit.initiative = 3;
             initUnit.unitName = "Test Brute";
             initUnit.enemy = false;
             AddCard(initUnit);
-            AddCard(initUnit);
-            AddCard(initUnit);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -58,6 +63,11 @@ public class DeckHandler : MonoBehaviour
     {
         int num = 0;
 
+        if (placementpanel == null)
+        {
+            placementpanel = GameObject.FindGameObjectsWithTag("PlacementPanel")[0].GetComponent<RectTransform>();
+        }
+
         foreach (UnitState u in Units)
         {
             GameObject btn = Instantiate(unitbutton);
@@ -74,7 +84,7 @@ public class DeckHandler : MonoBehaviour
     public void PlacementButtonOnClick(UnitState u, Button b)
     {
         GameObject unitGameObject = Instantiate(BaseUnitPrefab.gameObject);
-        Unit unit = unitGameObject.AddComponent<Unit>();
+        Unit unit = unitGameObject.GetComponent<Unit>();
         unit.Init(u);
         unitGameObject.SetActive(false);
         selectedUnit = unit;

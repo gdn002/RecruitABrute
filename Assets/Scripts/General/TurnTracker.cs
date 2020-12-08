@@ -148,10 +148,16 @@ public class TurnTracker : MonoBehaviour
 
     private void OnEnterRewardPhase()
     {
-        foreach (Unit unit in Grid.ActiveGrid.GetAllFriendlyUnits())
-        {
-            DeckHandler.MainDeckHandler.AddCard(unit.UnitState);
-        }
+        //temporary
+        UnitState reward = ScriptableObject.CreateInstance<UnitState>();
+        reward.health = 1000;
+        reward.maxHealth = 1000;
+        reward.movementRange = 3;
+        reward.initiative = 3;
+        reward.unitName = "Test Brute";
+        reward.enemy = false;
+        DeckHandler.MainDeckHandler.AddCard(reward);
+        
         SceneManager.LoadScene(1);
     }
 
@@ -323,10 +329,19 @@ public class TurnTracker : MonoBehaviour
     void Start()
     {
         UpdateHighlight();
+        DeckHandler.MainDeckHandler.DrawDeckToUI();
     }
 
     void Update()
     {
+        if (CurrentPhase == GamePhase.Setup)
+        {
+            if (DeckHandler.MainDeckHandler.Units.Count == UnitsPlaced)
+            {
+                NextPhase();
+            }
+        }
+        
         // If the active unit is an AI unit, disable all direct input
         if (ActiveUnit != null && ActiveUnit.HasAI)
         {

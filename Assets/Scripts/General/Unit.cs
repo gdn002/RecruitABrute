@@ -64,6 +64,10 @@ public class Unit : MonoBehaviour
         {
             Remove();
         }
+        else
+        {
+            unitState.Set(this);
+        }
     }
 
     public void Remove()
@@ -72,6 +76,7 @@ public class Unit : MonoBehaviour
         Grid.ActiveGrid.RemoveEntity(UnitEntity);
         UnitEntity.SetCollision(false);
         Grid.ActiveGrid.RemoveEntity(UnitEntity);
+        DeckHandler.MainDeckHandler.Units.Remove(unitState);
         Destroy(gameObject);
     }
 
