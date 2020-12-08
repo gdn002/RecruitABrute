@@ -11,6 +11,7 @@ public static class SceneLoadController
         //Here put the First Level Scene name,
         MainScene,
         MainMenuScene,
+
     }
 
     public static void Load(Scene scene)
