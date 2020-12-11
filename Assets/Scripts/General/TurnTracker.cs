@@ -41,6 +41,7 @@ public class TurnTracker : MonoBehaviour
 
     public Vector2Int ActiveUnitStartCoordinates;
     private GridTile lastSelected;
+    public GameObject rewardPanel;
 
     public void AddToInitiative(Unit unit)
     {
@@ -127,6 +128,28 @@ public class TurnTracker : MonoBehaviour
 
     private void OnTurnStart()
     {
+        int eCount = 0;
+        int pCount = 0;
+        foreach(Unit u in InitiativeOrder){
+            if(u.enemy){
+                eCount++;
+            }
+            else{
+                pCount++;
+            }
+        }
+        if(eCount == 0){
+            NextPhase();
+            
+        }
+        if(pCount == 0){
+            Destroy(GameObject.Find("In-game UI"));
+            Destroy(GameObject.Find("Map"));
+            SceneManager.LoadScene(0);
+        }
+
+
+
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
@@ -148,17 +171,22 @@ public class TurnTracker : MonoBehaviour
 
     private void OnEnterRewardPhase()
     {
-        //temporary
+        //temporary 
         UnitState reward = ScriptableObject.CreateInstance<UnitState>();
-        reward.health = 1000;
-        reward.maxHealth = 1000;
+        reward.health = 700; //this is gonna fuck with the AI, change
+        reward.maxHealth = 70;
         reward.movementRange = 3;
         reward.initiative = 3;
         reward.unitName = "Test Brute";
         reward.enemy = false;
-        DeckHandler.MainDeckHandler.AddCard(reward);
-        
-        SceneManager.LoadScene(1);
+        DeckHandler.MainDeckHandler.AddCard(reward); //this should be handled in the reward phase script
+
+        Transform x = GameObject.Find("In-game UI").transform.Find("RewardPanel");
+        x.gameObject.SetActive(true);
+        x.Find("UpgradeOrAdd").gameObject.SetActive(true);
+        //gameObject.SetActive(true);
+        //GameObject.Find("UpgradeOrAdd").gameObject.SetActive(true);
+        //rewardPanel.SetActive(true);
     }
 
 

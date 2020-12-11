@@ -11,6 +11,7 @@ public class UnitState : ScriptableObject
     public string unitName;
     public bool enemy;
     
+    
     public void Set(Unit unit)
     {
         health = unit.health;
