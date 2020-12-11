@@ -147,7 +147,7 @@ MonoBehaviour:
   initiative: 8
   unitName: Ranger Brute
   UnitEntity: {fileID: 0}
-  enemy: 1
+  enemy: 0
   unitStatsText: {fileID: 0}
   baseAttack: {fileID: 11400000, guid: d3364b565d6d3b14bbe63de53cc35dd9, type: 2}
   abilities: []

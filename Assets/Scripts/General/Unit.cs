@@ -157,4 +157,13 @@ public class Unit : MonoBehaviour
     {
         Grid.ActiveGrid.MouseDownGridTile(GetCoordinates());
     }
+    // *** CAMERA EVENTS ***
+    public void RotateForCamera(float degrees)
+    {
+        gameObject.transform.Find("Mesh").transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), degrees);
+    }
+    public void AngleForCamera(float degrees)    
+    {
+        gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles = new Vector3(degrees, 0.0f, 0.0f);       
+    }
 }
