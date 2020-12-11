@@ -14,12 +14,10 @@ public class DeckHandler : MonoBehaviour
     public Unit selectedUnit = null;
     public List<UnitState> Units { get; private set; } = new List<UnitState>();
 
-    public Unit BaseUnitPrefab;
+    public Unit StartingUnitPrefab;
     
     void Awake()
-    {
-        BaseUnitPrefab.enemy = false;
-        
+    {        
         if (MainDeckHandler == null)
         {
             MainDeckHandler = this;
@@ -33,6 +31,8 @@ public class DeckHandler : MonoBehaviour
             initUnit.initiative = 3;
             initUnit.unitName = "Test Brute";
             initUnit.enemy = false;
+            initUnit.Set(StartingUnitPrefab);
+            initUnit.unitPrefab = StartingUnitPrefab;
             AddCard(initUnit);
         }
         else
@@ -83,7 +83,8 @@ public class DeckHandler : MonoBehaviour
 
     public void PlacementButtonOnClick(UnitState u, Button b)
     {
-        GameObject unitGameObject = Instantiate(BaseUnitPrefab.gameObject); //change this
+
+        GameObject unitGameObject = Instantiate(u.unitPrefab.gameObject);
         Unit unit = unitGameObject.GetComponent<Unit>();
         unit.Init(u);
         unitGameObject.SetActive(false);

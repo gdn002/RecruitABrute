@@ -1226,7 +1226,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.5
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -2602,6 +2602,14 @@ MonoBehaviour:
   m_Text: Check Deck
 --- !u!222 &1187172341
 CanvasRenderer:
+  maxdecksize: 3
+  unitbutton: {fileID: 388012430}
+  placementpanel: {fileID: 1424156072}
+  selectedUnit: {fileID: 0}
+  StartingUnitPrefab: {fileID: 2569565651780631889, guid: 084bfd3e3602b8d4ba7419bf56b48d39,
+    type: 3}
+--- !u!4 &1240105436
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
