@@ -147,7 +147,7 @@ MonoBehaviour:
   initiative: 4
   unitName: Mage Brute
   UnitEntity: {fileID: 0}
-  enemy: 1
+  enemy: 0
   unitStatsText: {fileID: 0}
   baseAttack: {fileID: 0}
   abilities: []

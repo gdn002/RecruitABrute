@@ -2423,12 +2423,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd5382a1bd71d344b791c2ea56362ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unit: {fileID: 0}
   maxdecksize: 3
-  PlayerDeck: []
   unitbutton: {fileID: 388012430}
   placementpanel: {fileID: 1424156072}
   selectedUnit: {fileID: 0}
+  StartingUnitPrefab: {fileID: 2569565651780631889, guid: 084bfd3e3602b8d4ba7419bf56b48d39,
+    type: 3}
 --- !u!4 &1240105436
 Transform:
   m_ObjectHideFlags: 0
