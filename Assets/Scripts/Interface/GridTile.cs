@@ -18,6 +18,7 @@ public class GridTile : MonoBehaviour
     }
 
     public float gapBetweenCells = 0.01f;
+    public float height = 0.1f;
 
     public Vector2Int Coordinates { get; private set; }
 
@@ -29,6 +30,7 @@ public class GridTile : MonoBehaviour
         transform.SetParent(parent);
 
         Vector3 position = Grid.GridToLocal(coordinates);
+        position.y = -(height / 2);
         transform.localPosition = position;
 
         Coordinates = coordinates;
@@ -119,8 +121,8 @@ public class GridTile : MonoBehaviour
     // *** MONOBEHAVIOUR FUNCTIONS ***
     private void Awake()
     {
-        transform.localScale = new Vector3(Grid.CELL_SIZE - gapBetweenCells, 1, Grid.CELL_SIZE - gapBetweenCells);
-        renderer = GetComponentInChildren<Renderer>();
+        transform.localScale = new Vector3(Grid.CELL_SIZE - gapBetweenCells, height, Grid.CELL_SIZE - gapBetweenCells);
+        renderer = GetComponent<Renderer>();
         UpdateHighlight();
     }
 

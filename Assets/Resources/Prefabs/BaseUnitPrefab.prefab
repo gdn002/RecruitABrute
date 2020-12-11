@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1315878718078112947}
   - component: {fileID: 1315878718078112948}
   - component: {fileID: 206221781950494756}
-  - component: {fileID: 3670370233597192898}
   m_Layer: 0
   m_Name: BaseUnitPrefab
   m_TagString: Untagged
@@ -129,7 +128,7 @@ MonoBehaviour:
   initiative: 0
   unitName: 
   UnitEntity: {fileID: 0}
-  enemy: 0
+  enemy: 1
   unitStatsText: {fileID: 0}
   baseAttack: {fileID: 0}
   abilities: []
@@ -141,22 +140,3 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315878718078112950}
   m_Enabled: 1
---- !u!95 &3670370233597192898
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1315878718078112950}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
