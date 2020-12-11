@@ -1551,7 +1551,7 @@ MonoBehaviour:
     type: 3}
   placementpanel: {fileID: 1424156072}
   selectedUnit: {fileID: 0}
-  BaseUnitPrefab: {fileID: 2569565651780631889, guid: 27be827e947f0c544b48714b6e5d5117,
+  StartingUnitPrefab: {fileID: 2569565651780631889, guid: 084bfd3e3602b8d4ba7419bf56b48d39,
     type: 3}
 --- !u!4 &1240105436
 Transform:

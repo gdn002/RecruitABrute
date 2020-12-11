@@ -2,6 +2,8 @@
 
 public class UnitState : ScriptableObject
 {
+    public Unit unitPrefab;
+
     public int health;
     public int maxHealth;
     public int movementRange;
