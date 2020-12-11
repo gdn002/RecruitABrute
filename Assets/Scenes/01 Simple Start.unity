@@ -3786,7 +3786,7 @@ MonoBehaviour:
     type: 3}
   placementpanel: {fileID: 1424156072}
   selectedUnit: {fileID: 0}
-  BaseUnitPrefab: {fileID: 1315878718078112948, guid: 2d5d3005da287f141bce208168171a7b,
+  StartingUnitPrefab: {fileID: 2569565651780631889, guid: 084bfd3e3602b8d4ba7419bf56b48d39,
     type: 3}
 --- !u!1 &1713545314
 GameObject:

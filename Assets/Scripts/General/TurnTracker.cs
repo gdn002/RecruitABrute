@@ -143,6 +143,7 @@ public class TurnTracker : MonoBehaviour
             
         }
         if(pCount == 0){
+            Debug.Log("ASDASD");
             Destroy(GameObject.Find("In-game UI"));
             Destroy(GameObject.Find("Map"));
             SceneManager.LoadScene(0);
@@ -171,15 +172,6 @@ public class TurnTracker : MonoBehaviour
 
     private void OnEnterRewardPhase()
     {
-        //temporary 
-        UnitState reward = ScriptableObject.CreateInstance<UnitState>();
-        reward.health = 700; //this is gonna fuck with the AI, change
-        reward.maxHealth = 70;
-        reward.movementRange = 3;
-        reward.initiative = 3;
-        reward.unitName = "Test Brute";
-        reward.enemy = false;
-        DeckHandler.MainDeckHandler.AddCard(reward); //this should be handled in the reward phase script
 
         Transform x = GameObject.Find("In-game UI").transform.Find("RewardPanel");
         x.gameObject.SetActive(true);

@@ -25,12 +25,6 @@ public class DeckHandler : MonoBehaviour
             
             //Temporary to test adding card
             UnitState initUnit = ScriptableObject.CreateInstance<UnitState>();
-            initUnit.health = 50;
-            initUnit.maxHealth = 50;
-            initUnit.movementRange = 3;
-            initUnit.initiative = 3;
-            initUnit.unitName = "Test Brute";
-            initUnit.enemy = false;
             initUnit.Set(StartingUnitPrefab);
             initUnit.unitPrefab = StartingUnitPrefab;
             AddCard(initUnit);
@@ -56,6 +50,17 @@ public class DeckHandler : MonoBehaviour
         if (Units.Count < maxdecksize)
         {
             Units.Add(u);
+        }
+    }
+
+        public void AddCard(Unit u)
+    {
+        if (Units.Count < maxdecksize)
+        {
+            UnitState newUnit = ScriptableObject.CreateInstance<UnitState>();
+            newUnit.Set(u);
+            newUnit.unitPrefab = u;
+            AddCard(newUnit);
         }
     }
 

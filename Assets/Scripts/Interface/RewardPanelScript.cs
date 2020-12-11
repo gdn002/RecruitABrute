@@ -35,7 +35,9 @@ public class RewardPanelScript : MonoBehaviour
 
         Debug.Log("This GameObject was selected");
         Debug.Log(b);
+        GameObject newUnit = (GameObject) b;
 
+        DeckHandler.MainDeckHandler.AddCard(newUnit.GetComponent<Unit>());//CAST INTO GAME OBJECT
         //ADD b TO DECK HERE
         ResetUI();
 
