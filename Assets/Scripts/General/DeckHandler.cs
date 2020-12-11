@@ -27,8 +27,8 @@ public class DeckHandler : MonoBehaviour
             
             //Temporary to test adding card
             UnitState initUnit = ScriptableObject.CreateInstance<UnitState>();
-            initUnit.health = 1000;
-            initUnit.maxHealth = 1000;
+            initUnit.health = 50;
+            initUnit.maxHealth = 50;
             initUnit.movementRange = 3;
             initUnit.initiative = 3;
             initUnit.unitName = "Test Brute";
@@ -83,7 +83,7 @@ public class DeckHandler : MonoBehaviour
 
     public void PlacementButtonOnClick(UnitState u, Button b)
     {
-        GameObject unitGameObject = Instantiate(BaseUnitPrefab.gameObject);
+        GameObject unitGameObject = Instantiate(BaseUnitPrefab.gameObject); //change this
         Unit unit = unitGameObject.GetComponent<Unit>();
         unit.Init(u);
         unitGameObject.SetActive(false);
