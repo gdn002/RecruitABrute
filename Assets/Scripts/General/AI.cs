@@ -160,7 +160,7 @@ public class AI : MonoBehaviour
                             // Check all units that will be affected from targeting this unit
                             AITarget target;
                             target.coordinates = unit.GetCoordinates();
-                            target.value = GetValueFor(AttachedSkill.GetAffectedUnits(AttachedUnit, target.coordinates));
+                            target.value = GetValueFor(AttachedSkill.GetAffectedUnits(AttachedUnit, target.coordinates, true));
                             target.distance = Vector2Int.Distance(AttachedUnit.GetCoordinates(), target.coordinates);
 
                             // If there is value to this target, add it to the list
@@ -180,7 +180,7 @@ public class AI : MonoBehaviour
                             // Check all units that will be affected from targeting this tile
                             AITarget target;
                             target.coordinates = new Vector2Int(x, y);
-                            target.value = GetValueFor(AttachedSkill.GetAffectedUnits(AttachedUnit, target.coordinates));
+                            target.value = GetValueFor(AttachedSkill.GetAffectedUnits(AttachedUnit, target.coordinates, true));
                             target.distance = Vector2Int.Distance(AttachedUnit.GetCoordinates(), target.coordinates);
 
                             // If there is value to this target, add it to the list

@@ -88,8 +88,21 @@ public class Skill : ScriptableObject
         return validTargets;
     }
 
+    public List<Vector2Int> GetAffectedTiles(Unit caster, Vector2Int target)
+    {
+        if (InRange(caster.GetCoordinates(), target))
+        {
+            return GetAffectedTilesIfInRange(target);
+        }
+        else
+        {
+            return new List<Vector2Int>();
+        }
+    }
+
+    
     // Returns all tiles that will be affected by this skill when targeting the given coordinates
-    public List<Vector2Int> GetAffectedTiles(Vector2Int target)
+    public List<Vector2Int> GetAffectedTilesIfInRange(Vector2Int target)
     {
         List<Vector2Int> affectedTiles = new List<Vector2Int>();
         switch (effectZone)
@@ -119,9 +132,9 @@ public class Skill : ScriptableObject
     }
 
     // Returns all units that will be affected by this skill when targeting the given coordinates
-    public List<Unit> GetAffectedUnits(Unit caster, Vector2Int target)
+    public List<Unit> GetAffectedUnits(Unit caster, Vector2Int target, bool assumeInRange)
     {
-        List<Vector2Int> affectedTiles = GetAffectedTiles(target);
+        List<Vector2Int> affectedTiles = assumeInRange ? GetAffectedTilesIfInRange(target) : GetAffectedTiles(caster, target);
         List<Unit> affectedUnits = new List<Unit>();
 
         foreach (var tile in affectedTiles)
@@ -146,7 +159,7 @@ public class Skill : ScriptableObject
         Animation(caster);
         Func<int> callback = () =>
         {
-            List<Unit> affectedUnits = GetAffectedUnits(caster, target);
+            List<Unit> affectedUnits = GetAffectedUnits(caster, target, false);
             foreach (var unit in affectedUnits)
             {
                 EffectOnUnit(unit);
@@ -227,13 +240,18 @@ public class Skill : ScriptableObject
 
         foreach (var unit in allUnits)
         {
-            if (Vector2Int.Distance(coordinates, unit.GetCoordinates()) <= (float)range)
+            if (InRange(coordinates, unit.GetCoordinates()))
             {
                 unitsInRange.Add(unit);
             }
         }
 
         return unitsInRange;
+    }
+
+    private bool InRange(Vector2Int coord1, Vector2Int coord2)
+    {
+        return Vector2Int.Distance(coord1, coord2) <= range;
     }
 
     private List<Vector2Int> GetAllTilesInRange(Vector2Int coordinates)
@@ -251,7 +269,7 @@ public class Skill : ScriptableObject
             for (int y = minY; y < maxY; y++)
             {
                 Vector2Int tile = new Vector2Int(x, y);
-                if (Vector2Int.Distance(coordinates, tile) <= (float)range)
+                if (InRange(coordinates, tile))
                     tilesInRange.Add(tile);
             }
         }

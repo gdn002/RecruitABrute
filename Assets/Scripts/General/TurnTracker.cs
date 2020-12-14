@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -272,7 +273,13 @@ public class TurnTracker : MonoBehaviour
     // Highlights the tiles the currently active unit can target (currently only works for the base attack)
     private void SetTargetHighlight()
     {
-        Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+        if (ActiveSkill.targetType == Skill.TargetType.Unit)
+        {
+            Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+        } else if (ActiveSkill.targetType == Skill.TargetType.Tile && GridTile.CurrentlySelected != null)
+        {
+            Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates), GridTile.TileHighlights.AoE);
+        }
     }
 
     // *** INPUT MODES ***
