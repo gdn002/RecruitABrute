@@ -35,6 +35,11 @@ public class DeckHandler : MonoBehaviour
         }
     }
 
+    public void CallNextTurn()
+    {
+        TurnTracker.ActiveTracker.NextTurn();
+    }
+
 
     public void PrintDeck()
     {
