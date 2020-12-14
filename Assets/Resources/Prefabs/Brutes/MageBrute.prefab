@@ -149,8 +149,8 @@ MonoBehaviour:
   UnitEntity: {fileID: 0}
   enemy: 0
   unitStatsText: {fileID: 0}
-  baseAttack: {fileID: 0}
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: d3364b565d6d3b14bbe63de53cc35dd9, type: 2}
 --- !u!65 &-5451271156393447666
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -87,7 +87,7 @@ public class RewardPanelScript : MonoBehaviour
         //change onclick here
         
         // Skill button
-        Object[] skills = Resources.LoadAll("Prefabs/Skills", typeof(ScriptableObject));
+        Object[] skills = Resources.LoadAll("Prefabs/Skills/Rewards", typeof(ScriptableObject));
         Skill skill = (Skill) skills[Random.Range(0, skills.Length)];
         
         UpgradeUnitPanel.transform.GetChild(5).GetComponent<TMP_Text>().text = "Add skill: ";

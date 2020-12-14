@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee65b9d3b0ed9f34794979e1f9b8d7d1, type: 3}
-  m_Name: GenericAttack
+  m_Name: RangerAttack
   m_EditorClassIdentifier: 
-  skillName: Generic Attack
+  skillName: Shoot
   targetType: 1
   effectZone: 0
   affectedUnits: 4
   effectOnTargets: 0
-  power: 10
-  range: 1
+  power: 25
+  range: 5
   radius: 1
   projectile: {fileID: 0}
