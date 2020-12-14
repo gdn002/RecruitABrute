@@ -10,7 +10,7 @@ public class UnitState : ScriptableObject
     public int initiative;
     public string unitName;
     public bool enemy;
-    
+    public Skill[] abilities;
     
     public void Set(Unit unit)
     {
@@ -20,5 +20,6 @@ public class UnitState : ScriptableObject
         initiative = unit.initiative;
         unitName = unit.unitName;
         enemy = unit.enemy;
+        abilities = unit.abilities;
     }
 }

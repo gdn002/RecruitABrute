@@ -22,7 +22,7 @@ public class AI : MonoBehaviour
 
     public Entity AttachedEntity { get; private set; }
     public Unit AttachedUnit { get; private set; }
-    public Skill AttachedSkill { get { return AttachedUnit.baseAttack; } }
+    public Skill AttachedSkill { get { return AttachedUnit.abilities[0]; } }
 
     public Vector2Int? FoundTarget { get; private set; }
     public Vector2Int? FoundMovePos { get; private set; }

@@ -30,16 +30,14 @@ public class Unit : MonoBehaviour
         initiative = initUnitState.initiative;
         unitName = initUnitState.unitName;
         enemy = initUnitState.enemy;
+        abilities = initUnitState.abilities;
     }
 
     // These stats are derived from the unit's base attack Skill
-    public int AttackRange { get { return baseAttack.range; } }
-    public int AttackDamage { get { return baseAttack.power; } }
+    public int AttackRange { get { return abilities[0].range; } }
+    public int AttackDamage { get { return abilities[0].power; } }
 
     public UnitStatsText unitStatsText;
-
-    // Basic attack
-    public Skill baseAttack;
 
     // Special abilities
     public Skill[] abilities;
@@ -123,10 +121,10 @@ public class Unit : MonoBehaviour
         localRenderers = new List<Renderer>();
         localRenderers.AddRange(GetComponentsInChildren<Renderer>());
 
-        if (baseAttack == null)
+        if (abilities == null)
         {
             Debug.LogWarning("Unit " + unitName + " has no set base attack skill. Loading default skill...");
-            baseAttack = ScriptableObject.CreateInstance<Skill>();
+            abilities = new [] {ScriptableObject.CreateInstance<Skill>()};
         }
 
         AttachedAI = GetComponent<AI>();
