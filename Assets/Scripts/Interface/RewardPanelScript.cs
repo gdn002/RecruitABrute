@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -75,7 +76,19 @@ public class RewardPanelScript : MonoBehaviour
         UpgradeUnitPanel.transform.GetChild(4).transform.GetChild(0).GetComponent<TMP_Text>().text = "+10 Max HP";
         maxHealthButton.onClick.AddListener(() => {maxHealthMethod(u);});
         //change onclick here
-
+        
+        UpgradeUnitPanel.transform.GetChild(5).GetComponent<TMP_Text>().text = "Add skill: ";
+        Button addSkillButton = UpgradeUnitPanel.transform.GetChild(6).GetComponent<Button>();
+        UpgradeUnitPanel.transform.GetChild(6).transform.GetChild(0).GetComponent<TMP_Text>().text = "Add skill";
+        addSkillButton.onClick.AddListener(() => addSkillMethod(u));
+    }
+    
+    private void addSkillMethod(UnitState u){
+        Object[] skills = Resources.LoadAll("Prefabs/Skills", typeof(ScriptableObject));
+        Skill skill = (Skill) skills[Random.Range(0, skills.Length)];
+        u.abilities = u.abilities.Append(skill).ToArray();
+        Debug.Log(u.abilities);
+        ResetUI();
     }
     private void healMethod(UnitState u){
         Debug.Log("Health before:" + u.health.ToString());
@@ -87,9 +100,8 @@ public class RewardPanelScript : MonoBehaviour
         }
         Debug.Log("Health after: " + u.health.ToString());
         ResetUI();
-        
-
     }
+    
     private void maxHealthMethod(UnitState u){
         Debug.Log("max Health before:" + u.maxHealth.ToString());
         u.maxHealth+=10;

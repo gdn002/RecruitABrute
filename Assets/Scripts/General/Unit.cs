@@ -30,6 +30,7 @@ public class Unit : MonoBehaviour
         initiative = initUnitState.initiative;
         unitName = initUnitState.unitName;
         enemy = initUnitState.enemy;
+        abilities = initUnitState.abilities;
     }
 
     // These stats are derived from the unit's base attack Skill
