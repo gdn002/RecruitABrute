@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/02 Two Corridors.unity
     guid: 58597df15dd72984db92975d2f4c38d6
+  - enabled: 1
+    path: Assets/Scenes/03 Bottleneck.unity
+    guid: 07a3c8b635b0e9d44bb3ee9f3b24696c
+  - enabled: 1
+    path: Assets/Scenes/04 Three Rooms.unity
+    guid: 3407fd411fe707f4d9dff2f3af99fe1c
   m_configObjects: {}
