@@ -96,6 +96,7 @@ public class TurnTracker : MonoBehaviour
 
     public void NextTurn()
     {
+        ActiveSkill = null;
         if (CurrentPhase != GamePhase.Combat)
             return;
 
@@ -328,8 +329,7 @@ public class TurnTracker : MonoBehaviour
             if (selection.GetHighlight() == GridTile.TileHighlights.AoE)
             {
                 ActiveSkill.ActivateSkill(ActiveUnit, selection.Coordinates);
-                ActiveSkill = null;
-                NextTurn();
+                //NextTurn();
             }
         }
     }
