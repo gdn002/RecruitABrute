@@ -417,15 +417,6 @@ public class TurnTracker : MonoBehaviour
                 NextTurn();
             }
 
-            // This is only for testing while we don't have the scripts/interface to select/deselect skills
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                if (inputMode == InputMode.Movement)
-                    SetInputMode(InputMode.Target);
-                else
-                    SetInputMode(InputMode.Movement);
-            }
-
             switch (inputMode)
             {
                 case InputMode.Movement:
