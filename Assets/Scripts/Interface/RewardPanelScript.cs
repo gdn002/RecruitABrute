@@ -70,24 +70,37 @@ public class RewardPanelScript : MonoBehaviour
         
         Button healButton = UpgradeUnitPanel.transform.GetChild(3).GetComponent<Button>();
         UpgradeUnitPanel.transform.GetChild(3).transform.GetChild(0).GetComponent<TMP_Text>().text = "Heal (+20)";
-        healButton.onClick.AddListener(() => {healMethod(u);});
+        healButton.onClick.AddListener(() =>
+        {
+            healMethod(u);
+            healButton.onClick.RemoveAllListeners();
+        });
         //change onclick here
         Button maxHealthButton = UpgradeUnitPanel.transform.GetChild(4).GetComponent<Button>();
         UpgradeUnitPanel.transform.GetChild(4).transform.GetChild(0).GetComponent<TMP_Text>().text = "+10 Max HP";
-        maxHealthButton.onClick.AddListener(() => {maxHealthMethod(u);});
+        maxHealthButton.onClick.AddListener(() =>
+        {
+            maxHealthMethod(u);
+            maxHealthButton.onClick.RemoveAllListeners();
+
+        });
         //change onclick here
         
         UpgradeUnitPanel.transform.GetChild(5).GetComponent<TMP_Text>().text = "Add skill: ";
         Button addSkillButton = UpgradeUnitPanel.transform.GetChild(6).GetComponent<Button>();
         UpgradeUnitPanel.transform.GetChild(6).transform.GetChild(0).GetComponent<TMP_Text>().text = "Add skill";
-        addSkillButton.onClick.AddListener(() => addSkillMethod(u));
+        addSkillButton.onClick.AddListener(() =>
+        {
+            addSkillMethod(u);
+            addSkillButton.onClick.RemoveAllListeners();
+        });
     }
     
     private void addSkillMethod(UnitState u){
         Object[] skills = Resources.LoadAll("Prefabs/Skills", typeof(ScriptableObject));
         Skill skill = (Skill) skills[Random.Range(0, skills.Length)];
         u.abilities = u.abilities.Append(skill).ToArray();
-        Debug.Log(u.abilities);
+        Debug.Log("skills: " + u.abilities.Length);
         ResetUI();
     }
     private void healMethod(UnitState u){

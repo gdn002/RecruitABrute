@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TurnTracker : MonoBehaviour
 {
@@ -104,7 +106,6 @@ public class TurnTracker : MonoBehaviour
             TurnCounter = 0;
             RoundCounter++;
         }
-
         OnTurnStart();
     }
 
@@ -124,33 +125,11 @@ public class TurnTracker : MonoBehaviour
     private void OnTurnEnd()
     {
         ActiveUnit.Deactivate();
+        ResetSkillBar();
     }
 
     private void OnTurnStart()
     {
-        int eCount = 0;
-        int pCount = 0;
-        foreach(Unit u in InitiativeOrder){
-            if(u.enemy){
-                eCount++;
-            }
-            else{
-                pCount++;
-            }
-        }
-        if(eCount == 0){
-            NextPhase();
-            
-        }
-        if(pCount == 0){
-            Debug.Log("ASDASD");
-            Destroy(GameObject.Find("In-game UI"));
-            Destroy(GameObject.Find("Map"));
-            SceneManager.LoadScene(0);
-        }
-
-
-
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
@@ -160,6 +139,30 @@ public class TurnTracker : MonoBehaviour
         {
             ActiveUnit.AttachedAI.FindTarget();
             StartCoroutine(ActiveUnit.AttachedAI.CommitActions());
+        }
+        else
+        {
+            UpdateSkillBar();
+        }
+    }
+
+    private void UpdateSkillBar()
+    {
+        GameObject skillBar = GameObject.FindGameObjectWithTag("SkillBar");
+        for (int i = 0; i < ActiveUnit.abilities.Length; i++)
+        {
+            var btn = (GameObject) Instantiate(Resources.Load("Prefabs/Interface/SkillButton"), skillBar.transform);
+            btn.transform.position += new Vector3(i * 100, 0);
+            btn.transform.GetChild(0).GetComponent<Text>().text = ActiveUnit.abilities[i].skillName;
+        }
+    }
+    
+    private void ResetSkillBar()
+    {
+        GameObject skillBar = GameObject.FindGameObjectWithTag("SkillBar");
+        foreach (Transform child in skillBar.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 
@@ -172,7 +175,7 @@ public class TurnTracker : MonoBehaviour
 
     private void OnEnterRewardPhase()
     {
-
+        ResetSkillBar();
         Transform x = GameObject.Find("In-game UI").transform.Find("RewardPanel");
         x.gameObject.SetActive(true);
         x.Find("UpgradeOrAdd").gameObject.SetActive(true);
@@ -361,43 +364,50 @@ public class TurnTracker : MonoBehaviour
                 NextPhase();
             }
         }
-        
-        // If the active unit is an AI unit, disable all direct input
-        if (ActiveUnit != null && ActiveUnit.HasAI)
-        {
-            // If the AI is no longer busy, it means it is done and the next turn can start
-            if (!ActiveUnit.AttachedAI.IsBusy)
-                NextTurn();
 
-            return;
-        }
-
-        // This is only for testing while we don't have the scripts/interface to call NextTurn externally
-        if (Input.GetKeyDown(KeyCode.Return))
+        else if (CurrentPhase == GamePhase.Combat)
         {
-            NextTurn();
-        }
-
-        // This is only for testing while we don't have the scripts/interface to select/deselect skills
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (inputMode == InputMode.Movement)
-                SetInputMode(InputMode.Target);
-            else
-                SetInputMode(InputMode.Movement);
-        }
-
-        if (CurrentPhase == GamePhase.Combat)
-        {
-            
+            // Player Lost
             if (Grid.ActiveGrid.GetAllFriendlyUnits().Count == 0)
             {
-                Application.Quit();//Todo: Handle player lost scenario
-            } else if (Grid.ActiveGrid.GetAllEnemyUnits().Count == 0)
-            {
-                NextPhase();
+                Destroy(GameObject.Find("In-game UI"));
+                Destroy(GameObject.Find("Map"));
+                SceneManager.LoadScene(0);
+                return;
             }
             
+            //Player won
+            if (Grid.ActiveGrid.GetAllEnemyUnits().Count == 0)
+            {
+                NextPhase();
+                return;
+            }
+            
+            // If the active unit is an AI unit, disable all direct input
+            if (ActiveUnit != null && ActiveUnit.HasAI)
+            {
+                // If the AI is no longer busy, it means it is done and the next turn can start
+                if (!ActiveUnit.AttachedAI.IsBusy)
+                    NextTurn();
+
+                return;
+            }
+
+            // This is only for testing while we don't have the scripts/interface to call NextTurn externally
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                NextTurn();
+            }
+
+            // This is only for testing while we don't have the scripts/interface to select/deselect skills
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (inputMode == InputMode.Movement)
+                    SetInputMode(InputMode.Target);
+                else
+                    SetInputMode(InputMode.Movement);
+            }
+
             switch (inputMode)
             {
                 case InputMode.Movement:
