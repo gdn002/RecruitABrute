@@ -51,6 +51,8 @@ public class RewardPanelScript : MonoBehaviour
         DestroyAllChildren(UpgradePanel); //not sure if these are needed
         DestroyAllChildren(AddPanel); //not sure if these are needed
 
+
+        UpgradeUnitPanel.SetActive(false);
         UpgradePanel.SetActive(false);
         AddPanel.SetActive(false);
         gameObject.SetActive(false); //these 3+2+2 lines can prob be moved outside if later
