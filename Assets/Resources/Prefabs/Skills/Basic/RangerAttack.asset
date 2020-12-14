@@ -20,4 +20,5 @@ MonoBehaviour:
   power: 25
   range: 5
   radius: 1
-  projectile: {fileID: 0}
+  projectile: {fileID: 71072317499118049, guid: 64d4cda2005417840850f18daadb362a,
+    type: 3}
