@@ -17,8 +17,10 @@ public class RewardPanelScript : MonoBehaviour
     public void DisplayRewardsOnAddPanel(){
         Debug.Log("DISPLAY REWARTDS ON ADD PANEL");
         brutes = Resources.LoadAll("Prefabs/Brutes", typeof(GameObject));
+        brutes = brutes.OrderBy(brute => Random.value).ToArray();
+        
         for(int i = 0;i<3;i++){
-            var b = brutes[Random.Range(0, brutes.Length)];
+            var b = brutes[i];
             GameObject btn = Instantiate(unitbutton);
             btn.transform.SetParent(AddPanel.transform, false);
             //btn.transform.localScale = new Vector3(1, 1, 1);
