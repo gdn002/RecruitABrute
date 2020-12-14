@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -12,7 +10,27 @@ public class Unit : MonoBehaviour
     public string unitName;
     public Entity UnitEntity;
     public bool enemy;
+    private UnitState unitState;
 
+    public UnitState UnitState
+    {
+        get
+        {
+            unitState.Set(this);
+            return unitState;
+        }
+    }
+
+    public void Init(UnitState initUnitState)
+    {
+        unitState = initUnitState;
+        health = initUnitState.health;
+        maxHealth = initUnitState.maxHealth;
+        movementRange = initUnitState.movementRange;
+        initiative = initUnitState.initiative;
+        unitName = initUnitState.unitName;
+        enemy = initUnitState.enemy;
+    }
 
     // These stats are derived from the unit's base attack Skill
     public int AttackRange { get { return baseAttack.range; } }
@@ -46,6 +64,10 @@ public class Unit : MonoBehaviour
         {
             Remove();
         }
+        else
+        {
+            unitState.Set(this);
+        }
     }
 
     public void Remove()
@@ -54,6 +76,7 @@ public class Unit : MonoBehaviour
         Grid.ActiveGrid.RemoveEntity(UnitEntity);
         UnitEntity.SetCollision(false);
         Grid.ActiveGrid.RemoveEntity(UnitEntity);
+        DeckHandler.MainDeckHandler.Units.Remove(unitState);
         Destroy(gameObject);
     }
 
@@ -86,6 +109,12 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         UnitEntity = gameObject.GetComponent<Entity>();
+        unitState = ScriptableObject.CreateInstance<UnitState>();
+
+        if (enemy)
+        {
+            gameObject.AddComponent<AI>();
+        }
     }
 
     // Start is called before the first frame update
@@ -127,5 +156,14 @@ public class Unit : MonoBehaviour
     private void OnMouseDown()
     {
         Grid.ActiveGrid.MouseDownGridTile(GetCoordinates());
+    }
+    // *** CAMERA EVENTS ***
+    public void RotateForCamera(float degrees)
+    {
+        gameObject.transform.Find("Mesh").transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), degrees);
+    }
+    public void AngleForCamera(float degrees)    
+    {
+        gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles = new Vector3(degrees, 0.0f, 0.0f);       
     }
 }

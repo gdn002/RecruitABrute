@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TurnTracker : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class TurnTracker : MonoBehaviour
 
     public Vector2Int ActiveUnitStartCoordinates;
     private GridTile lastSelected;
+    public GameObject rewardPanel;
 
     public void AddToInitiative(Unit unit)
     {
@@ -83,7 +85,7 @@ public class TurnTracker : MonoBehaviour
                     OnEnterCombatPhase();
                     break;
                 case GamePhase.Reward:
-                    //OnEnterRewardPhase();
+                    OnEnterRewardPhase();
                     break;
             }
         }
@@ -126,6 +128,29 @@ public class TurnTracker : MonoBehaviour
 
     private void OnTurnStart()
     {
+        int eCount = 0;
+        int pCount = 0;
+        foreach(Unit u in InitiativeOrder){
+            if(u.enemy){
+                eCount++;
+            }
+            else{
+                pCount++;
+            }
+        }
+        if(eCount == 0){
+            NextPhase();
+            
+        }
+        if(pCount == 0){
+            Debug.Log("ASDASD");
+            Destroy(GameObject.Find("In-game UI"));
+            Destroy(GameObject.Find("Map"));
+            SceneManager.LoadScene(0);
+        }
+
+
+
         ActiveUnit.Activate();
         ActiveUnitStartCoordinates = ActiveUnit.GetCoordinates();
 
@@ -143,6 +168,17 @@ public class TurnTracker : MonoBehaviour
         // First Turn
 
         OnTurnStart();
+    }
+
+    private void OnEnterRewardPhase()
+    {
+
+        Transform x = GameObject.Find("In-game UI").transform.Find("RewardPanel");
+        x.gameObject.SetActive(true);
+        x.Find("UpgradeOrAdd").gameObject.SetActive(true);
+        //gameObject.SetActive(true);
+        //GameObject.Find("UpgradeOrAdd").gameObject.SetActive(true);
+        //rewardPanel.SetActive(true);
     }
 
 
@@ -314,14 +350,19 @@ public class TurnTracker : MonoBehaviour
     void Start()
     {
         UpdateHighlight();
+        DeckHandler.MainDeckHandler.DrawDeckToUI();
     }
 
     void Update()
     {
-        // DEBUG PURPOSES
         if (CurrentPhase == GamePhase.Setup)
-            NextPhase();
-
+        {
+            if (DeckHandler.MainDeckHandler.Units.Count == UnitsPlaced)
+            {
+                NextPhase();
+            }
+        }
+        
         // If the active unit is an AI unit, disable all direct input
         if (ActiveUnit != null && ActiveUnit.HasAI)
         {
@@ -349,6 +390,15 @@ public class TurnTracker : MonoBehaviour
 
         if (CurrentPhase == GamePhase.Combat)
         {
+            
+            if (Grid.ActiveGrid.GetAllFriendlyUnits().Count == 0)
+            {
+                Application.Quit();//Todo: Handle player lost scenario
+            } else if (Grid.ActiveGrid.GetAllEnemyUnits().Count == 0)
+            {
+                NextPhase();
+            }
+            
             switch (inputMode)
             {
                 case InputMode.Movement:

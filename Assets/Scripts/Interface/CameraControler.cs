@@ -42,18 +42,20 @@ public class CameraControler : MonoBehaviour
         if (Input.GetKeyDown("e"))
         { 
             grid.transform.RotateAround(new Vector3(grid.GetComponent<Grid>().gridSize.x / 2.0f -0.5f, 0.0f, grid.GetComponent<Grid>().gridSize.y / 2.0f - 0.5f), new Vector3(0.0f, 1.0f, 0.0f), 90.0f);
-            foreach(GameObject unit in GameObject.FindGameObjectsWithTag("Unit"))
+            grid.BroadcastMessage("RotateForCamera", -90.0f);
+            /*foreach(GameObject unit in GameObject.FindGameObjectsWithTag("Unit"))
             {
                 unit.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), -90.0f);
-            }
+            }*/
         }
         if (Input.GetKeyDown("q"))
         {
             grid.transform.RotateAround(new Vector3(grid.GetComponent<Grid>().gridSize.x / 2.0f - 0.5f, 0.0f, grid.GetComponent<Grid>().gridSize.y / 2.0f - 0.5f), new Vector3(0.0f, 1.0f, 0.0f), -90.0f);
-            foreach (GameObject unit in GameObject.FindGameObjectsWithTag("Unit"))
+            grid.BroadcastMessage("RotateForCamera", 90.0f);
+            /*foreach (GameObject unit in GameObject.FindGameObjectsWithTag("Unit"))
             {
                 unit.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), 90.0f);
-            }
+            }*/
         }
     }
     void CameraAngle()
@@ -92,7 +94,9 @@ public class CameraControler : MonoBehaviour
         float camHeight = 7.0f - 5.0f * level / 100.0f;
         float FoV = 70.0f - 50.0f * level / 100.0f;
         float angle = 80.0f - 70.0f * level / 100.0f;
+        float unitAngle = -57.0f - 33.0f * level / 100.0f;
 
+        grid.BroadcastMessage("AngleForCamera", unitAngle);
         cam.transform.position = new Vector3(cam.transform.position.x, camHeight, cam.transform.position.z - zOffset);
         cam.GetComponent<Camera>().fieldOfView = FoV;
         cam.transform.localEulerAngles = new Vector3(angle, 0.0f, 0.0f);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
@@ -204,6 +205,16 @@ public class Grid : MonoBehaviour
         }
 
         return allUnits;
+    }
+    
+    public List<Unit> GetAllFriendlyUnits()
+    {
+        return GetAllUnits().Where(unit => !unit.enemy).ToList();
+    }
+
+    public List<Unit> GetAllEnemyUnits()
+    {
+        return GetAllUnits().Where(unit => unit.enemy).ToList();
     }
 
     public void AddEntity(Entity entity)

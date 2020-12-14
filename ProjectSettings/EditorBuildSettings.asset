@@ -6,12 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenuScene.unity
-    guid: b5b1a7bd3326de941a7fb090ca92837a
+    path: Assets/Scenes/TemporaryMainMenu.unity
+    guid: c43b67a1d0b07bd49bc12956a712bd0c
   - enabled: 1
+    path: Assets/Scenes/MapScene.unity
+    guid: b004138c9e92b9845878a96fbda74964
+  - enabled: 0
     path: Assets/Scenes/MainScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/OptionsScene.unity
-    guid: 0be28ce11c48dfd4a96e8af9ef16855a
+    path: Assets/Scenes/01 Simple Start.unity
+    guid: bfd6c402d376a8f4f88372ea0e92455d
+  - enabled: 1
+    path: Assets/Scenes/02 Two Corridors.unity
+    guid: 58597df15dd72984db92975d2f4c38d6
+  - enabled: 1
+    path: Assets/Scenes/03 Bottleneck.unity
+    guid: 07a3c8b635b0e9d44bb3ee9f3b24696c
+  - enabled: 1
+    path: Assets/Scenes/04 Three Rooms.unity
+    guid: 3407fd411fe707f4d9dff2f3af99fe1c
   m_configObjects: {}
