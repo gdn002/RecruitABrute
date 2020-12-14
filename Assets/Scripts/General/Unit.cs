@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Unit : MonoBehaviour
 {
@@ -30,16 +31,14 @@ public class Unit : MonoBehaviour
         initiative = initUnitState.initiative;
         unitName = initUnitState.unitName;
         enemy = initUnitState.enemy;
+        abilities = initUnitState.abilities;
     }
 
     // These stats are derived from the unit's base attack Skill
-    public int AttackRange { get { return baseAttack.range; } }
-    public int AttackDamage { get { return baseAttack.power; } }
+    public int AttackRange { get { return abilities[0].range; } }
+    public int AttackDamage { get { return abilities[0].power; } }
 
     public UnitStatsText unitStatsText;
-
-    // Basic attack
-    public Skill baseAttack;
 
     // Special abilities
     public Skill[] abilities;
@@ -123,10 +122,10 @@ public class Unit : MonoBehaviour
         localRenderers = new List<Renderer>();
         localRenderers.AddRange(GetComponentsInChildren<Renderer>());
 
-        if (baseAttack == null)
+        if (abilities == null)
         {
             Debug.LogWarning("Unit " + unitName + " has no set base attack skill. Loading default skill...");
-            baseAttack = ScriptableObject.CreateInstance<Skill>();
+            abilities = new [] {ScriptableObject.CreateInstance<Skill>()};
         }
 
         AttachedAI = GetComponent<AI>();
@@ -141,6 +140,9 @@ public class Unit : MonoBehaviour
     // *** MOUSE EVENTS ***
     private void OnMouseOver()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         UnitStatsText.ActiveUnitStatsText.UpdateText(this);
         Highlight(true);
         Grid.ActiveGrid.MouseOverGridTile(GetCoordinates());
@@ -155,6 +157,9 @@ public class Unit : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Grid.ActiveGrid.MouseDownGridTile(GetCoordinates());
     }
     // *** CAMERA EVENTS ***
@@ -164,6 +169,6 @@ public class Unit : MonoBehaviour
     }
     public void AngleForCamera(float degrees)    
     {
-        gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles = new Vector3(degrees, 0.0f, 0.0f);       
+        gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles = new Vector3(degrees, 0, -90.0f);       
     }
 }

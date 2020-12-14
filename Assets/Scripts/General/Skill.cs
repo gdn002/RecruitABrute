@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System;
+using System.Linq.Expressions;
 
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Custom/Skill")]
 public class Skill : ScriptableObject
@@ -143,16 +144,24 @@ public class Skill : ScriptableObject
     public void ActivateSkill(Unit caster, Vector2Int target)
     {
         Animation(caster);
+        Func<int> callback = () =>
+        {
+            List<Unit> affectedUnits = GetAffectedUnits(caster, target);
+            foreach (var unit in affectedUnits)
+            {
+                EffectOnUnit(unit);
+            }
+            TurnTracker.ActiveTracker.NextTurn();
+            return 0;
+        };
+        
         if(projectile != null){
             GameObject p = Instantiate(projectile.gameObject, caster.transform.position, Quaternion.identity);
-            p.GetComponent<Projectile>().SetTarget(target);
+            p.GetComponent<Projectile>().SetTarget(target, callback);
         }
-        
-
-        List<Unit> affectedUnits = GetAffectedUnits(caster, target);
-        foreach (var unit in affectedUnits)
+        else
         {
-            EffectOnUnit(unit);
+            callback();
         }
     }
 

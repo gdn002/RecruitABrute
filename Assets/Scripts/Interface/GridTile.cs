@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class GridTile : MonoBehaviour
 {
@@ -75,6 +76,9 @@ public class GridTile : MonoBehaviour
     // *** MOUSE EVENTS ***
     public void OnMouseOver()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         CurrentlySelected = this;
         TurnTracker.ActiveTracker.UpdateHighlight();    
     }
@@ -87,7 +91,10 @@ public class GridTile : MonoBehaviour
 
     public void OnMouseDown()
     {
-        switch(TurnTracker.ActiveTracker.CurrentPhase)
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        switch (TurnTracker.ActiveTracker.CurrentPhase)
         {
             case TurnTracker.GamePhase.Setup:
                 if (DeckHandler.MainDeckHandler.selectedUnit != null)
@@ -131,5 +138,10 @@ public class GridTile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (CurrentlySelected == this)
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+                OnMouseExit();
+        }
     }
 }

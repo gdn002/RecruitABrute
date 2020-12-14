@@ -35,6 +35,11 @@ public class DeckHandler : MonoBehaviour
         }
     }
 
+    public void CallNextTurn()
+    {
+        TurnTracker.ActiveTracker.NextTurn();
+    }
+
 
     public void PrintDeck()
     {
@@ -94,7 +99,6 @@ public class DeckHandler : MonoBehaviour
         unit.Init(u);
         unitGameObject.SetActive(false);
         selectedUnit = unit;
-        Grid.ActiveGrid.AddEntity(selectedUnit.UnitEntity);
         Destroy(b.gameObject);
     }
 

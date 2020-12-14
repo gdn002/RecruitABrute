@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -16,8 +17,10 @@ public class RewardPanelScript : MonoBehaviour
     public void DisplayRewardsOnAddPanel(){
         Debug.Log("DISPLAY REWARTDS ON ADD PANEL");
         brutes = Resources.LoadAll("Prefabs/Brutes", typeof(GameObject));
+        brutes = brutes.OrderBy(brute => Random.value).ToArray();
+        
         for(int i = 0;i<3;i++){
-            var b = brutes[Random.Range(0, brutes.Length)];
+            var b = brutes[i];
             GameObject btn = Instantiate(unitbutton);
             btn.transform.SetParent(AddPanel.transform, false);
             //btn.transform.localScale = new Vector3(1, 1, 1);
@@ -64,36 +67,51 @@ public class RewardPanelScript : MonoBehaviour
         UpgradePanel.SetActive(false);
         UpgradeUnitPanel.SetActive(true);
         UpgradeUnitPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = u.unitName;
-        UpgradeUnitPanel.transform.GetChild(1).GetComponent<TMP_Text>().text = "Health: " +u.health.ToString();
-        UpgradeUnitPanel.transform.GetChild(2).GetComponent<TMP_Text>().text = "Max health: " +u.maxHealth.ToString();
         
-        Button healButton = UpgradeUnitPanel.transform.GetChild(3).GetComponent<Button>();
-        UpgradeUnitPanel.transform.GetChild(3).transform.GetChild(0).GetComponent<TMP_Text>().text = "Heal (+20)";
-        healButton.onClick.AddListener(() => {healMethod(u);});
+        Button healButton = UpgradeUnitPanel.transform.GetChild(1).GetComponent<Button>();
+        UpgradeUnitPanel.transform.GetChild(1).transform.GetChild(0).GetComponent<TMP_Text>().text = "Heal fully";
+        healButton.onClick.AddListener(() =>
+        {
+            healMethod(u);
+            healButton.onClick.RemoveAllListeners();
+        });
         //change onclick here
-        Button maxHealthButton = UpgradeUnitPanel.transform.GetChild(4).GetComponent<Button>();
-        UpgradeUnitPanel.transform.GetChild(4).transform.GetChild(0).GetComponent<TMP_Text>().text = "+10 Max HP";
-        maxHealthButton.onClick.AddListener(() => {maxHealthMethod(u);});
-        //change onclick here
+        Button maxHealthButton = UpgradeUnitPanel.transform.GetChild(2).GetComponent<Button>();
+        UpgradeUnitPanel.transform.GetChild(2).transform.GetChild(0).GetComponent<TMP_Text>().text = "+10 Max HP";
+        maxHealthButton.onClick.AddListener(() =>
+        {
+            maxHealthMethod(u);
+            maxHealthButton.onClick.RemoveAllListeners();
 
+        });
+        //change onclick here
+        
+        // Skill button
+        Object[] skills = Resources.LoadAll("Prefabs/Skills/Rewards", typeof(ScriptableObject));
+        Skill skill = (Skill) skills[Random.Range(0, skills.Length)];
+        
+        Button addSkillButton = UpgradeUnitPanel.transform.GetChild(3).GetComponent<Button>();
+        UpgradeUnitPanel.transform.GetChild(3).transform.GetChild(0).GetComponent<TMP_Text>().text = "Add skill: " + skill.skillName;
+        addSkillButton.onClick.AddListener(() =>
+        {
+            addSkillMethod(u, skill);
+            addSkillButton.onClick.RemoveAllListeners();
+        });
     }
-    private void healMethod(UnitState u){
-        Debug.Log("Health before:" + u.health.ToString());
-        if(u.health+20>u.maxHealth){
-            u.health=u.maxHealth;
-        }
-        else{
-            u.health += 20;
-        }
-        Debug.Log("Health after: " + u.health.ToString());
+    
+    private void addSkillMethod(UnitState u, Skill skill){
+        u.abilities = u.abilities.Append(skill).ToArray();
         ResetUI();
-        
-
     }
+    private void healMethod(UnitState u)
+    {
+        u.health = u.maxHealth;
+        ResetUI();
+    }
+    
     private void maxHealthMethod(UnitState u){
-        Debug.Log("max Health before:" + u.maxHealth.ToString());
         u.maxHealth+=10;
-        Debug.Log("max Health after: " + u.maxHealth.ToString());
+        u.health+=10;
         ResetUI();
     }
 
