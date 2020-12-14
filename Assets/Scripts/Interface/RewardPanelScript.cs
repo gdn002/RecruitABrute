@@ -86,21 +86,22 @@ public class RewardPanelScript : MonoBehaviour
         });
         //change onclick here
         
+        // Skill button
+        Object[] skills = Resources.LoadAll("Prefabs/Skills", typeof(ScriptableObject));
+        Skill skill = (Skill) skills[Random.Range(0, skills.Length)];
+        
         UpgradeUnitPanel.transform.GetChild(5).GetComponent<TMP_Text>().text = "Add skill: ";
         Button addSkillButton = UpgradeUnitPanel.transform.GetChild(6).GetComponent<Button>();
-        UpgradeUnitPanel.transform.GetChild(6).transform.GetChild(0).GetComponent<TMP_Text>().text = "Add skill";
+        UpgradeUnitPanel.transform.GetChild(6).transform.GetChild(0).GetComponent<TMP_Text>().text = skill.skillName;
         addSkillButton.onClick.AddListener(() =>
         {
-            addSkillMethod(u);
+            addSkillMethod(u, skill);
             addSkillButton.onClick.RemoveAllListeners();
         });
     }
     
-    private void addSkillMethod(UnitState u){
-        Object[] skills = Resources.LoadAll("Prefabs/Skills", typeof(ScriptableObject));
-        Skill skill = (Skill) skills[Random.Range(0, skills.Length)];
+    private void addSkillMethod(UnitState u, Skill skill){
         u.abilities = u.abilities.Append(skill).ToArray();
-        Debug.Log("skills: " + u.abilities.Length);
         ResetUI();
     }
     private void healMethod(UnitState u){
