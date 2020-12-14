@@ -44,6 +44,7 @@ public class TurnTracker : MonoBehaviour
     public Vector2Int ActiveUnitStartCoordinates;
     private GridTile lastSelected;
     public GameObject rewardPanel;
+    public Skill ActiveSkill { get; private set; }
 
     public void AddToInitiative(Unit unit)
     {
@@ -151,9 +152,26 @@ public class TurnTracker : MonoBehaviour
         GameObject skillBar = GameObject.FindGameObjectWithTag("SkillBar");
         for (int i = 0; i < ActiveUnit.abilities.Length; i++)
         {
+            Skill skill = ActiveUnit.abilities[i];
             var btn = (GameObject) Instantiate(Resources.Load("Prefabs/Interface/SkillButton"), skillBar.transform);
             btn.transform.position += new Vector3(i * 100, 0);
-            btn.transform.GetChild(0).GetComponent<Text>().text = ActiveUnit.abilities[i].skillName;
+            btn.transform.GetChild(0).GetComponent<Text>().text = skill.skillName;
+            btn.GetComponent<Button>().onClick.AddListener(() => pressSkillButton(skill));
+        }
+    }
+
+    private void pressSkillButton(Skill skill)
+    {
+        // If this skill is already selected, deselect it. Otherwise select it.
+        if (ActiveSkill == skill)
+        {
+            ActiveSkill = null;
+            SetInputMode(InputMode.Movement);
+        }
+        else
+        {
+            ActiveSkill = skill;
+            SetInputMode(InputMode.Target);
         }
     }
     
@@ -253,7 +271,7 @@ public class TurnTracker : MonoBehaviour
     // Highlights the tiles the currently active unit can target (currently only works for the base attack)
     private void SetTargetHighlight()
     {
-        Grid.ActiveGrid.HighlightTiles(ActiveUnit.baseAttack.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+        Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
     }
 
     // *** INPUT MODES ***
@@ -309,7 +327,7 @@ public class TurnTracker : MonoBehaviour
             // Use skill on selected target if it is valid
             if (selection.GetHighlight() == GridTile.TileHighlights.AoE)
             {
-                ActiveUnit.baseAttack.ActivateSkill(ActiveUnit, selection.Coordinates);
+                ActiveSkill.ActivateSkill(ActiveUnit, selection.Coordinates);
                 NextTurn();
             }
         }
