@@ -16,14 +16,14 @@ public class MainMenu : MonoBehaviour
     }
 
 
-    public void StartTheGame()
+    public void StartTheGameYo()
     {
         SceneManager.LoadScene(1);
     }
 
 
 
-    public void QuitTheGame()
+    public void QuitTheGameYo()
     {
     transform.Find("quiteGameBtn").GetComponent<Button>().onClick.AddListener(() => {
         Application.Quit();
