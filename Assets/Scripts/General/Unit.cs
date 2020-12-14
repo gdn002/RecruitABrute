@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Unit : MonoBehaviour
 {
@@ -139,6 +140,9 @@ public class Unit : MonoBehaviour
     // *** MOUSE EVENTS ***
     private void OnMouseOver()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         UnitStatsText.ActiveUnitStatsText.UpdateText(this);
         Highlight(true);
         Grid.ActiveGrid.MouseOverGridTile(GetCoordinates());
@@ -153,6 +157,9 @@ public class Unit : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Grid.ActiveGrid.MouseDownGridTile(GetCoordinates());
     }
     // *** CAMERA EVENTS ***
