@@ -328,6 +328,7 @@ public class TurnTracker : MonoBehaviour
             if (selection.GetHighlight() == GridTile.TileHighlights.AoE)
             {
                 ActiveSkill.ActivateSkill(ActiveUnit, selection.Coordinates);
+                ActiveSkill = null;
                 NextTurn();
             }
         }
