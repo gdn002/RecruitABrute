@@ -94,7 +94,6 @@ public class DeckHandler : MonoBehaviour
         unit.Init(u);
         unitGameObject.SetActive(false);
         selectedUnit = unit;
-        Grid.ActiveGrid.AddEntity(selectedUnit.UnitEntity);
         Destroy(b.gameObject);
     }
 
