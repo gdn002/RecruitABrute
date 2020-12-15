@@ -169,6 +169,8 @@ public class Unit : MonoBehaviour
     }
     public void AngleForCamera(float degrees)    
     {
-        gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles = new Vector3(degrees, 0, -90.0f);       
+        var old = gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles;
+        old.x = degrees;
+        gameObject.transform.Find("Mesh").transform.Find("Cube").transform.localEulerAngles = old;
     }
 }
