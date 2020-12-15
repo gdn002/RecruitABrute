@@ -198,7 +198,16 @@ public class TurnTracker : MonoBehaviour
         ResetSkillBar();
         Transform x = GameObject.Find("In-game UI").transform.Find("RewardPanel");
         x.gameObject.SetActive(true);
-        x.Find("UpgradeOrAdd").gameObject.SetActive(true);
+        GameObject upOrAdd = x.Find("UpgradeOrAdd").gameObject;
+        upOrAdd.SetActive(true);
+        if (DeckHandler.MainDeckHandler.Units.Count == DeckHandler.MainDeckHandler.maxdecksize)
+        {
+            upOrAdd.transform.Find("AddButton").gameObject.SetActive(false);
+        }
+        else
+        {
+            upOrAdd.transform.Find("AddButton").gameObject.SetActive(true);
+        }
         //gameObject.SetActive(true);
         //GameObject.Find("UpgradeOrAdd").gameObject.SetActive(true);
         //rewardPanel.SetActive(true);
