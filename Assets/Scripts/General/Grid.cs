@@ -180,15 +180,10 @@ public class Grid : MonoBehaviour
 
     public Unit GetUnit(Vector2Int coordinates)
     {
-        // Limit search to entities with collision only
-        // Non-collision entities will be used only as eye-candy, therefore shouldn't be relevant
-        if (GetCollision(coordinates))
+        foreach (var entity in entityList)
         {
-            foreach (var entity in entityList)
-            {
-                if (entity.hasCollision && entity.coordinates == coordinates)
-                    return entity.GetComponent<Unit>();
-            }
+            if (entity.coordinates == coordinates)
+                return entity.GetComponent<Unit>();
         }
 
         return null;

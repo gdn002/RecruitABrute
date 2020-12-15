@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -188,7 +189,7 @@ public class TurnTracker : MonoBehaviour
     private void OnEnterCombatPhase()
     {
         // First Turn
-
+        Guide.ActiveGuide.ClearGuide();
         OnTurnStart();
     }
 
@@ -197,7 +198,16 @@ public class TurnTracker : MonoBehaviour
         ResetSkillBar();
         Transform x = GameObject.Find("In-game UI").transform.Find("RewardPanel");
         x.gameObject.SetActive(true);
-        x.Find("UpgradeOrAdd").gameObject.SetActive(true);
+        GameObject upOrAdd = x.Find("UpgradeOrAdd").gameObject;
+        upOrAdd.SetActive(true);
+        if (DeckHandler.MainDeckHandler.Units.Count == DeckHandler.MainDeckHandler.maxdecksize)
+        {
+            upOrAdd.transform.Find("AddButton").gameObject.SetActive(false);
+        }
+        else
+        {
+            upOrAdd.transform.Find("AddButton").gameObject.SetActive(true);
+        }
         //gameObject.SetActive(true);
         //GameObject.Find("UpgradeOrAdd").gameObject.SetActive(true);
         //rewardPanel.SetActive(true);
@@ -272,7 +282,18 @@ public class TurnTracker : MonoBehaviour
     // Highlights the tiles the currently active unit can target (currently only works for the base attack)
     private void SetTargetHighlight()
     {
-        Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+        if (ActiveSkill.targetType == Skill.TargetType.Unit)
+        {
+            Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+            Unit selectedUnit = Grid.ActiveGrid.GetUnit(GridTile.CurrentlySelected.Coordinates);
+            if (selectedUnit != null && ActiveSkill.GetValidTargets(ActiveUnit).Contains(selectedUnit.GetCoordinates()))
+            {
+                Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates), GridTile.TileHighlights.AoE);
+            }
+        } else if (ActiveSkill.targetType == Skill.TargetType.Tile && GridTile.CurrentlySelected != null)
+        {
+            Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates), GridTile.TileHighlights.AoE);
+        }
     }
 
     // *** INPUT MODES ***
@@ -372,6 +393,7 @@ public class TurnTracker : MonoBehaviour
     {
         UpdateHighlight();
         DeckHandler.MainDeckHandler.DrawDeckToUI();
+        Guide.ActiveGuide.DisplayPlaceUnitGuide();
     }
 
     void Update()

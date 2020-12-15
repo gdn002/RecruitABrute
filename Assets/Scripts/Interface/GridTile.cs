@@ -59,14 +59,14 @@ public class GridTile : MonoBehaviour
         {
             case TileHighlights.Movement:
                 return new Color(0.5f, 0.5f, 0.5f);//Gray
+            case TileHighlights.Friend:
+                return new Color(0f, 0.5f, 0f);//Dark green
             case TileHighlights.AoE:
                 return new Color(1f, 0.5f, 0f);//Orange
-            case TileHighlights.Friend:
-                return Color.green;
             case TileHighlights.Foe:
                 return Color.red;
             case TileHighlights.ActiveUnit:
-                return new Color(0.3f, 0.3f, 0.3f);
+                return new Color(0f, 1f, 0f);//Light green
         }
 
         return Color.white;
