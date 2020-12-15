@@ -276,6 +276,11 @@ public class TurnTracker : MonoBehaviour
         if (ActiveSkill.targetType == Skill.TargetType.Unit)
         {
             Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
+            Unit selectedUnit = Grid.ActiveGrid.GetUnit(GridTile.CurrentlySelected.Coordinates);
+            if (selectedUnit != null && ActiveSkill.GetValidTargets(ActiveUnit).Contains(selectedUnit.GetCoordinates()))
+            {
+                Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates), GridTile.TileHighlights.AoE);
+            }
         } else if (ActiveSkill.targetType == Skill.TargetType.Tile && GridTile.CurrentlySelected != null)
         {
             Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates), GridTile.TileHighlights.AoE);
