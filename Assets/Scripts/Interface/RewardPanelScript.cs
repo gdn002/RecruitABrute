@@ -51,8 +51,8 @@ public class RewardPanelScript : MonoBehaviour
     private void ResetUI(){
         GameObject.Find("Map").GetComponent<Canvas>().enabled = true;//Instead of loading scene 1
 
-        DestroyAllChildren(UpgradePanel); //not sure if these are needed
-        DestroyAllChildren(AddPanel); //not sure if these are needed
+        DestroyButtons(UpgradePanel); //not sure if these are needed
+        DestroyButtons(AddPanel); //not sure if these are needed
 
 
         UpgradeUnitPanel.SetActive(false);
@@ -115,9 +115,14 @@ public class RewardPanelScript : MonoBehaviour
         ResetUI();
     }
 
-    private void DestroyAllChildren(GameObject parent){
-        foreach (Transform child in parent.transform) {
-        GameObject.Destroy(child.gameObject);
+    private void DestroyButtons(GameObject parent)
+    {
+        foreach (Transform child in parent.transform)
+        {
+            if (child.GetComponent<Button>() != null)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 
