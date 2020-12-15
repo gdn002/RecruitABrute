@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 8096122975473401665}
   - component: {fileID: -1928443180690124347}
   m_Layer: 0
-  m_Name: FighterBrute
+  m_Name: Knight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,13 +144,13 @@ MonoBehaviour:
   health: 25
   maxHealth: 25
   movementRange: 2
-  initiative: 7
-  unitName: Fighter Brute
+  initiative: 3
+  unitName: Knight
   UnitEntity: {fileID: 0}
-  enemy: 0
+  enemy: 1
   unitStatsText: {fileID: 0}
   abilities:
-  - {fileID: 11400000, guid: 4a964f70c3290ff42ac096fe606c8d6b, type: 2}
+  - {fileID: 11400000, guid: db7d2f040d8d5f94488466f12d70f469, type: 2}
 --- !u!65 &3390443023559326447
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 8096122975473401665}
   - component: {fileID: -1928443180690124347}
   m_Layer: 0
-  m_Name: FighterBrute
+  m_Name: Rogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,16 +141,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc6a686c988c34844b6537bbba976e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 25
-  maxHealth: 25
+  health: 10
+  maxHealth: 10
   movementRange: 2
-  initiative: 7
-  unitName: Fighter Brute
+  initiative: 9
+  unitName: Rogue
   UnitEntity: {fileID: 0}
-  enemy: 0
+  enemy: 1
   unitStatsText: {fileID: 0}
   abilities:
-  - {fileID: 11400000, guid: 4a964f70c3290ff42ac096fe606c8d6b, type: 2}
+  - {fileID: 11400000, guid: 2414a5ba0b1d8d747908cd2e29658e5a, type: 2}
 --- !u!65 &3390443023559326447
 BoxCollider:
   m_ObjectHideFlags: 0

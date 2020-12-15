@@ -18,6 +18,8 @@ public class GenerateMap : MonoBehaviour
     public int spacing;
     public int amountOfButtons;
 
+    private string[] easyLevels = {"2Rogues", "1Archer"};
+    
     void Start()
     {
         CreateNewMap();
@@ -102,21 +104,22 @@ public class GenerateMap : MonoBehaviour
         Destroy(gameObject);
     }
 
-
     public void LoadLevel(int levelIndex, Button b){
 
         ColorBlock c = b.colors;
-        
-        //Debug.Log("Level Index  " + levelIndex.ToString());
-        //Debug.Log("Current Level  " + sceneToLoad);
+
         if (levelIndex+2 == sceneToLoad){
+            b.onClick.RemoveAllListeners();
             c.normalColor = Color.red;
             b.colors = c;
-            int loadMe = sceneToLoad;
+            if (levelIndex == 0)
+            {
+                SceneManager.LoadScene("UIScene");
+            }
             sceneToLoad++;
-            //Debug.Log("Load level with index: " + (loadMe));
             map.GetComponent<Canvas>().enabled = false;
-            SceneManager.LoadScene(loadMe); //THIS IS WHERE WE SET WHAT SCENE TO LOAD it should be "loadMe"
+            string scene = easyLevels[Random.Range(0, easyLevels.Length)];
+            SceneManager.LoadScene(scene);
         }
     }
 }

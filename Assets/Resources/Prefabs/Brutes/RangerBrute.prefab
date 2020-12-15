@@ -141,10 +141,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc6a686c988c34844b6537bbba976e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 60
-  maxHealth: 60
-  movementRange: 4
-  initiative: 8
+  health: 10
+  maxHealth: 10
+  movementRange: 3
+  initiative: 10
   unitName: Ranger Brute
   UnitEntity: {fileID: 0}
   enemy: 0

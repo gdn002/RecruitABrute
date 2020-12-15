@@ -17,7 +17,7 @@ MonoBehaviour:
   effectZone: 1
   affectedUnits: -1
   effectOnTargets: 0
-  power: 10
+  power: 2
   range: 5
   radius: 2
   projectile: {fileID: 71072317499118049, guid: 2a06d4e1d5dda96449bc2a0d8ae64ec0,
