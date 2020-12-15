@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Kick
   targetType: 1
-  effectZone: 0
+  effectZone: 1
   affectedUnits: 4
   effectOnTargets: 0
-  power: 30
-  range: 2
+  power: 25
+  range: 1
   radius: 1
   projectile: {fileID: 0}

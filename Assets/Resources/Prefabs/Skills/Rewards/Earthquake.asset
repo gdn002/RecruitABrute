@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Earthquake
   targetType: 2
-  effectZone: 1
+  effectZone: 3
   affectedUnits: -1
   effectOnTargets: 0
-  power: 10
+  power: 50
   range: 5
-  radius: 2
-  projectile: {fileID: 71072317499118049, guid: 2a06d4e1d5dda96449bc2a0d8ae64ec0,
+  radius: 1
+  projectile: {fileID: 71072317499118049, guid: e57e2821bc784cd449f4668325f52f9f,
     type: 3}

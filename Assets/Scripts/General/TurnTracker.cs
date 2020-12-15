@@ -189,7 +189,7 @@ public class TurnTracker : MonoBehaviour
     private void OnEnterCombatPhase()
     {
         // First Turn
-
+        Guide.ActiveGuide.ClearGuide();
         OnTurnStart();
     }
 
@@ -384,6 +384,7 @@ public class TurnTracker : MonoBehaviour
     {
         UpdateHighlight();
         DeckHandler.MainDeckHandler.DrawDeckToUI();
+        Guide.ActiveGuide.DisplayPlaceUnitGuide();
     }
 
     void Update()
