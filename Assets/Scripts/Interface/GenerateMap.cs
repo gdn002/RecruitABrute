@@ -21,6 +21,7 @@ public class GenerateMap : MonoBehaviour
     private string[] easyLevels = {"2Rogues", "1Archer"};
     private string[] normalLevels = {"2Corridors", "Bottleneck"};
     private string[] hardLevels = {"ThreeRooms", "WizardFever"};
+    private string[] bossLeveles = {"Executioner"};
 
     private int easyLevelIndex = 3;
     private int normalLevelIndex = 6;
@@ -142,7 +143,7 @@ public class GenerateMap : MonoBehaviour
             }
             else
             {
-                scene = "2Rogues";//todo boss
+                scene = bossLeveles[Random.Range(0, bossLeveles.Length)];
             }
 
             SceneManager.LoadScene(scene);
