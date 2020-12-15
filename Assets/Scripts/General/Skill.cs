@@ -157,24 +157,45 @@ public class Skill : ScriptableObject
     public void ActivateSkill(Unit caster, Vector2Int target)
     {
         Animation(caster);
-        Func<int> callback = () =>
+        if (caster.HasAI)
         {
+            if (projectile != null)
+            {
+                GameObject p = Instantiate(projectile.gameObject, caster.transform.position, Quaternion.identity);
+                p.GetComponent<Projectile>().SetTarget(target);
+            }
+            
             List<Unit> affectedUnits = GetAffectedUnits(caster, target, false);
             foreach (var unit in affectedUnits)
             {
                 EffectOnUnit(unit);
             }
+
             TurnTracker.ActiveTracker.NextTurn();
-            return 0;
-        };
-        
-        if(projectile != null){
-            GameObject p = Instantiate(projectile.gameObject, caster.transform.position, Quaternion.identity);
-            p.GetComponent<Projectile>().SetTarget(target, callback);
         }
         else
         {
-            callback();
+            Func<int> callback = () =>
+            {
+                List<Unit> affectedUnits = GetAffectedUnits(caster, target, false);
+                foreach (var unit in affectedUnits)
+                {
+                    EffectOnUnit(unit);
+                }
+
+                TurnTracker.ActiveTracker.NextTurn();
+                return 0;
+            };
+
+            if (projectile != null)
+            {
+                GameObject p = Instantiate(projectile.gameObject, caster.transform.position, Quaternion.identity);
+                p.GetComponent<Projectile>().SetTarget(target, callback);
+            }
+            else
+            {
+                callback();
+            }
         }
     }
 

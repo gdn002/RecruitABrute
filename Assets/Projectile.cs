@@ -10,7 +10,11 @@ public class Projectile : MonoBehaviour
     public Vector3 target;
     private Func<int> callback;
 
-    public void SetTarget(Vector2Int t, Func<int> callback){ //SET TARGET HERE
+    public void SetTarget(Vector2Int t){
+        target = Grid.ActiveGrid.GridToWorld(t);
+    }
+    
+    public void SetTarget(Vector2Int t, Func<int> callback){
         this.callback = callback;
         target = Grid.ActiveGrid.GridToWorld(t);
     }
@@ -23,7 +27,10 @@ public class Projectile : MonoBehaviour
 
         if (gameObject.transform.position == target)
         {
-            callback();
+            if (callback != null)
+            {
+                callback();
+            }
             Destroy(gameObject);
         }
     }

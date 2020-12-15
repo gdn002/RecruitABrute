@@ -19,6 +19,13 @@ public class GenerateMap : MonoBehaviour
     public int amountOfButtons;
 
     private string[] easyLevels = {"2Rogues", "1Archer"};
+    private string[] normalLevels = {"2Corridors", "Bottleneck"};
+    private string[] hardLevels = {"ThreeRooms", "WizardFever"};
+
+    private int easyLevelIndex = 3;
+    private int normalLevelIndex = 6;
+    private int hardLevelIndex = 9;
+    
     
     void Start()
     {
@@ -104,11 +111,12 @@ public class GenerateMap : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void LoadLevel(int levelIndex, Button b){
-
+    public void LoadLevel(int levelIndex, Button b)
+    {
         ColorBlock c = b.colors;
 
-        if (levelIndex+2 == sceneToLoad){
+        if (levelIndex + 2 == sceneToLoad)
+        {
             b.onClick.RemoveAllListeners();
             c.normalColor = Color.red;
             b.colors = c;
@@ -116,9 +124,27 @@ public class GenerateMap : MonoBehaviour
             {
                 SceneManager.LoadScene("UIScene");
             }
+
             sceneToLoad++;
             map.GetComponent<Canvas>().enabled = false;
-            string scene = easyLevels[Random.Range(0, easyLevels.Length)];
+            string scene;
+            if (levelIndex < easyLevelIndex)
+            {
+                scene = easyLevels[Random.Range(0, easyLevels.Length)];
+            }
+            else if (levelIndex < normalLevelIndex)
+            {
+                scene = normalLevels[Random.Range(0, normalLevels.Length)];
+            }
+            else if (levelIndex < hardLevelIndex)
+            {
+                scene = hardLevels[Random.Range(0, hardLevels.Length)];
+            }
+            else
+            {
+                scene = "2Rogues";//todo boss
+            }
+
             SceneManager.LoadScene(scene);
         }
     }

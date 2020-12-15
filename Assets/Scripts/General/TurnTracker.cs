@@ -74,6 +74,15 @@ public class TurnTracker : MonoBehaviour
                 // This still doesn't handle the possibility that the currently active unit dies in its own turn
             }
         }
+
+        //Fix edge cases by bounding turncounter
+        if (TurnCounter < 0)
+        {
+            TurnCounter = 0;
+        } else if (TurnCounter >= InitiativeOrder.Count)
+        {
+            TurnCounter = InitiativeOrder.Count - 1;
+        }
     }
 
     public void NextPhase()
@@ -285,10 +294,16 @@ public class TurnTracker : MonoBehaviour
         if (ActiveSkill.targetType == Skill.TargetType.Unit)
         {
             Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetValidTargets(ActiveUnit), GridTile.TileHighlights.AoE);
-            Unit selectedUnit = Grid.ActiveGrid.GetUnit(GridTile.CurrentlySelected.Coordinates);
-            if (selectedUnit != null && ActiveSkill.GetValidTargets(ActiveUnit).Contains(selectedUnit.GetCoordinates()))
+            if (GridTile.CurrentlySelected != null)
             {
-                Grid.ActiveGrid.HighlightTiles(ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates), GridTile.TileHighlights.AoE);
+                Unit selectedUnit = Grid.ActiveGrid.GetUnit(GridTile.CurrentlySelected.Coordinates);
+                if (selectedUnit != null &&
+                    ActiveSkill.GetValidTargets(ActiveUnit).Contains(selectedUnit.GetCoordinates()))
+                {
+                    Grid.ActiveGrid.HighlightTiles(
+                        ActiveSkill.GetAffectedTiles(ActiveUnit, GridTile.CurrentlySelected.Coordinates),
+                        GridTile.TileHighlights.AoE);
+                }
             }
         } else if (ActiveSkill.targetType == Skill.TargetType.Tile && GridTile.CurrentlySelected != null)
         {
