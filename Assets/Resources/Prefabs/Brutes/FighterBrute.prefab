@@ -141,8 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc6a686c988c34844b6537bbba976e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 25
-  maxHealth: 25
+  health: 40
+  maxHealth: 40
   movementRange: 2
   initiative: 7
   unitName: Fighter Brute
